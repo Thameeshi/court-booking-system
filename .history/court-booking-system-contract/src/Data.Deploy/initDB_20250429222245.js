@@ -35,7 +35,7 @@ export class DBInitializer {
                 PricePerHour REAL NOT NULL,
                 OwnerID INTEGER NOT NULL,
                 Availability TEXT NOT NULL,
-                Image TEXT,  
+                Image TEXT,  // New field for storing image path
                 PRIMARY KEY("Id" AUTOINCREMENT)
             )
         `);

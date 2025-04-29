@@ -20,12 +20,12 @@ export class CourtService {
             await this.#dbContext.open();
 
             const courtEntity = {
-                name: "",
-                description: "",
-                price: "",
-                ownerEmail: userInfo.email || "",
-                nfTokenID: "",
-                nfTokenSellOffer: "",
+                name: data.name,
+                location: data.location,
+                type: data.type,
+                availability: data.availability, // e.g., JSON string or status
+                pricePerHour: data.pricePerHour,
+                ownerEmail: data.ownerEmail
             };
 
             const rowId = await this.#dbContext.insertValue(Tables.COURT, courtEntity);

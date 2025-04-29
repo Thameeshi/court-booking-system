@@ -12,6 +12,7 @@ export class CourtService {
         this.#dbContext = new SqliteDatabase(this.#dbPath);
     }
 
+    // Method to add a new court
     async addCourt(data) {
         let resObj = {};
         resObj.reqId = this.#message.reqId;
@@ -20,12 +21,12 @@ export class CourtService {
             await this.#dbContext.open();
 
             const courtEntity = {
-                name: "",
-                description: "",
-                price: "",
-                ownerEmail: userInfo.email || "",
-                nfTokenID: "",
-                nfTokenSellOffer: "",
+                name: data.name,
+                location: data.location,
+                type: data.type,
+                availability: data.availability, // e.g., JSON string or status
+                pricePerHour: data.pricePerHour,
+                ownerEmail: data.ownerEmail
             };
 
             const rowId = await this.#dbContext.insertValue(Tables.COURT, courtEntity);
@@ -40,6 +41,7 @@ export class CourtService {
         }
     }
 
+    // Method to edit an existing court
     async editCourt(courtId, updatedData) {
         let resObj = {};
         resObj.reqId = this.#message.reqId;
@@ -70,6 +72,7 @@ export class CourtService {
         }
     }
 
+    // Method to delete a court
     async deleteCourt(courtId) {
         let resObj = {};
         resObj.reqId = this.#message.reqId;
@@ -91,6 +94,7 @@ export class CourtService {
         }
     }
 
+    // Method to get all courts
     async getAllCourts() {
         let resObj = {};
         try {
@@ -110,6 +114,7 @@ export class CourtService {
         }
     }
 
+    // Method to get courts by a specific owner (email)
     async getCourtsByOwner(ownerEmail) {
         let resObj = {};
         try {

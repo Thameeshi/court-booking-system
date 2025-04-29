@@ -6,7 +6,7 @@ const { SharedService } = require("./Services/Common.Services/SharedService");
 const { EventTypes } = require("./Constants/EventTypes");
 
 const foodWasteReductionContract = async ctx => {
-	console.log(`court booking contract is running.`);
+	console.log(`Food Wate Reduction contract is running.`);
 
 	SharedService.context = ctx;
 	const isReadOnly = ctx.readonly;

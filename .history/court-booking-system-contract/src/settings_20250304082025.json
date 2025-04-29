@@ -1,7 +1,7 @@
 {
 	"settings": {
 		"postExecutionScriptName": "./post_exec.sh",
-		"dbPath": "courtBooking.db",
+		"dbPath": "food-waste-reduct-contract.db",
 		"dbScriptsFolderPath": "./dbScripts",
 		"newContractZipFileName": "./newContractData.zip"
 	}

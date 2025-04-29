@@ -4,21 +4,17 @@ import { useSelector } from "react-redux";
 import XrplService from "../services/common-services/XrplService.ts";
 import crypto from 'crypto-browserify';
 
-const CreateCourt = () => {
+const Addcourt = () => {
     const { userInfo, provider } = useSelector((state) => state.auth);
     const [formData, setFormData] = useState({
         name: "",
         description: "",
-        pricePerHour: "",
-        location: "",
-        type: "",
-        availability: "Available",
+        price: "",
         ownerEmail: userInfo.email || "",
         nfTokenID: "",
         nfTokenSellOffer: "",
     });
 
-    const [imageFile, setImageFile] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState("");
     const [successMessage, setSuccessMessage] = useState("");
@@ -73,46 +69,33 @@ const CreateCourt = () => {
         setSuccessMessage("");
 
         try {
-            if (!imageFile) {
-                setError("Please upload a court image.");
-                setIsLoading(false);
-                return;
-            }
-
             const memoData = JSON.stringify({
                 name: formData.name,
                 description: formData.description,
-                price: formData.pricePerHour,
+                price: formData.price,
             });
 
             const nftResult = await mintNFT(memoData);
             const nftURI = nftResult.result.tx_json.URI;
             const rpc = new XrplService(provider);
             const NFTokenID = await rpc.getNftFromUri(nftURI);
-            const sellOfferResponse = await rpc.createSellOffer(NFTokenID, formData.pricePerHour, memoData, null);
+            const sellOfferResponse = await rpc.createSellOffer(NFTokenID, formData.price, memoData, null);
             const txHash = sellOfferResponse.result.tx_json.hash;
+
             const confirmedTx = await rpc.waitForConfirmation(txHash);
             const nfTokenSellOffer = confirmedTx.meta.offer_id;
 
             if (NFTokenID) {
-                const formDataToSend = new FormData();
-                formDataToSend.append("name", formData.name);
-                formDataToSend.append("description", formData.description);
-                formDataToSend.append("pricePerHour", formData.pricePerHour);
-                formDataToSend.append("location", formData.location);
-                formDataToSend.append("type", formData.type);
-                formDataToSend.append("availability", formData.availability);
-                formDataToSend.append("ownerEmail", formData.ownerEmail);
-                formDataToSend.append("ownerID", formData.ownerID);
-                formDataToSend.append("nfTokenID", NFTokenID);
-                formDataToSend.append("nfTokenSellOffer", nfTokenSellOffer);
-                formDataToSend.append("image", imageFile);
+                const updatedFormData = {
+                    ...formData,
+                    nfTokenID: NFTokenID,
+                    nfTokenSellOffer: nfTokenSellOffer,
+                };
 
-                const response = await courtService.addCourt(formDataToSend); // Should use multipart/form-data
-
+                const response = await courtService.createCourt(updatedFormData);
                 if (response.success) {
                     setSuccessMessage("Court added successfully!");
-                    fetchCourts();
+                    fetchCourts(); // Refresh list
                 } else {
                     setError("Failed to add court. Please try again.");
                 }
@@ -130,7 +113,7 @@ const CreateCourt = () => {
     return (
         <div className="container mt-5">
             <h1 className="mb-4">Add New Court</h1>
-            <form onSubmit={handleSubmit} className="card p-4 shadow-sm" encType="multipart/form-data">
+            <form onSubmit={handleSubmit} className="card p-4 shadow-sm">
                 <div className="mb-3">
                     <label htmlFor="name" className="form-label">Court Name</label>
                     <input
@@ -158,61 +141,11 @@ const CreateCourt = () => {
                     <label htmlFor="price" className="form-label">Hourly Price</label>
                     <input
                         type="text"
-                        name="pricePerHour"
+                        name="price"
                         id="price"
-                        value={formData.pricePerHour}
+                        value={formData.price}
                         onChange={handleInputChange}
                         className="form-control"
-                        required
-                    />
-                </div>
-                <div className="mb-3">
-                    <label htmlFor="location" className="form-label">Location</label>
-                    <input
-                        type="text"
-                        name="location"
-                        id="location"
-                        value={formData.location}
-                        onChange={handleInputChange}
-                        className="form-control"
-                        required
-                    />
-                </div>
-                <div className="mb-3">
-                    <label htmlFor="type" className="form-label">Court Type</label>
-                    <input
-                        type="text"
-                        name="type"
-                        id="type"
-                        value={formData.type}
-                        onChange={handleInputChange}
-                        className="form-control"
-                        required
-                    />
-                </div>
-                <div className="mb-3">
-                    <label htmlFor="availability" className="form-label">Availability</label>
-                    <select
-                        name="availability"
-                        id="availability"
-                        value={formData.availability}
-                        onChange={handleInputChange}
-                        className="form-select"
-                        required
-                    >
-                        <option value="Available">Available</option>
-                        <option value="Unavailable">Unavailable</option>
-                    </select>
-                </div>
-                <div className="mb-3">
-                    <label htmlFor="image" className="form-label">Court Image</label>
-                    <input
-                        type="file"
-                        id="image"
-                        name="image"
-                        className="form-control"
-                        accept="image/*"
-                        onChange={(e) => setImageFile(e.target.files[0])}
                         required
                     />
                 </div>
