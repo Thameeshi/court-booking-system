@@ -1,0 +1,34 @@
+{
+  "name": "contract",
+  "version": "1.0.0",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "removeDist": "rm -rf dist",
+    "removeDistLinux": "[ -d dist ] && rm -r dist &>>/dev/null",
+    "dockerBuild": "docker build -f Dockerfile.Build -t food-waste-reduct-contract-image:latest .",
+    "dockerRun": "docker run -d --name food-waste-reduct-contract-build-container food-waste-reduct-contract-image",
+    "fetchDist": "docker cp food-waste-reduct-contract-build-container:/food-waste-reduct-contract/dist/ ./dist/",
+    "copyStaticFiles": "cp src/settings.json dist/ && cp hp.cfg.override dist/",
+    "copyStaticFilesLinux": "cp src/settings.json dist && cp hp.cfg.override dist",
+    "stopContainer": "docker rm -f food-waste-reduct-contract-build-container && docker image prune -f && docker container prune -f",
+    "buildLinux": "npx ncc build ./src/startup.js -o dist",
+    "buildLinux:prod": "npx ncc build ./src/startup.js --minify -o dist",
+    "start": "npm run build && set HP_INSTANCE_IMAGE=evernode/sashimono:hp.0.6.4-ubt.20.04-njs.20 && hpdevkit deploy dist",
+    "startLinux": "npm run build1 && export HP_INSTANCE_IMAGE=evernodedev/sashimono:hp.0.6.4-ubt.20.04-njs.20 && hpdevkit deploy dist",
+    "build1": "npm run removeDistLinux && npx ncc build ./src/startup.js -o dist && npm run copyStaticFilesLinux",
+    "build": "npm run removeDist && npm run dockerBuild && npm run dockerRun && npm run fetchDist && npm run copyStaticFiles && npm run stopContainer",
+    "postinstall": "npm i sqlite3 --target_platform=linux --target_arch=x64 --target_libc=glibc --no-save",
+    "dockerClean":"docker system prune -a --volumes"
+  },
+  "dependencies": {
+    "@vercel/ncc": "0.34.0",
+    "azure-openai": "^0.9.4",
+    "bson": "^5.1.0",
+    "hotpocket-nodejs-contract": "^0.7.4",
+    "openai": "^4.80.1",
+    "sqlite-async": "1.2.0",
+    "sqlite3": "^5.1.7"
+  },
+  "author": "",
+  "license": "ISC"
+}
