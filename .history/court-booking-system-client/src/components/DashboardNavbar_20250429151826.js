@@ -44,7 +44,7 @@ const DashboardNavbar = () => {
               {/* Links for PublicUser */}
               {userRole === "PublicUser" && (
                 <li className="nav-item">
-                  <Link to="/dashboard/court" className="nav-link">
+                  <Link to="/dashboard/bookCourt" className="nav-link">
                     Book Court
                   </Link>
                 </li>

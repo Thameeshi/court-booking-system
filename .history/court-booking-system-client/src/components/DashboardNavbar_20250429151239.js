@@ -6,9 +6,6 @@ const DashboardNavbar = () => {
   const userDetails = useSelector((state) => state.user.userDetails);
   const { xrpBalance } = useSelector((state) => state.wallet);
 
-  // Get user role from Redux state
-  const userRole = userDetails.userRole || "PublicUser"; // Default to "PublicUser" if not set
-
   return (
     <div>
       {/* Navbar */}
@@ -21,7 +18,9 @@ const DashboardNavbar = () => {
 
           {/* User Details and Balance (hidden on small screens) */}
           <div className="d-none d-lg-flex align-items-center text-info ml-2">
-            <span className="me-3">{userDetails.Name}</span>
+            <span className="me-3">
+              {userDetails.Name}
+            </span>
             <span className="me-3">|</span>
             <span className="me-3"> Balance: {xrpBalance / 1000000} XRP</span>
           </div>
@@ -29,7 +28,11 @@ const DashboardNavbar = () => {
           {/* Nav Tabs (always visible) */}
           <div className="justify-content-end" id="navbarNav">
             <ul className="navbar-nav">
-              {/* Common links */}
+              <li className="nav-item">
+                <Link to="/dashboard/bookCourt" className="nav-link">
+                  Book Court
+                </Link>
+              </li>
               <li className="nav-item">
                 <Link to="/dashboard/myBookings" className="nav-link">
                   My Bookings
@@ -40,31 +43,16 @@ const DashboardNavbar = () => {
                   Profile
                 </Link>
               </li>
-
-              {/* Links for PublicUser */}
-              {userRole === "PublicUser" && (
-                <li className="nav-item">
-                  <Link to="/dashboard/court" className="nav-link">
-                    Book Court
-                  </Link>
-                </li>
-              )}
-
-              {/* Links for CourtOwner (Admin) */}
-              {userRole === "CourtOwner" && (
-                <>
-                  <li className="nav-item">
-                    <Link to="/dashboard/manageCourts" className="nav-link">
-                      Manage Courts
-                    </Link>
-                  </li>
-                  <li className="nav-item">
-                    <Link to="/dashboard/paymentHistory" className="nav-link">
-                      Payment History
-                    </Link>
-                  </li>
-                </>
-              )}
+              <li className="nav-item">
+                <Link to="/dashboard/manageCourts" className="nav-link">
+                  Manage Courts
+                </Link>
+              </li>
+              <li className="nav-item">
+                <Link to="/dashboard/paymentHistory" className="nav-link">
+                  Payment History
+                </Link>
+              </li>
             </ul>
           </div>
         </div>

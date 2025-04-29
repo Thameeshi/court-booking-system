@@ -84,7 +84,7 @@ const App = () => {
                 <Route path="/dashboard" element={<DashboardNavbar />}>
                   {/* Uncomment if you want to show ProfileInfo by default */}
                   <Route path="" element={<ProfileInfo />} /> 
-                  <Route path="court" element={<CreateCourt/>} />
+                  <Route path="" element={<CreateCourt/>} />
                   <Route path="myBookings" element={<ViewCourtBookings />} />
                 </Route>
               </>
