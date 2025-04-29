@@ -11,6 +11,7 @@ import DashboardNavbar from "./components/DashboardNavbar.js";
 import ProfileInfo from "./pages/ProfileInfo.js";
 import CreateCourt from "./pages/CreateCourt.js";
 import ViewCourtBookings from "./pages/ViewCourtBookings.js";
+
 import './App.css';
 
 const App = () => {

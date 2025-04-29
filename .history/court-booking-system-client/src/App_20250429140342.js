@@ -9,8 +9,9 @@ import Web3AuthPage from "./pages/Web3AuthPage.tsx";
 import SignUp from "./pages/SignUp.js";
 import DashboardNavbar from "./components/DashboardNavbar.js";
 import ProfileInfo from "./pages/ProfileInfo.js";
-import CreateCourt from "./pages/CreateCourt.js";
-import ViewCourtBookings from "./pages/ViewCourtBookings.js";
+import CreateCourt from "./pages/CreateCourt.js";  // Replaced CreateDonationRequest
+import ViewCourtBookings from "./pages/ViewCourtBookings.js";    // Replaced ViewDonationRequests
+
 import './App.css';
 
 const App = () => {
@@ -20,7 +21,7 @@ const App = () => {
   const [isHotPocketConnected, setIsHotPocketConnected] = useState(false);
   const [isUserChecked, setIsUserChecked] = useState(false);
   const [userExists, setUserExists] = useState(false);
-
+  
   // Initialize HotPocket when web3Authorized is true
   useEffect(() => {
     if (web3Authorized) {
@@ -41,10 +42,10 @@ const App = () => {
         try {
           console.log("userInfo:", userInfo);
           const res = await userService.checkUser(userInfo?.email);
-          if (res.success) {
+          if(res.success){
             setUserExists(true);
             dispatch(setUserDetails(res.success[0]));
-          } else {
+          }else{
             setUserExists(false);
           }
         } catch (error) {
@@ -82,11 +83,11 @@ const App = () => {
 
                 <Route path="/signup" element={<SignUp />} />
                 <Route path="/dashboard" element={<DashboardNavbar />}>
-                  {/* Uncomment if you want to show ProfileInfo by default */}
-                  {/* <Route path="" element={<ProfileInfo />} /> */}
-                  <Route path="" element={<CreateCourt/>} />
-                  <Route path="myBookings" element={<ViewCourtBookings />} />
-                </Route>
+               {/*<Route path="" element={<ProfileInfo />} />*/}
+                <Route path="court" element={<CreateCourt/>} /> {/* Replaces CreateDonationRequest */}
+                <Route path="myBookings" element={<ViewCourtBookings />} />
+    </Route>
+
               </>
             )}
 

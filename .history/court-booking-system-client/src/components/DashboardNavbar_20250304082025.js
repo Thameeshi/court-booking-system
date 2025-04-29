@@ -13,7 +13,7 @@ const DashboardNavbar = () => {
         <div className="container-fluid">
           {/* Brand/Title */}
           <Link to="/dashboard" className="navbar-brand">
-            Court Booking Platform
+            Food Waste Reduction Platform
           </Link>
 
           {/* User Details and Balance (hidden on small screens) */}

@@ -11,6 +11,7 @@ import DashboardNavbar from "./components/DashboardNavbar.js";
 import ProfileInfo from "./pages/ProfileInfo.js";
 import CreateCourt from "./pages/CreateCourt.js";
 import ViewCourtBookings from "./pages/ViewCourtBookings.js";
+
 import './App.css';
 
 const App = () => {
@@ -84,7 +85,7 @@ const App = () => {
                 <Route path="/dashboard" element={<DashboardNavbar />}>
                   {/* Uncomment if you want to show ProfileInfo by default */}
                   {/* <Route path="" element={<ProfileInfo />} /> */}
-                  <Route path="" element={<CreateCourt/>} />
+                  <Route path="" element={<CreateCourt />} />
                   <Route path="myBookings" element={<ViewCourtBookings />} />
                 </Route>
               </>

@@ -9,9 +9,11 @@ import Web3AuthPage from "./pages/Web3AuthPage.tsx";
 import SignUp from "./pages/SignUp.js";
 import DashboardNavbar from "./components/DashboardNavbar.js";
 import ProfileInfo from "./pages/ProfileInfo.js";
-import CreateCourt from "./pages/CreateCourt.js";
-import ViewCourtBookings from "./pages/ViewCourtBookings.js";
+
+
 import './App.css';
+import ViewDonationRequests from "./pages/ViewDonationRequests.js";
+
 
 const App = () => {
   const dispatch = useDispatch();
@@ -20,7 +22,8 @@ const App = () => {
   const [isHotPocketConnected, setIsHotPocketConnected] = useState(false);
   const [isUserChecked, setIsUserChecked] = useState(false);
   const [userExists, setUserExists] = useState(false);
-
+  //TODO: fix auth issue when changing page right after signup due to 'userExists'
+  
   // Initialize HotPocket when web3Authorized is true
   useEffect(() => {
     if (web3Authorized) {
@@ -41,10 +44,10 @@ const App = () => {
         try {
           console.log("userInfo:", userInfo);
           const res = await userService.checkUser(userInfo?.email);
-          if (res.success) {
+          if(res.success){
             setUserExists(true);
             dispatch(setUserDetails(res.success[0]));
-          } else {
+          }else{
             setUserExists(false);
           }
         } catch (error) {
@@ -65,7 +68,7 @@ const App = () => {
 
   return (
     <Router>
-      <div className="app-container">
+      <div className="">
         <div className="grid">
           <Routes>
             {/* Route for unauthorized users */}
@@ -82,10 +85,9 @@ const App = () => {
 
                 <Route path="/signup" element={<SignUp />} />
                 <Route path="/dashboard" element={<DashboardNavbar />}>
-                  {/* Uncomment if you want to show ProfileInfo by default */}
-                  {/* <Route path="" element={<ProfileInfo />} /> */}
-                  <Route path="" element={<CreateCourt/>} />
-                  <Route path="myBookings" element={<ViewCourtBookings />} />
+                <Route path="" element={<ProfileInfo />} />
+                <Route path="donationReq" element={<CreateDonationRequest />} />
+                <Route path="donation" element={<ViewDonationRequests />} />
                 </Route>
               </>
             )}
