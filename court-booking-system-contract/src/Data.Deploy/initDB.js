@@ -33,7 +33,7 @@ export class DBInitializer {
                 Location TEXT NOT NULL,
                 Type TEXT NOT NULL,
                 PricePerHour REAL NOT NULL,
-                Email TEXT NOT NULL UNIQUE,
+                Email TEXT NOT NULL ,
                 description TEXT,
                 Availability TEXT NOT NULL,
                 Image TEXT,  

@@ -27,12 +27,19 @@ const CreateCourt = () => {
 
     const handleImageChange = (e) => {
         const file = e.target.files[0];
-        setFormData({
-            ...formData,
-            Image: file, // Update the Image field in formData
-        });
+    
+        if (file) {
+            // Only save the file name to the form data, actual file upload handled differently
+            setFormData(prevData => ({
+                ...prevData,
+                Image: file.name // Just the file name
+            }));
+    
+            // Save file to local file system or another channel if needed
+            // Depends on how you’ve configured HotPocket contract's FS
+        }
     };
-
+    
     const handleSubmit = async (e) => {
         e.preventDefault();
         setIsLoading(true);

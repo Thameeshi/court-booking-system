@@ -15,7 +15,7 @@ export class CourtService {
     async addCourt(data) {
         let resObj = {};
         resObj.reqId = this.#message.reqId;
-
+    
         try {
             // Validate input data
             if (
@@ -30,9 +30,10 @@ export class CourtService {
                     "Missing required fields: Name, Location, Type, PricePerHour, Email, or Availability."
                 );
             }
-
+    
+            // Open database context
             await this.#dbContext.open();
-
+    
             // Populate courtEntity with the provided data
             const courtEntity = {
                 Name: data.Name,
@@ -42,12 +43,13 @@ export class CourtService {
                 Email: data.Email,
                 description: data.description || null,
                 Availability: data.Availability,
-                Image: data.Image || null,
+                // Store only the image filename
+                Image: data.Image ? data.Image : null,
             };
-
+    
             // Insert the courtEntity into the database
             const rowId = await this.#dbContext.insertValue(Tables.COURT, courtEntity);
-
+    
             resObj.success = { message: "Court added successfully", rowId: rowId };
             return resObj;
         } catch (error) {
@@ -55,9 +57,11 @@ export class CourtService {
             resObj.error = `Error in adding court: ${error.message}`;
             return resObj;
         } finally {
+            // Ensure database connection is closed
             this.#dbContext.close();
         }
     }
+    
 
     async editCourt(courtId, updatedData) {
         let resObj = {};
