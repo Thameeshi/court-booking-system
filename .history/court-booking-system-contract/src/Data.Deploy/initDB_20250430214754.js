@@ -36,7 +36,6 @@ export class DBInitializer {
                 Email TEXT NOT NULL UNIQUE,
                 description TEXT,
                 Availability TEXT NOT NULL,
-                Image TEXT,  
                 PRIMARY KEY("Id" AUTOINCREMENT)
             )
         `);
