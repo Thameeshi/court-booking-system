@@ -32,7 +32,7 @@ const CreateCourt = () => {
             // Only save the file name to the form data, actual file upload handled differently
             setFormData(prevData => ({
                 ...prevData,
-                Image: file.name // Just the file name
+                Image: file // Just the file name
             }));
     
             // Save file to local file system or another channel if needed
@@ -53,11 +53,7 @@ const CreateCourt = () => {
                 return;
             }
 
-            if (formData.Image.size > 5 * 1024 * 1024) { // 5 MB limit
-                setError("File size must be less than 5 MB.");
-                setIsLoading(false);
-                return;
-            }
+            
 
             const formDataToSend = new FormData();
             formDataToSend.append("Name", formData.Name);

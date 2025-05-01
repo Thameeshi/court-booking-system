@@ -22,10 +22,13 @@ class CourtService {
         return await hotPocketService.getServerInputResponse({
             type: 'Court',
             subType: 'editCourt',
-            data: { courtId, ...updatedCourtData }
+            data: {
+                courtId,
+                updatedData: updatedCourtData  // ✅ wrap correctly
+            }
         });
     }
-
+    
     async deleteCourt(courtId) {
         return await hotPocketService.getServerInputResponse({
             type: 'Court',
@@ -45,7 +48,7 @@ class CourtService {
         return await hotPocketService.getServerReadReqResponse({
             type: 'Court',
             subType: 'getCourtByOwner',
-            data: { owner_email: ownerEmail }
+            data: {email: ownerEmail }
         });
     }
 

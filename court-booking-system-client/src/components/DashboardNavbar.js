@@ -31,8 +31,8 @@ const DashboardNavbar = () => {
             <ul className="navbar-nav">
               {/* Common links */}
               <li className="nav-item">
-                <Link to="/dashboard/myBookings" className="nav-link">
-                  My Bookings
+                <Link to="/dashboard/myCourts" className="nav-link">
+                  Manage Court
                 </Link>
               </li>
               <li className="nav-item">
@@ -45,7 +45,7 @@ const DashboardNavbar = () => {
               {userRole === "PublicUser" && (
                 <li className="nav-item">
                   <Link to="/dashboard/court" className="nav-link">
-                    Book Court
+                    Add Court
                   </Link>
                 </li>
               )}

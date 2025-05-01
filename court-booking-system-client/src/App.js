@@ -10,7 +10,8 @@ import SignUp from "./pages/SignUp.js";
 import DashboardNavbar from "./components/DashboardNavbar.js";
 import ProfileInfo from "./pages/ProfileInfo.js";
 import CreateCourt from "./pages/CreateCourt.js";
-import ViewCourtBookings from "./pages/ViewCourtBookings.js";
+import ManageCourt from "./pages/ManageCourt.js";
+import EditCourt from "./pages/EditCourt.js";
 import './App.css';
 
 const App = () => {
@@ -85,7 +86,9 @@ const App = () => {
                   {/* Uncomment if you want to show ProfileInfo by default */}
                   <Route path="" element={<ProfileInfo />} /> 
                   <Route path="court" element={<CreateCourt/>} />
-                  <Route path="myBookings" element={<ViewCourtBookings />} />
+                  <Route path="myCourts" element={<ManageCourt />} />
+                  <Route path="edit-court/:courtId" element={<EditCourt />} />
+
                 </Route>
               </>
             )}

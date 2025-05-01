@@ -20,6 +20,27 @@ export class CourtController {
                     }
                     return await this.#service.addCourt(this.#message.data);
 
+                case "editCourt":
+                    if (!this.#message.data || !this.#message.data.courtId || !this.#message.data.updatedData) {
+                        return { error: "Missing courtId or updatedData in request." };
+                    }
+                    return await this.#service.editCourt(this.#message.data.courtId, this.#message.data.updatedData);
+
+                case "deleteCourt":
+                    if (!this.#message.data || !this.#message.data.courtId) {
+                        return { error: "Missing courtId in request." };
+                    }
+                    return await this.#service.deleteCourt(this.#message.data.courtId);
+
+                case "getAllCourts":
+                    return await this.#service.getAllCourts();
+
+                case "getCourtByOwner":
+                    if (!this.#message.data || !this.#message.data.email) {
+                        return { error: "Missing owner email in request." };
+                    }
+                    return await this.#service.getCourtByOwner(this.#message.data.email);
+
                 default:
                     console.error("Invalid subType:", this.#message.subType);
                     return { error: "Invalid request subType.", request: this.#message };
