@@ -6,7 +6,7 @@ const ManageCourt = () => {
     const [courts, setCourts] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
-    const ownerEmail = "thameeshisenade@gmail.com"; // Replace with the logged-in owner's email
+    const ownerEmail = "hayeshahp6@gmail.com"; // Replace with the logged-in owner's email
 
     useEffect(() => {
         const fetchCourts = async () => {
