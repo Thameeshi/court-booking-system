@@ -2,7 +2,7 @@ import React from "react";
 import { Outlet, Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 
-const DashboardNavbar = () => {
+const UserNavbar = () => {
   const userDetails = useSelector((state) => state.user.userDetails);
   const { xrpBalance } = useSelector((state) => state.wallet);
 
@@ -12,7 +12,7 @@ const DashboardNavbar = () => {
       <nav className="navbar navbar-expand-lg navbar-dark bg-dark vw-100">
         <div className="container-fluid">
           {/* Brand/Title */}
-          <Link to="/dashboard" className="navbar-brand">
+          <Link to="/userdashboard" className="navbar-brand">
             Book My Court
           </Link>
 
@@ -27,17 +27,17 @@ const DashboardNavbar = () => {
           <div className="justify-content-end" id="navbarNav">
             <ul className="navbar-nav">
               <li className="nav-item">
-                <Link to="/dashboard/court" className="nav-link">
-                  Add Court
+                <Link to="/userdashboard/booking" className="nav-link">
+                  Book a Court
                 </Link>
               </li>
               <li className="nav-item">
-                <Link to="/dashboard/myCourts" className="nav-link">
-                  Manage Court
+                <Link to="/userdashboard/myBookings" className="nav-link">
+                    My Bookings
                 </Link>
               </li>
               <li className="nav-item">
-                <Link to="/dashboard/profile" className="nav-link">
+                <Link to="/userdashboard/profile" className="nav-link">
                   Profile
                 </Link>
               </li>
@@ -54,4 +54,4 @@ const DashboardNavbar = () => {
   );
 };
 
-export default DashboardNavbar;
+export default UserNavbar;

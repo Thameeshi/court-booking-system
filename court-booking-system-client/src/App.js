@@ -8,15 +8,19 @@ import { setUserDetails } from "./store/slices/userSlice.js";
 import Web3AuthPage from "./pages/Web3AuthPage.tsx";
 import SignUp from "./pages/SignUp.js";
 import DashboardNavbar from "./components/DashboardNavbar.js";
+import UserNavbar from "./components/UserNavbar.js";
 import ProfileInfo from "./pages/ProfileInfo.js";
 import CreateCourt from "./pages/CreateCourt.js";
 import ManageCourt from "./pages/ManageCourt.js";
+import CourtBooking from "./pages/CourtBooking.js"; // Import CourtBooking component
+import MyBookings from "./pages/MyBookings.js"; // Import MyBookings component
 import EditCourt from "./pages/EditCourt.js";
-import './App.css';
+import "./App.css";
 
 const App = () => {
   const dispatch = useDispatch();
   const { web3Authorized, userInfo } = useSelector((state) => state.auth);
+  const userDetails = useSelector((state) => state.user.userDetails);
 
   const [isHotPocketConnected, setIsHotPocketConnected] = useState(false);
   const [isUserChecked, setIsUserChecked] = useState(false);
@@ -66,6 +70,10 @@ const App = () => {
 
   return (
     <Router>
+      {/* Show navbars based on user role */}
+      {userDetails?.UserRole === "CourtOwner" && <DashboardNavbar />}
+      {userDetails?.UserRole === "PublicUser" && <UserNavbar />}
+
       <div className="app-container">
         <div className="grid">
           <Routes>
@@ -75,21 +83,25 @@ const App = () => {
             {/* Routes for authorized users */}
             {web3Authorized && (
               <>
-                {/* Redirect to SignUp if user does not exist */}
+                {/* Redirects based on user existence */}
                 {!userExists && <Route path="/" element={<Navigate to="/signup" />} />}
-
-                {/* Redirect to Dashboard if user exists */}
-                {userExists && <Route path="/" element={<Navigate to="/dashboard" />} />}
+                {userExists && <Route path="/" element={<Navigate to="/dashboard/profile" />} />}
 
                 <Route path="/signup" element={<SignUp />} />
-                <Route path="/dashboard" element={<DashboardNavbar />}>
-                  {/* Uncomment if you want to show ProfileInfo by default */}
-                  <Route path="" element={<ProfileInfo />} /> 
-                  <Route path="court" element={<CreateCourt/>} />
-                  <Route path="myCourts" element={<ManageCourt />} />
-                  <Route path="edit-court/:courtId" element={<EditCourt />} />
 
-                </Route>
+                {/* Shared routes for all logged-in users */}
+                <Route path="/dashboard/profile" element={<ProfileInfo />} />
+                <Route path="/userdashboard/booking" element={<CourtBooking />} /> {/* Book a Court */}
+                <Route path="/userdashboard/myBookings" element={<MyBookings />} /> {/* My Bookings */}
+
+                {/* Routes for Court Owners */}
+                {userDetails?.UserRole === "CourtOwner" && (
+                  <>
+                    <Route path="/dashboard/court" element={<CreateCourt />} />
+                    <Route path="/dashboard/myCourts" element={<ManageCourt />} />
+                    <Route path="/dashboard/edit-court/:courtId" element={<EditCourt />} />
+                  </>
+                )}
               </>
             )}
 
