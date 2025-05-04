@@ -1,5 +1,5 @@
-import { CourtService } from "../Services/Domain.Services/CourtService";
-import { BookingService } from "../Services/Domain.Services/BookingService";  // Make sure this import exists
+import { CourtService } from "../Services/Domain.Services/CourtService.js";
+import { BookingService } from "../Services/Domain.Services/BookingService.js";
 
 export class CourtController {
     #message = null;
@@ -9,76 +9,72 @@ export class CourtController {
     constructor(message) {
         this.#message = message;
         this.#service = new CourtService(message);
-        this.#bookingService = new BookingService(message);  // Make sure BookingService is properly instantiated
-        console.log("CourtController initialized with services");
+        this.#bookingService = new BookingService(message);
+        console.log("[CourtController] Services initialized.");
     }
 
     async handleRequest() {
         try {
-            console.log("Received message:", this.#message);
-            console.log("CourtController handling request:", this.#message);
-            console.log("Request subType:", this.#message.subType);
+            const subType = this.#message?.subType;
+            const data = this.#message?.data;
 
-            console.log("Received subType:", this.#message.subType);
-            console.log("Expected subType: getUserBookings");
-            console.log("Comparison result:", this.#message.subType === "getUserBookings");
+            console.log("[CourtController] Received subType:", subType);
 
-            switch (this.#message.subType) {
+            switch (subType) {
+                // COURT MANAGEMENT
                 case "addCourt":
-                    if (!this.#message.data || Object.keys(this.#message.data).length === 0) {
-                        return { error: "Invalid request. Data object is empty or missing.", request: this.#message };
+                    if (!data || Object.keys(data).length === 0) {
+                        return { error: "Data for court is missing.", request: this.#message };
                     }
-                    return await this.#service.addCourt(this.#message.data);
+                    return await this.#service.addCourt(data);
 
                 case "editCourt":
-                    if (!this.#message.data || !this.#message.data.courtId || !this.#message.data.updatedData) {
-                        return { error: "Missing courtId or updatedData in request." };
+                    if (!data?.courtId || !data?.updatedData) {
+                        return { error: "Missing 'courtId' or 'updatedData'." };
                     }
-                    return await this.#service.editCourt(this.#message.data.courtId, this.#message.data.updatedData);
+                    return await this.#service.editCourt(data.courtId, data.updatedData);
 
                 case "deleteCourt":
-                    if (!this.#message.data || !this.#message.data.courtId) {
-                        return { error: "Missing courtId in request." };
+                    if (!data?.courtId) {
+                        return { error: "Missing 'courtId'." };
                     }
-                    return await this.#service.deleteCourt(this.#message.data.courtId);
+                    return await this.#service.deleteCourt(data.courtId);
 
                 case "getAllCourts":
                     return await this.#service.getAllCourts();
 
                 case "getCourtByOwner":
-                    if (!this.#message.data || !this.#message.data.email) {
-                        return { error: "Missing owner email in request." };
+                    if (!data?.email) {
+                        return { error: "Missing owner email." };
                     }
-                    return await this.#service.getCourtByOwner(this.#message.data.email);
+                    return await this.#service.getCourtByOwner(data.email);
 
-                // Booking related cases
+                // BOOKING MANAGEMENT
                 case "createBooking":
-                    console.log("Processing createBooking request");
-                    if (!this.#message.data || !this.#message.data.UserEmail || !this.#message.data.CourtId || !this.#message.data.Date || !this.#message.data.StartTime || !this.#message.data.EndTime) {
-                        return { error: "Missing required fields for booking." };
+                    if (!data?.CourtId || !data?.UserEmail || !data?.Date || !data?.StartTime || !data?.EndTime) {
+                        return { error: "Missing required booking fields (CourtId, UserEmail, Date, StartTime, EndTime)." };
                     }
-                    return await this.#bookingService.createBooking(this.#message.data);
-
-                case "confirmBooking":
-                    console.log("Processing confirmBooking request");
-                    if (!this.#message.data || !this.#message.data.bookingId) {
-                        return { error: "Missing bookingId in request." };
-                    }
-                    return await this.#bookingService.confirmBooking(this.#message.data.bookingId);
+                    return await this.#bookingService.createBooking(data);
 
                 case "getUserBookings":
-                    if (!this.#message.data || !this.#message.data.UserEmail) {
-                        return { error: "Missing UserEmail in request." };
+                    if (!data?.UserEmail) {
+                        return { error: "Missing 'UserEmail' for booking retrieval." };
                     }
-                    return await this.#bookingService.getUserBookings(this.#message.data.UserEmail);
+                    return await this.#bookingService.getUserBookings(data.UserEmail);
 
                 default:
-                    console.error("Invalid subType:", this.#message.subType);
-                    return { error: `Invalid request subType: ${this.#message.subType}`, request: this.#message };
+                    console.error("[CourtController] Invalid subType received:", subType);
+                    return {
+                        error: "Invalid request subType.",
+                        request: this.#message
+                    };
             }
-        } catch (error) {
-            console.error("Error in CourtController:", error);
-            return { error: error.message || "An unexpected error occurred in CourtController.", request: this.#message };
+        } catch (err) {
+            console.error("[CourtController] Error:", err);
+            return {
+                error: err.message || "An unexpected error occurred.",
+                request: this.#message
+            };
         }
     }
 }

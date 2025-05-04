@@ -54,7 +54,7 @@ export class DBInitializer {
             `);
         }
 
-        // ✅ Create bookings table
+        // ✅ Create bookings table with an additional column
         await this.#runQuery(`
             CREATE TABLE IF NOT EXISTS bookings (
                 Id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -63,11 +63,12 @@ export class DBInitializer {
                 Date TEXT NOT NULL,
                 StartTime TEXT NOT NULL,
                 EndTime TEXT NOT NULL,
-                Status TEXT NOT NULL
+                Status TEXT NOT NULL,
+                BookingType TEXT DEFAULT 'Practice' -- New column
             )
         `);
 
-        // ✅ Insert dummy bookings if none exist
+        // ✅ Insert dummy bookings with the new column
         const bookingList = await this.#runSelectQuery(`SELECT COUNT(*) as count FROM bookings`);
         if (bookingList[0].count === 0) {
             const courts = await this.#runSelectQuery(`SELECT Id FROM ${Tables.COURT}`);
@@ -82,11 +83,11 @@ export class DBInitializer {
                     const startTime = "10:00";
                     const endTime = "11:00";
 
-                    return `('hayeshah6@gmail.com', ${court.Id}, '${date}', '${startTime}', '${endTime}', 'Confirmed')`;
+                    return `('hayeshah6@gmail.com', ${court.Id}, '${date}', '${startTime}', '${endTime}', 'Confirmed', 'Practice')`;
                 }).join(",");
 
                 await this.#runQuery(`
-                    INSERT INTO bookings (UserEmail, CourtId, Date, StartTime, EndTime, Status)
+                    INSERT INTO bookings (UserEmail, CourtId, Date, StartTime, EndTime, Status, BookingType)
                     VALUES ${insertValues}
                 `);
             }
