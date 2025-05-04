@@ -15,8 +15,7 @@ import ManageCourt from "./pages/ManageCourt.js";
 import CourtBooking from "./pages/CourtBooking.js"; // Import CourtBooking component
 import MyBookings from "./pages/MyBookings.js"; // Import MyBookings component
 import EditCourt from "./pages/EditCourt.js";
-import ViewCourt from "./pages/ViewCourt.js"; // Import ViewCourt component
-import ConfirmBooking from "./pages/ConfirmBooking.js"; // Import ConfirmBooking component
+import ViewCourt from "./pages/ViewCourt"; 
 import "./App.css";
 
 const App = () => {
@@ -95,8 +94,7 @@ const App = () => {
                 <Route path="/dashboard/profile" element={<ProfileInfo />} />
                 <Route path="/userdashboard/booking" element={<CourtBooking />} /> {/* Book a Court */}
                 <Route path="/userdashboard/myBookings" element={<MyBookings />} /> {/* My Bookings */}
-                <Route path="/viewcourt" element={<ViewCourt />} />
-                <Route path="/confirm-booking" element={<ConfirmBooking />} /> {/* Confirm Booking */}
+                <Route path="/view-court/:courtId" element={<ViewCourt />} /> {/* Add this route */}
 
                 {/* Routes for Court Owners */}
                 {userDetails?.UserRole === "CourtOwner" && (

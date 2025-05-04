@@ -5,7 +5,7 @@
   "requires": true,
   "packages": {
     "": {
-      "name": "court-booking-system-webapp",
+      "name": "food-waste-reduction-webapp",
       "version": "0.1.0",
       "dependencies": {
         "@reduxjs/toolkit": "^2.5.1",

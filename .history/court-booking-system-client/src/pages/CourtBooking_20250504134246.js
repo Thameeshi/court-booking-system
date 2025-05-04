@@ -1,40 +1,10 @@
-import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom"; // Import useNavigate
-import courtService from "../services/domain-services/CourtService";
 
 const CourtBooking = () => {
-  const [courts, setCourts] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
-
-  const navigate = useNavigate(); // Initialize navigate hook
-
-  useEffect(() => {
-    const fetchCourts = async () => {
-      try {
-        setLoading(true);
-        const response = await courtService.getAllCourts();
-        if (response.success) {
-          setCourts(response.success);
-        } else {
-          setError("Failed to fetch courts.");
-        }
-      } catch (err) {
-        setError(err.message || "An error occurred while fetching courts.");
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchCourts();
-  }, []);
+  const navigate = useNavigate(); // Initialize navigate
 
   const handleView = (court) => {
-    navigate("/viewcourt", { state: { court } }); // Navigate to the ViewCourt page
-  };
-
-  const handleBookNow = (court) => {
-    navigate("/confirm-booking", { state: { court } }); // Navigate to ConfirmBooking page
+    navigate(`/view-court/${court.Id}`); // Navigate to the ViewCourt page with courtId
   };
 
   return (

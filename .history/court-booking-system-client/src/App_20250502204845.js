@@ -12,11 +12,7 @@ import UserNavbar from "./components/UserNavbar.js";
 import ProfileInfo from "./pages/ProfileInfo.js";
 import CreateCourt from "./pages/CreateCourt.js";
 import ManageCourt from "./pages/ManageCourt.js";
-import CourtBooking from "./pages/CourtBooking.js"; // Import CourtBooking component
-import MyBookings from "./pages/MyBookings.js"; // Import MyBookings component
 import EditCourt from "./pages/EditCourt.js";
-import ViewCourt from "./pages/ViewCourt.js"; // Import ViewCourt component
-import ConfirmBooking from "./pages/ConfirmBooking.js"; // Import ConfirmBooking component
 import "./App.css";
 
 const App = () => {
@@ -93,10 +89,8 @@ const App = () => {
 
                 {/* Shared routes for all logged-in users */}
                 <Route path="/dashboard/profile" element={<ProfileInfo />} />
-                <Route path="/userdashboard/booking" element={<CourtBooking />} /> {/* Book a Court */}
-                <Route path="/userdashboard/myBookings" element={<MyBookings />} /> {/* My Bookings */}
-                <Route path="/viewcourt" element={<ViewCourt />} />
-                <Route path="/confirm-booking" element={<ConfirmBooking />} /> {/* Confirm Booking */}
+                <Route path="/dashboard/booking" element={<CreateCourt />} />
+                <Route path="/dashboard/myBookings" element={<CourtBooking />} />
 
                 {/* Routes for Court Owners */}
                 {userDetails?.UserRole === "CourtOwner" && (

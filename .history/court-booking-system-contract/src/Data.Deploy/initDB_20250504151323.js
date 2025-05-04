@@ -6,26 +6,11 @@ const path = require("path");
 const settings = require("../settings.json").settings;
 
 export class DBInitializer {
-    static #db = null;
-
     static async init() {
         // Initialize the database connection
         this.#db = new sqlite3.Database(settings.dbPath);
 
-        // Create table User
-        await this.#runQuery(`CREATE TABLE IF NOT EXISTS ${Tables.USER} (
-            Id INTEGER,
-            XrplAddress TEXT NOT NULL UNIQUE,
-            Email TEXT NOT NULL,
-            Name TEXT NOT NULL,
-            UserRole TEXT NOT NULL,
-            Description TEXT,
-            Lat REAL,
-            Lng REAL,
-            PRIMARY KEY("Id" AUTOINCREMENT)
-        )`);
-
-        // Create table Court with OwnerID included
+        // Create table Court
         await this.#runQuery(`
             CREATE TABLE IF NOT EXISTS ${Tables.COURT} (
                 Id INTEGER,
@@ -48,13 +33,13 @@ export class DBInitializer {
             await this.#runQuery(`INSERT INTO ${Tables.COURT} 
                 (Name, Location, Type, PricePerHour, Email, Description, Availability, Image, OwnerID) 
                 VALUES 
-                ('Badminton Court A', 'Downtown Sports Arena', 'Badminton', 10.00, 'hayeshahp6@gmail.com', 'Indoor court with wooden flooring', 'Available', 'badminton.jpg', 1),
-                ('Tennis Court B', 'Uptown Club', 'Tennis', 15.00, 'hayeshahp6@gmail.com', 'Outdoor hard court', 'Booked', 'tennis.jpg', 1),
-                ('Futsal Court C', 'City Park', 'Futsal', 20.00, 'hayeshahp6@gmail.com', 'Artificial turf futsal court', 'Available', 'futsal.jpg', 1)
+                ('Badminton Court A', 'Downtown Sports Arena', 'Badminton', 10.00, 'thameeshisenade@gmail.com', 'Indoor court with wooden flooring', 'Available', 'badminton.jpg', 1),
+                ('Tennis Court B', 'Uptown Club', 'Tennis', 15.00, 'thameeshisenade@gmail.com', 'Outdoor hard court', 'Booked', 'tennis.jpg', 1),
+                ('Futsal Court C', 'City Park', 'Futsal', 20.00, 'thameeshisenade@gmail.com', 'Artificial turf futsal court', 'Available', 'futsal.jpg', 1)
             `);
         }
 
-        // ✅ Create bookings table
+        // Create bookings table
         await this.#runQuery(`
             CREATE TABLE IF NOT EXISTS bookings (
                 Id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -67,7 +52,7 @@ export class DBInitializer {
             )
         `);
 
-        // ✅ Insert dummy bookings if none exist
+        // Insert dummy bookings if none exist
         const bookingList = await this.#runSelectQuery(`SELECT COUNT(*) as count FROM bookings`);
         if (bookingList[0].count === 0) {
             const courts = await this.#runSelectQuery(`SELECT Id FROM ${Tables.COURT}`);
@@ -82,7 +67,7 @@ export class DBInitializer {
                     const startTime = "10:00";
                     const endTime = "11:00";
 
-                    return `('hayeshah6@gmail.com', ${court.Id}, '${date}', '${startTime}', '${endTime}', 'Confirmed')`;
+                    return `('thameeshisenade@gmail.com', ${court.Id}, '${date}', '${startTime}', '${endTime}', 'Confirmed')`;
                 }).join(",");
 
                 await this.#runQuery(`
@@ -103,6 +88,7 @@ export class DBInitializer {
                     reject(err);
                     return;
                 }
+                
                 resolve({ lastId: this.lastID, changes: this.changes });
             });
         });

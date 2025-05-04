@@ -48,9 +48,9 @@ export class DBInitializer {
             await this.#runQuery(`INSERT INTO ${Tables.COURT} 
                 (Name, Location, Type, PricePerHour, Email, Description, Availability, Image, OwnerID) 
                 VALUES 
-                ('Badminton Court A', 'Downtown Sports Arena', 'Badminton', 10.00, 'hayeshahp6@gmail.com', 'Indoor court with wooden flooring', 'Available', 'badminton.jpg', 1),
-                ('Tennis Court B', 'Uptown Club', 'Tennis', 15.00, 'hayeshahp6@gmail.com', 'Outdoor hard court', 'Booked', 'tennis.jpg', 1),
-                ('Futsal Court C', 'City Park', 'Futsal', 20.00, 'hayeshahp6@gmail.com', 'Artificial turf futsal court', 'Available', 'futsal.jpg', 1)
+                ('Badminton Court A', 'Downtown Sports Arena', 'Badminton', 10.00, 'thameeshisenade@gmail.com', 'Indoor court with wooden flooring', 'Available', 'badminton.jpg', 1),
+                ('Tennis Court B', 'Uptown Club', 'Tennis', 15.00, 'thameeshisenade@gmail.com', 'Outdoor hard court', 'Booked', 'tennis.jpg', 1),
+                ('Futsal Court C', 'City Park', 'Futsal', 20.00, 'thameeshisenade@gmail.com, 'Artificial turf futsal court', 'Available', 'futsal.jpg', 1)
             `);
         }
 
@@ -82,7 +82,7 @@ export class DBInitializer {
                     const startTime = "10:00";
                     const endTime = "11:00";
 
-                    return `('hayeshah6@gmail.com', ${court.Id}, '${date}', '${startTime}', '${endTime}', 'Confirmed')`;
+                    return `('thameeshisenade@gmail.com', ${court.Id}, '${date}', '${startTime}', '${endTime}', 'Confirmed')`;
                 }).join(",");
 
                 await this.#runQuery(`
@@ -103,6 +103,7 @@ export class DBInitializer {
                     reject(err);
                     return;
                 }
+                
                 resolve({ lastId: this.lastID, changes: this.changes });
             });
         });

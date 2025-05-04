@@ -42,54 +42,25 @@ export class DBInitializer {
             )
         `);
 
+        // const userList = await this.#runSelectQuery(`SELECT COUNT(*) as count FROM ${Tables.USER}`);
+        // if (userList[0].count === 0) {
+        //     // Insert dummy data for Users
+        //     await this.#runQuery(`INSERT INTO ${Tables.USER} (XrplAddress, Email, Name, UserRole, Description, Lat, Lng) VALUES 
+        //         ('rCourtOwner1', 'owner1@example.com', 'Sports Complex A', 'CourtOwner', 'Owner of multiple courts', 34.0522, -118.2437),
+        //         ('rCourtUser1', 'user1@example.com', 'John Doe', 'User', 'Public user who books courts', 40.7128, -74.0060)
+        //     `);
+        // }
+
         // Insert dummy data for Courts if none exist
         const courtList = await this.#runSelectQuery(`SELECT COUNT(*) as count FROM ${Tables.COURT}`);
         if (courtList[0].count === 0) {
             await this.#runQuery(`INSERT INTO ${Tables.COURT} 
                 (Name, Location, Type, PricePerHour, Email, Description, Availability, Image, OwnerID) 
                 VALUES 
-                ('Badminton Court A', 'Downtown Sports Arena', 'Badminton', 10.00, 'hayeshahp6@gmail.com', 'Indoor court with wooden flooring', 'Available', 'badminton.jpg', 1),
-                ('Tennis Court B', 'Uptown Club', 'Tennis', 15.00, 'hayeshahp6@gmail.com', 'Outdoor hard court', 'Booked', 'tennis.jpg', 1),
-                ('Futsal Court C', 'City Park', 'Futsal', 20.00, 'hayeshahp6@gmail.com', 'Artificial turf futsal court', 'Available', 'futsal.jpg', 1)
+                ('Badminton Court A', 'Downtown Sports Arena', 'Badminton', 10.00, 'thameeshisenade@gmail.com', 'Indoor court with wooden flooring', 'Available', 'badminton.jpg', 1),
+                ('Tennis Court B', 'Uptown Club', 'Tennis', 15.00, 'thameeshisenade@gmail.com', 'Outdoor hard court', 'Booked', 'tennis.jpg', 1),
+                ('Futsal Court C', 'City Park', 'Futsal', 20.00, 'thameeshisenade@gmail.com', 'Artificial turf futsal court', 'Available', 'futsal.jpg', 1)
             `);
-        }
-
-        // ✅ Create bookings table
-        await this.#runQuery(`
-            CREATE TABLE IF NOT EXISTS bookings (
-                Id INTEGER PRIMARY KEY AUTOINCREMENT,
-                UserEmail TEXT NOT NULL,
-                CourtId INTEGER NOT NULL,
-                Date TEXT NOT NULL,
-                StartTime TEXT NOT NULL,
-                EndTime TEXT NOT NULL,
-                Status TEXT NOT NULL
-            )
-        `);
-
-        // ✅ Insert dummy bookings if none exist
-        const bookingList = await this.#runSelectQuery(`SELECT COUNT(*) as count FROM bookings`);
-        if (bookingList[0].count === 0) {
-            const courts = await this.#runSelectQuery(`SELECT Id FROM ${Tables.COURT}`);
-            if (courts.length > 0) {
-                const now = new Date();
-
-                const insertValues = courts.slice(0, 2).map((court, index) => {
-                    const bookingDate = new Date(now);
-                    bookingDate.setDate(now.getDate() + index); // today and tomorrow
-
-                    const date = bookingDate.toISOString().split("T")[0];
-                    const startTime = "10:00";
-                    const endTime = "11:00";
-
-                    return `('hayeshah6@gmail.com', ${court.Id}, '${date}', '${startTime}', '${endTime}', 'Confirmed')`;
-                }).join(",");
-
-                await this.#runQuery(`
-                    INSERT INTO bookings (UserEmail, CourtId, Date, StartTime, EndTime, Status)
-                    VALUES ${insertValues}
-                `);
-            }
         }
 
         // Close the database connection after all queries are executed
@@ -103,6 +74,7 @@ export class DBInitializer {
                     reject(err);
                     return;
                 }
+
                 resolve({ lastId: this.lastID, changes: this.changes });
             });
         });

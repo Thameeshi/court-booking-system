@@ -82,7 +82,7 @@ export class DBInitializer {
                     const startTime = "10:00";
                     const endTime = "11:00";
 
-                    return `('hayeshah6@gmail.com', ${court.Id}, '${date}', '${startTime}', '${endTime}', 'Confirmed')`;
+                    return `('thameeshisenade@gmail.com', ${court.Id}, '${date}', '${startTime}', '${endTime}', 'Confirmed')`;
                 }).join(",");
 
                 await this.#runQuery(`
