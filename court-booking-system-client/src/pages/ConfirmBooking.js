@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import hotPocketService from "../services/common-services/HotPocketService";
+import courtService from "../services/domain-services/CourtService";
 
 const ConfirmBooking = () => {
   const navigate = useNavigate();
@@ -11,7 +11,8 @@ const ConfirmBooking = () => {
     name: "",
     email: "",
     date: "",
-    time: "",
+    startTime: "",
+    endTime: "",
   });
 
   const handleInputChange = (e) => {
@@ -26,38 +27,35 @@ const ConfirmBooking = () => {
       CourtId: court.Id,
       CourtName: court.Name,
       UserEmail: bookingDetails.email,
+      UserName: bookingDetails.name, // Adding name to payload
       Date: bookingDetails.date,
-      StartTime: bookingDetails.time,
-      EndTime: bookingDetails.time, // optional or you can calculate +1hr
+      StartTime: bookingDetails.startTime,
+      EndTime: bookingDetails.endTime,
     };
     console.log("Payload being sent:", payload);
 
     try {
-      const response = await hotPocketService.getServerInputResponse({
-        type: "Court",
-        subType: "createBooking",
-        data: payload,
-      });
+      // Use courtService's createBooking method instead of directly using hotPocketService
+      const response = await courtService.createBooking(payload);
 
       if (response && response.success) {
         alert(`Court "${court.Name}" booked successfully!`);
         navigate("/");
       } else {
-        alert("Booking failed. Please try again.");
+        alert(`Booking failed: ${response.error || "Please try again."}`);
       }
     } catch (error) {
       console.error("Booking error:", error);
-      alert("An error occurred during booking.");
+      alert(`An error occurred during booking: ${error.message}`);
     }
 
-    setBookingDetails({ name: "", email: "", date: "", time: "" });
+    setBookingDetails({ name: "", email: "", date: "", startTime: "", endTime: "" });
   };
 
   return (
     <div className="container mt-5">
-      <h2>Book Court: {court.Name}</h2>
+      <h2>Book Court: {court ? court.Name : "Unknown Court"}</h2>
       <form onSubmit={handleBookingSubmit}>
-        {/* Inputs same as before */}
         <div className="mb-3">
           <label htmlFor="name" className="form-label">Your Name</label>
           <input
@@ -95,12 +93,24 @@ const ConfirmBooking = () => {
           />
         </div>
         <div className="mb-3">
-          <label htmlFor="time" className="form-label">Booking Time</label>
+          <label htmlFor="startTime" className="form-label">Start Time</label>
           <input
             type="time"
-            id="time"
-            name="time"
-            value={bookingDetails.time}
+            id="startTime"
+            name="startTime"
+            value={bookingDetails.startTime}
+            onChange={handleInputChange}
+            className="form-control"
+            required
+          />
+        </div>
+        <div className="mb-3">
+          <label htmlFor="endTime" className="form-label">End Time</label>
+          <input
+            type="time"
+            id="endTime"
+            name="endTime"
+            value={bookingDetails.endTime}
             onChange={handleInputChange}
             className="form-control"
             required

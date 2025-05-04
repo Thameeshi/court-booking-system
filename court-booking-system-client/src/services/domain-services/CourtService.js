@@ -24,11 +24,11 @@ class CourtService {
             subType: 'editCourt',
             data: {
                 courtId,
-                updatedData: updatedCourtData  // ✅ wrap correctly
+                updatedData: updatedCourtData
             }
         });
     }
-    
+
     async deleteCourt(courtId) {
         return await hotPocketService.getServerInputResponse({
             type: 'Court',
@@ -57,12 +57,14 @@ class CourtService {
         return await this.getCourtByOwner(email);
     }
 
-    // New method: Create a booking
+    // Booking methods
     async createBooking(bookingData) {
         // Validate booking data
         if (!bookingData.UserEmail || !bookingData.CourtId || !bookingData.Date || !bookingData.StartTime || !bookingData.EndTime) {
             throw new Error("Missing required fields: UserEmail, CourtId, Date, StartTime, or EndTime.");
         }
+
+        console.log("Sending booking data to backend:", bookingData);
 
         // Send the booking request to the backend
         return await hotPocketService.getServerInputResponse({
@@ -72,7 +74,6 @@ class CourtService {
         });
     }
 
-    // New method: Confirm a booking
     async confirmBooking(bookingId) {
         // Validate booking ID
         if (!bookingId) {
@@ -92,12 +93,22 @@ class CourtService {
             throw new Error("UserEmail is required to fetch bookings.");
         }
 
+        console.log("Fetching bookings for user:", userEmail);
+
         // Send the request to the backend
-        return await hotPocketService.getServerReadReqResponse({
-            type: "Court",
-            subType: "getUserBookings",
-            data: { UserEmail: userEmail },
-        });
+        try {
+            const response = await hotPocketService.getServerReadReqResponse({
+                type: "Court",
+                subType: "getUserBookings",
+                data: { UserEmail: userEmail },
+            });
+            
+            console.log("Response from backend:", response);
+            return response;
+        } catch (error) {
+            console.error("Error fetching user bookings:", error);
+            throw error;
+        }
     }
 }
 
