@@ -1,20 +1,25 @@
 import React, { useEffect, useState } from "react";
-import bookingService from "../services/domain-services/CourtService";
+import hotPocketService from "../services/common-services/HotPocketService";
 
 const MyBookings = () => {
   const [bookings, setBookings] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const userEmail = "youremail@example.com"; // Replace this with actual logged-in user's email
 
   useEffect(() => {
     const fetchBookings = async () => {
       try {
-        setLoading(true);
-        const response = await bookingService.getMyBookings();
-        if (response.success) {
+        const response = await hotPocketService.getServerReadReqResponse({
+          type: "Court",
+          subType: "getUserBookings",
+          data: { UserEmail: userEmail },
+        });
+
+        if (response && response.success) {
           setBookings(response.success);
         } else {
-          setError("Failed to fetch bookings.");
+          setError("No bookings found or failed to fetch.");
         }
       } catch (err) {
         setError(err.message || "An error occurred while fetching bookings.");
@@ -38,7 +43,7 @@ const MyBookings = () => {
             <li key={booking.Id} className="list-group-item">
               <h5>{booking.CourtName}</h5>
               <p>{booking.Date}</p>
-              <p>{booking.Time}</p>
+              <p>{booking.StartTime} - {booking.EndTime}</p>
             </li>
           ))}
         </ul>

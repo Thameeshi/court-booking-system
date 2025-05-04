@@ -1,16 +1,20 @@
-import { CourtService } from "../Services/Domain.Services/CourtService";
+import { BookingService } from "../Services/Domain.Services/BookingService";  // Importing BookingService
 
 export class CourtController {
     #message = null;
     #service = null;
+    #bookingService = null;
 
     constructor(message) {
         this.#message = message;
         this.#service = new CourtService(message);
+        this.#bookingService = new BookingService(message);  // Initialize BookingService
     }
 
     async handleRequest() {
         try {
+            console.log("Received message:", this.#message);
+            console.log("Received subType:", this.#message.subType);
             console.log("Handling Court request with subType:", this.#message.subType);
 
             switch (this.#message.subType) {
@@ -40,6 +44,25 @@ export class CourtController {
                         return { error: "Missing owner email in request." };
                     }
                     return await this.#service.getCourtByOwner(this.#message.data.email);
+
+                // Booking related cases
+                case "createBooking":
+                    if (!this.#message.data || !this.#message.data.UserEmail || !this.#message.data.CourtId || !this.#message.data.Date || !this.#message.data.StartTime || !this.#message.data.EndTime) {
+                        return { error: "Missing required fields for booking." };
+                    }
+                    return await this.#bookingService.createBooking(this.#message.data);
+
+                case "confirmBooking":
+                    if (!this.#message.data || !this.#message.data.bookingId) {
+                        return { error: "Missing bookingId in request." };
+                    }
+                    return await this.#bookingService.confirmBooking(this.#message.data.bookingId);
+
+                case "getUserBookings":
+                    if (!this.#message.data || !this.#message.data.UserEmail) {
+                        return { error: "Missing UserEmail in request." };
+                    }
+                    return await this.#bookingService.getUserBookings(this.#message.data.UserEmail);
 
                 default:
                     console.error("Invalid subType:", this.#message.subType);

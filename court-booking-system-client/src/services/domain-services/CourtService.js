@@ -48,13 +48,56 @@ class CourtService {
         return await hotPocketService.getServerReadReqResponse({
             type: 'Court',
             subType: 'getCourtByOwner',
-            data: {email: ownerEmail }
+            data: { email: ownerEmail }
         });
     }
 
     async getMyCourts(email) {
         // Alias for getCourtByOwner to match usage in CreateCourt.js
         return await this.getCourtByOwner(email);
+    }
+
+    // New method: Create a booking
+    async createBooking(bookingData) {
+        // Validate booking data
+        if (!bookingData.UserEmail || !bookingData.CourtId || !bookingData.Date || !bookingData.StartTime || !bookingData.EndTime) {
+            throw new Error("Missing required fields: UserEmail, CourtId, Date, StartTime, or EndTime.");
+        }
+
+        // Send the booking request to the backend
+        return await hotPocketService.getServerInputResponse({
+            type: "Court",
+            subType: "createBooking",
+            data: bookingData,
+        });
+    }
+
+    // New method: Confirm a booking
+    async confirmBooking(bookingId) {
+        // Validate booking ID
+        if (!bookingId) {
+            throw new Error("Booking ID is required to confirm a booking.");
+        }
+
+        // Send the confirm booking request to the backend
+        return await hotPocketService.getServerInputResponse({
+            type: "Court",
+            subType: "confirmBooking",
+            data: { bookingId },
+        });
+    }
+
+    async getUserBookings(userEmail) {
+        if (!userEmail) {
+            throw new Error("UserEmail is required to fetch bookings.");
+        }
+
+        // Send the request to the backend
+        return await hotPocketService.getServerReadReqResponse({
+            type: "Court",
+            subType: "getUserBookings",
+            data: { UserEmail: userEmail },
+        });
     }
 }
 

@@ -1,22 +1,49 @@
-# Stage 2: Create a clean Ubuntu-based image for copying built files
-FROM ubuntu:latest
+# Stage 1: Build dependencies and install packages
+FROM ubuntu:latest AS build
 
-# Install necessary packages
+# Install necessary packages for building
 RUN apt-get update && apt-get install -y nodejs npm
 
-# Copy your project files into the container
+# Set working directory in the container
 WORKDIR /food-waste-reduct-contract
 
 # Clear the contents of the working directory
 RUN rm -rf ./*
 
 # Copy package.json and package-lock.json
-COPY package*.json /food-waste-reduct-contract
+COPY package*.json /food-waste-reduct-contract/
 
-# Install dependencies
-RUN npm install
+# Optional: Set npm retry configs to avoid network issues
+RUN npm config set fetch-retries 5 && \
+    npm config set fetch-retry-mintimeout 20000 && \
+    npm config set fetch-retry-maxtimeout 120000
 
+# Install dependencies with a timeout and retries configuration
+RUN npm install --legacy-peer-deps --timeout=120000
+
+# Copy the source files to the container
 COPY src /food-waste-reduct-contract/src/
 
-# Build your project
-RUN npm run buildLinux  
+# Build the project
+RUN npm run buildLinux
+
+# Stage 2: Create a clean Ubuntu-based image for copying built files
+FROM ubuntu:latest
+
+# Install necessary packages for running the application
+RUN apt-get update && apt-get install -y nodejs npm
+
+# Set working directory for the final image
+WORKDIR /food-waste-reduct-contract
+
+# Copy the built project files from the build stage
+COPY --from=build /food-waste-reduct-contract/dist /food-waste-reduct-contract/dist
+
+# Optionally, copy any other necessary files (e.g., settings, configs)
+COPY src/settings.json /food-waste-reduct-contract/dist/
+
+# Expose the necessary port
+EXPOSE 3000
+
+# Command to start the application
+CMD ["npm", "start"]
