@@ -48,9 +48,11 @@ const App = () => {
         try {
           console.log("userInfo:", userInfo);
           const res = await userService.checkUser(userInfo?.email);
-          if (res.success) {
+          console.log("Response from checkUser:", res);
+
+          if (res?.success === true) {
             setUserExists(true);
-            dispatch(setUserDetails(res.success[0]));
+            dispatch(setUserDetails(res.user)); // Pass the user object to the Redux store or state
           } else {
             setUserExists(false);
           }

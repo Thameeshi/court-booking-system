@@ -46,7 +46,7 @@ export class BookingService {
             const query = `
                 SELECT b.*, c.Name AS CourtName
                 FROM bookings b
-                LEFT JOIN courts c ON b.CourtId = c.Id
+                LEFT JOIN COURT c ON b.CourtId = c.Id
                 WHERE b.UserEmail = ?
                 ORDER BY b.Date DESC, b.StartTime ASC
             `;

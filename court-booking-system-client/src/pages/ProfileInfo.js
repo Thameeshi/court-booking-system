@@ -53,10 +53,8 @@ const ProfileInfo = () => {
             <p><strong>Name:</strong> {userDetails.Name}</p>
             <p><strong>Email:</strong> {userDetails.Email}</p>
             <p><strong>Role:</strong> {userDetails.UserRole}</p>
-            <p><strong>Description:</strong> {userDetails.Description}</p>
             <p><strong>XRPL Address:</strong> {userDetails.XrplAddress}</p>
-            <p><strong>Latitude:</strong> {userDetails.Lat}</p>
-            <p><strong>Longitude:</strong> {userDetails.Lng}</p>
+            
           </div>
 
           <hr />

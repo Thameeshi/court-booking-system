@@ -12,8 +12,8 @@ const MyBookings = () => {
       try {
         const response = await courtService.getUserBookings(userEmail);
 
-        if (response && response.success) {
-          setBookings(response.success);
+        if (response && Array.isArray(response)) {
+          setBookings(response); // Directly set the response as bookings
         } else {
           setError("No bookings found or failed to fetch.");
         }

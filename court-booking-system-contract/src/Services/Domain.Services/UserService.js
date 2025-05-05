@@ -1,6 +1,6 @@
+import { Tables } from "../../Constants/Tables";
 const settings = require("../../settings.json").settings;
 const { SqliteDatabase } = require("../Common.Services/dbHandler").default;
-import { Tables } from "../../Constants/Tables";
 
 export class UserService {
 	#message = null;
@@ -25,15 +25,16 @@ export class UserService {
 				email: data.email,
 				name: data.name,
 				userRole: data.userRole,
-				description: data.description,
-				lat: data.lat,
-				lng: data.lng,
 			};
 
 			const rowId = await this.#dbContext.insertValue(Tables.USER, userEntity);
-			resObj.success = { message:"Registered user successfully", rowId: rowId };
+			resObj.success = { message: "Registered user successfully", rowId: rowId };
 			return resObj;
 		} catch (error) {
+			// Handle the error
+			console.log("Error during user registration:", error.message);
+			resObj.error = "Error registering user.";
+			return resObj;
 		} finally {
 			this.#dbContext.close();
 		}
@@ -57,38 +58,43 @@ export class UserService {
 			resObj.success = userRows;
 			return resObj;
 		} catch (error) {
-			console.log("Error in listing users: ", error);
+			console.log("Error in listing users: ", error.message);
+			resObj.error = "Error in listing users.";
+			return resObj;
 		} finally {
 			this.#dbContext.close();
 		}
 	}
 
-	async checkIfUserExists(){
+	async checkIfUserExists() {
 		let resObj = {};
 		const email = this.#message.data?.email;
-		console.log("checkIfUserExists user email: ",email );
+		console.log("checkIfUserExists user email: ", email);
 
 		try {
 			await this.#dbContext.open();
 
-			let query = `SELECT * FROM USER WHERE Email = '${email}'`;
+			let query = `SELECT * FROM USER WHERE Email = ?`;
+			let userRows = await this.#dbContext.runSelectQuery(query, [email]);
+			console.log("userRows: ", userRows);
 
-			let userRows = await this.#dbContext.runSelectQuery(query);
-			console.log("userRows: ",userRows );
 			if (!(userRows && userRows.length > 0)) {
-				resObj.success = null;
+				resObj.success = false; // Indicates user not found
 				return resObj;
 			}
-			resObj.success = userRows;
+			resObj.success = true; // Indicates user exists
+			resObj.user = userRows[0]; // Return the user data if found
 			return resObj;
 		} catch (error) {
-			console.log("Error in checking user: ", error);
+			console.log("Error in checking user: ", error.message); // Log error message
+			resObj.error = "Error in checking user.";
+			return resObj;
 		} finally {
 			this.#dbContext.close();
 		}
 	}
 
-	async getFoodRecipientList(){
+	async getFoodRecipientList() {
 		let resObj = {};
 
 		try {
@@ -105,7 +111,9 @@ export class UserService {
 			resObj.success = userRows;
 			return resObj;
 		} catch (error) {
-			console.log("Error in listing food recipients: ", error);
+			console.log("Error in listing food recipients: ", error.message);
+			resObj.error = "Error in listing food recipients.";
+			return resObj;
 		} finally {
 			this.#dbContext.close();
 		}

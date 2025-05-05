@@ -15,9 +15,9 @@ export class CourtService {
     async addCourt(data) {
         let resObj = {};
         resObj.reqId = this.#message.reqId;
-
+    
         try {
-            // Validate input data
+            // Validate the required fields
             if (
                 !data.Name ||
                 !data.Location ||
@@ -30,10 +30,27 @@ export class CourtService {
                     "Missing required fields: Name, Location, Type, PricePerHour, Email, or Availability."
                 );
             }
-
+    
             await this.#dbContext.open();
-
-            // Populate courtEntity with the provided data
+    
+            // Fetch OwnerID from User table using the provided email
+            const ownerQuery = `SELECT Id FROM ${Tables.USER} WHERE Email = ?`;
+            const ownerResult = await this.#dbContext.runSelectQuery(ownerQuery, [data.Email]);
+    
+            console.log("Owner query result:", ownerResult); // Add this debug log
+            
+            if (!ownerResult || ownerResult.length === 0) {
+                throw new Error(`No user found with email: ${data.Email}. User must exist before adding a court.`);
+            }
+    
+            const ownerId = ownerResult[0].Id;
+            
+            // Verify ownerId exists and is not undefined/null
+            if (!ownerId) {
+                throw new Error(`User found with email ${data.Email}, but has no valid ID.`);
+            }
+    
+            // Build the court entity with all necessary fields including OwnerID
             const courtEntity = {
                 Name: data.Name,
                 Location: data.Location,
@@ -43,12 +60,33 @@ export class CourtService {
                 description: data.description || null,
                 Availability: data.Availability,
                 Image: data.Image || null,
+                OwnerID: ownerId,
             };
-
-            // Insert the courtEntity into the database
-            const rowId = await this.#dbContext.insertValue(Tables.COURT, courtEntity);
-
-            resObj.success = { message: "Court added successfully", rowId: rowId };
+    
+            // Raw insert query to add court
+            const insertQuery = `INSERT INTO ${Tables.COURT} 
+            (Name, Location, Type, PricePerHour, Email, description, Availability, Image, OwnerID)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+    
+            const rowValues = [
+                courtEntity.Name,
+                courtEntity.Location,
+                courtEntity.Type,
+                courtEntity.PricePerHour,
+                courtEntity.Email,
+                courtEntity.description,
+                courtEntity.Availability,
+                courtEntity.Image,
+                courtEntity.OwnerID // Make sure this is included
+            ];
+    
+            console.log("Insert Query: ", insertQuery);
+            console.log("Values: ", rowValues);
+            console.log("OwnerID being used:", courtEntity.OwnerID); // Add this debug log
+    
+            const result = await this.#dbContext.runQuery(insertQuery, rowValues);
+    
+            resObj.success = { message: "Court added successfully", changes: result.changes };
             return resObj;
         } catch (error) {
             console.log("Error in adding court: ", error);
