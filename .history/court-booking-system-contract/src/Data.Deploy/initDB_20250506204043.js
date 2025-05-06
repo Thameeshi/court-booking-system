@@ -45,14 +45,13 @@ export class DBInitializer {
         // Insert dummy data for Courts if none exist
         const courtList = await this.#runSelectQuery(`SELECT COUNT(*) as count FROM ${Tables.COURT}`);
         if (courtList[0].count === 0) {
-            const dummyEmail = settings.dummyEmail || "dummy@example.com"; // Use dummy email
             await this.#runQuery(`
                 INSERT INTO ${Tables.COURT} 
                 (Name, Location, Type, PricePerHour, Email, Description, Availability, Image, OwnerID) 
                 VALUES 
-                ('Badminton Court A', 'Downtown Sports Arena', 'Badminton', 10.00, '${dummyEmail}', 'Indoor court with wooden flooring', 'Available', 'badminton.jpg', 1),
-                ('Tennis Court B', 'Uptown Club', 'Tennis', 15.00, '${dummyEmail}', 'Outdoor hard court', 'Booked', 'tennis.jpg', 1),
-                ('Futsal Court C', 'City Park', 'Futsal', 20.00, '${dummyEmail}', 'Artificial turf futsal court', 'Available', 'futsal.jpg', 1)
+                ('Badminton Court A', 'Downtown Sports Arena', 'Badminton', 10.00, 'thameeshisenade@gmail.com', 'Indoor court with wooden flooring', 'Available', 'badminton.jpg', 1),
+                ('Tennis Court B', 'Uptown Club', 'Tennis', 15.00, 'thameeshisenade@gmail.com', 'Outdoor hard court', 'Booked', 'tennis.jpg', 1),
+                ('Futsal Court C', 'City Park', 'Futsal', 20.00, 'thameeshisenade@gmail.com', 'Artificial turf futsal court', 'Available', 'futsal.jpg', 1)
             `);
         }
 
@@ -85,7 +84,7 @@ export class DBInitializer {
                     const startTime = "10:00";
                     const endTime = "11:00";
 
-                    return `('${settings.dummyEmail}', ${court.Id}, '${date}', '${startTime}', '${endTime}', 'Confirmed', 'Practice')`;
+                    return `('thameeshisenade@gmail.com', ${court.Id}, '${date}', '${startTime}', '${endTime}', 'Confirmed', 'Practice')`;
                 }).join(",");
 
                 await this.#runQuery(`

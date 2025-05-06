@@ -10,11 +10,6 @@ const ViewCourt = () => {
     return <p>No court details found. Please go back and try again.</p>;
   }
 
-  const handlePayment = () => {
-    // Navigate to a payment page or trigger a payment process
-    navigate("/payment", { state: { court } });
-  };
-
   return (
     <div className="container mt-5">
       <h2>{court.Name}</h2>
@@ -37,11 +32,8 @@ const ViewCourt = () => {
               <p><strong>Contact Email:</strong> {court.Email}</p>
               <p><strong>Description:</strong> {court.Description || "No description provided."}</p>
 
-              <button className="btn btn-secondary mt-3 me-2" onClick={() => navigate(-1)}>
+              <button className="btn btn-secondary mt-3" onClick={() => navigate(-1)}>
                 Go Back
-              </button>
-              <button className="btn btn-primary mt-3" onClick={handlePayment}>
-                Pay Now
               </button>
             </div>
           </div>
