@@ -45,18 +45,20 @@ export class DBInitializer {
         // Insert dummy data for Courts if none exist
         const courtList = await this.#runSelectQuery(`SELECT COUNT(*) as count FROM ${Tables.COURT}`);
         if (courtList[0].count === 0) {
-            await this.#runQuery(`INSERT INTO ${Tables.COURT} 
+            const dummyEmail = settings.dummyEmail || "dummy@example.com"; // Use dummy email
+            await this.#runQuery(`
+                INSERT INTO ${Tables.COURT} 
                 (Name, Location, Type, PricePerHour, Email, Description, Availability, Image, OwnerID) 
                 VALUES 
-                ('Badminton Court A', 'Downtown Sports Arena', 'Badminton', 10.00, 'hayeshahp6@gmail.com', 'Indoor court with wooden flooring', 'Available', 'badminton.jpg', 1),
-                ('Tennis Court B', 'Uptown Club', 'Tennis', 15.00, 'hayeshahp6@gmail.com', 'Outdoor hard court', 'Booked', 'tennis.jpg', 1),
-                ('Futsal Court C', 'City Park', 'Futsal', 20.00, 'hayeshahp6@gmail.com', 'Artificial turf futsal court', 'Available', 'futsal.jpg', 1)
+                ('Badminton Court A', 'Downtown Sports Arena', 'Badminton', 10.00, '${dummyEmail}', 'Indoor court with wooden flooring', 'Available', 'badminton.jpg', 1),
+                ('Tennis Court B', 'Uptown Club', 'Tennis', 15.00, '${dummyEmail}', 'Outdoor hard court', 'Booked', 'tennis.jpg', 1),
+                ('Futsal Court C', 'City Park', 'Futsal', 20.00, '${dummyEmail}', 'Artificial turf futsal court', 'Available', 'futsal.jpg', 1)
             `);
         }
 
-        // ✅ Create bookings table with an additional column
+        // Create bookings table with an additional column
         await this.#runQuery(`
-            CREATE TABLE IF NOT EXISTS bookings (
+            CREATE TABLE IF NOT EXISTS ${Tables.BOOKING} (
                 Id INTEGER PRIMARY KEY AUTOINCREMENT,
                 UserEmail TEXT NOT NULL,
                 CourtId INTEGER NOT NULL,
@@ -64,12 +66,12 @@ export class DBInitializer {
                 StartTime TEXT NOT NULL,
                 EndTime TEXT NOT NULL,
                 Status TEXT NOT NULL,
-                BookingType TEXT DEFAULT 'Practice' -- New column
+                BookingType TEXT DEFAULT 'Practice'
             )
         `);
 
-        // ✅ Insert dummy bookings with the new column
-        const bookingList = await this.#runSelectQuery(`SELECT COUNT(*) as count FROM bookings`);
+        // Insert dummy bookings with the new column
+        const bookingList = await this.#runSelectQuery(`SELECT COUNT(*) as count FROM ${Tables.BOOKING}`);
         if (bookingList[0].count === 0) {
             const courts = await this.#runSelectQuery(`SELECT Id FROM ${Tables.COURT}`);
             if (courts.length > 0) {
@@ -77,17 +79,17 @@ export class DBInitializer {
 
                 const insertValues = courts.slice(0, 2).map((court, index) => {
                     const bookingDate = new Date(now);
-                    bookingDate.setDate(now.getDate() + index); // today and tomorrow
+                    bookingDate.setDate(now.getDate() + index);
 
                     const date = bookingDate.toISOString().split("T")[0];
                     const startTime = "10:00";
                     const endTime = "11:00";
 
-                    return `('${'hayeshah6@gmail.com'}', ${court.Id}, '${date}', '${startTime}', '${endTime}', 'Confirmed', 'Practice')`;
+                    return `('${settings.dummyEmail}', ${court.Id}, '${date}', '${startTime}', '${endTime}', 'Confirmed', 'Practice')`;
                 }).join(",");
 
                 await this.#runQuery(`
-                    INSERT INTO bookings (UserEmail, CourtId, Date, StartTime, EndTime, Status, BookingType)
+                    INSERT INTO ${Tables.BOOKING} (UserEmail, CourtId, Date, StartTime, EndTime, Status, BookingType)
                     VALUES ${insertValues}
                 `);
             }
