@@ -1,0 +1,9 @@
+{
+    "settings": {
+        "postExecutionScriptName": "./post_exec.sh",
+        "dbPath": "courtBooking.db",
+        "dbScriptsFolderPath": "./dbScripts",
+        "newContractZipFileName": "./newContractData.zip",
+        "dummyEmail": "dummy@example.com" // Add a dummy email for initialization
+    }
+}
