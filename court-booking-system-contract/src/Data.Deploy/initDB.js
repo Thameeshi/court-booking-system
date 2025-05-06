@@ -5,14 +5,19 @@ const sqlite3 = require("sqlite3").verbose();
 const path = require("path");
 const settings = require("../settings.json").settings;
 
+// Load environment variables
+require("dotenv").config();
+
 export class DBInitializer {
     static #db = null;
 
     static async init() {
-        // Initialize the database connection
         this.#db = new sqlite3.Database(settings.dbPath);
 
-        // Create table User
+        // Get email from environment variable
+        const userEmail = process.env.USER_EMAIL || 'default@example.com';
+
+        // Create User table
         await this.#runQuery(`CREATE TABLE IF NOT EXISTS ${Tables.USER} (
             Id INTEGER,
             XrplAddress TEXT NOT NULL UNIQUE,
@@ -25,7 +30,7 @@ export class DBInitializer {
             PRIMARY KEY("Id" AUTOINCREMENT)
         )`);
 
-        // Create table Court with OwnerID included
+        // Create Court table
         await this.#runQuery(`
             CREATE TABLE IF NOT EXISTS ${Tables.COURT} (
                 Id INTEGER,
@@ -42,23 +47,22 @@ export class DBInitializer {
             )
         `);
 
-        // Insert dummy data for Courts if none exist
-        const courtList = await this.#runSelectQuery(`SELECT COUNT(*) as count FROM ${Tables.COURT}`);
+        // Insert dummy court data
+       /* const courtList = await this.#runSelectQuery(`SELECT COUNT(*) as count FROM ${Tables.COURT}`);
         if (courtList[0].count === 0) {
-            const dummyEmail = settings.dummyEmail || "dummy@example.com"; // Use dummy email
             await this.#runQuery(`
                 INSERT INTO ${Tables.COURT} 
                 (Name, Location, Type, PricePerHour, Email, Description, Availability, Image, OwnerID) 
                 VALUES 
-                ('Badminton Court A', 'Downtown Sports Arena', 'Badminton', 10.00, '${dummyEmail}', 'Indoor court with wooden flooring', 'Available', 'badminton.jpg', 1),
-                ('Tennis Court B', 'Uptown Club', 'Tennis', 15.00, '${dummyEmail}', 'Outdoor hard court', 'Booked', 'tennis.jpg', 1),
-                ('Futsal Court C', 'City Park', 'Futsal', 20.00, '${dummyEmail}', 'Artificial turf futsal court', 'Available', 'futsal.jpg', 1)
+                ('Badminton Court A', 'Downtown Sports Arena', 'Badminton', 10.00, 'hayeshahp6@gmail.com', 'Indoor court with wooden flooring', 'Available', 'badminton.jpg', 1),
+                ('Tennis Court B', 'Uptown Club', 'Tennis', 15.00, 'hayeshahp6@gmail.com', 'Outdoor hard court', 'Booked', 'tennis.jpg', 1),
+                ('Futsal Court C', 'City Park', 'Futsal', 20.00, 'hayeshahp6@gmail.com', 'Artificial turf futsal court', 'Available', 'futsal.jpg', 1)
             `);
-        }
+        }*/
 
-        // Create bookings table with an additional column
+        // Create bookings table
         await this.#runQuery(`
-            CREATE TABLE IF NOT EXISTS ${Tables.BOOKING} (
+            CREATE TABLE IF NOT EXISTS bookings (
                 Id INTEGER PRIMARY KEY AUTOINCREMENT,
                 UserEmail TEXT NOT NULL,
                 CourtId INTEGER NOT NULL,
@@ -70,8 +74,8 @@ export class DBInitializer {
             )
         `);
 
-        // Insert dummy bookings with the new column
-        const bookingList = await this.#runSelectQuery(`SELECT COUNT(*) as count FROM ${Tables.BOOKING}`);
+        // Insert dummy bookings
+        const bookingList = await this.#runSelectQuery(`SELECT COUNT(*) as count FROM bookings`);
         if (bookingList[0].count === 0) {
             const courts = await this.#runSelectQuery(`SELECT Id FROM ${Tables.COURT}`);
             if (courts.length > 0) {
@@ -80,22 +84,20 @@ export class DBInitializer {
                 const insertValues = courts.slice(0, 2).map((court, index) => {
                     const bookingDate = new Date(now);
                     bookingDate.setDate(now.getDate() + index);
-
                     const date = bookingDate.toISOString().split("T")[0];
                     const startTime = "10:00";
                     const endTime = "11:00";
 
-                    return `('${settings.dummyEmail}', ${court.Id}, '${date}', '${startTime}', '${endTime}', 'Confirmed', 'Practice')`;
+                    return `('${userEmail}', ${court.Id}, '${date}', '${startTime}', '${endTime}', 'Confirmed', 'Practice')`;
                 }).join(",");
 
                 await this.#runQuery(`
-                    INSERT INTO ${Tables.BOOKING} (UserEmail, CourtId, Date, StartTime, EndTime, Status, BookingType)
+                    INSERT INTO bookings (UserEmail, CourtId, Date, StartTime, EndTime, Status, BookingType)
                     VALUES ${insertValues}
                 `);
             }
         }
 
-        // Close the database connection after all queries are executed
         this.#db.close();
     }
 

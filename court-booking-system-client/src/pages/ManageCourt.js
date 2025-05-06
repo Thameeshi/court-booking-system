@@ -6,7 +6,7 @@ const ManageCourt = () => {
     const [courts, setCourts] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
-    const ownerEmail = "hayeshahp6@gmail.com"; // Replace with the logged-in owner's email
+    const ownerEmail = process.env.USER_EMAIL; // Replace with the logged-in owner's email
 
     useEffect(() => {
         const fetchCourts = async () => {
@@ -62,7 +62,7 @@ const ManageCourt = () => {
                         <div className="col-md-4 mb-4" key={court.Id}>
                             <div className="card">
                                 <img
-                                    src={court.Image} // Assuming `Image` contains the image URL
+                                    src={court.Image} // Assuming Image contains the image URL
                                     alt={court.Name}
                                     className="card-img-top"
                                     style={{ height: "200px", objectFit: "cover" }} // Adjust size as needed

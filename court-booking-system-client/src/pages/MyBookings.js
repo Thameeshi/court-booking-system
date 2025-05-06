@@ -5,7 +5,7 @@ const MyBookings = () => {
   const [bookings, setBookings] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const userEmail = "hayeshahp6@gmail.com";
+  const userEmail = process.env.USER_EMAIL;
 
   useEffect(() => {
     const fetchBookings = async () => {
@@ -25,7 +25,7 @@ const MyBookings = () => {
     };
 
     fetchBookings();
-  }, []);
+  }, [userEmail]);
 
   return (
     <div className="container mt-5">
