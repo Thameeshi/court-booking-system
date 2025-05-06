@@ -17,7 +17,7 @@ export class DBInitializer {
         this.#db = new sqlite3.Database(settings.dbPath);
 
         // Get email from environment variable
-        const userEmail = process.env.USER_EMAIL || 'default@example.com';
+        const userEmail = process.env.USER_EMAIL || 'thameeshisenade@gmail.com';
 
         // Create User table
         await this.#runQuery(`CREATE TABLE IF NOT EXISTS ${Tables.USER} (
@@ -49,7 +49,7 @@ export class DBInitializer {
             )
         `);
 
-       // Insert dummy court data
+        // Insert dummy court data
        // const courtList = await this.#runSelectQuery(`SELECT COUNT(*) as count FROM ${Tables.COURT}`);
        // if (courtList[0].count === 0) {
        //     await this.#runQuery(`INSERT INTO ${Tables.COURT} 

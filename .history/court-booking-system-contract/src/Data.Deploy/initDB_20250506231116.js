@@ -1,6 +1,5 @@
 import { Tables } from "../Constants/Tables";
 
-
 const fs = require("fs");
 const sqlite3 = require("sqlite3").verbose();
 const path = require("path");
@@ -17,7 +16,7 @@ export class DBInitializer {
         this.#db = new sqlite3.Database(settings.dbPath);
 
         // Get email from environment variable
-        const userEmail = process.env.USER_EMAIL || 'default@example.com';
+        const userEmail = process.env.USER_EMAIL ;
 
         // Create User table
         await this.#runQuery(`CREATE TABLE IF NOT EXISTS ${Tables.USER} (
@@ -49,17 +48,17 @@ export class DBInitializer {
             )
         `);
 
-       // Insert dummy court data
-       // const courtList = await this.#runSelectQuery(`SELECT COUNT(*) as count FROM ${Tables.COURT}`);
-       // if (courtList[0].count === 0) {
-       //     await this.#runQuery(`INSERT INTO ${Tables.COURT} 
-       //         (Name, Location, Type, PricePerHour, Email, Description, Availability, Image, OwnerID) 
-       //        VALUES 
-       //         ('Badminton Court A', 'Downtown Sports Arena', 'Badminton', 10.00, 'thameeshisenade@gmail.com', 'Indoor court with wooden flooring', 'Available', 'badminton.jpg', 1),
-       //         ('Tennis Court B', 'Uptown Club', 'Tennis', 15.00, 'thameeshisenade@gmail.com', 'Outdoor hard court', 'Booked', 'tennis.jpg', 1),
-       //         ('Futsal Court C', 'City Park', 'Futsal', 20.00, 'thameeshisenade@gmail.com', 'Artificial turf futsal court', 'Available', 'futsal.jpg', 1)
-       //   `);
-       //}
+        // Insert dummy court data
+        const courtList = await this.#runSelectQuery(`SELECT COUNT(*) as count FROM ${Tables.COURT}`);
+        if (courtList[0].count === 0) {
+            await this.#runQuery(`INSERT INTO ${Tables.COURT} 
+                (Name, Location, Type, PricePerHour, Email, Description, Availability, Image, OwnerID) 
+                VALUES 
+                ('Badminton Court A', 'Downtown Sports Arena', 'Badminton', 10.00, '${userEmail}', 'Indoor court with wooden flooring', 'Available', 'badminton.jpg', 1),
+                ('Tennis Court B', 'Uptown Club', 'Tennis', 15.00, '${userEmail}', 'Outdoor hard court', 'Booked', 'tennis.jpg', 1),
+                ('Futsal Court C', 'City Park', 'Futsal', 20.00, '${userEmail}', 'Artificial turf futsal court', 'Available', 'futsal.jpg', 1)
+            `);
+        }
 
         // Create bookings table
         await this.#runQuery(`

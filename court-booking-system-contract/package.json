@@ -24,6 +24,7 @@
     "@vercel/ncc": "0.34.0",
     "azure-openai": "^0.9.4",
     "bson": "^5.1.0",
+    "dotenv": "^16.5.0",
     "hotpocket-nodejs-contract": "^0.7.4",
     "openai": "^4.80.1",
     "sqlite-async": "1.2.0",

@@ -5,7 +5,7 @@ const MyBookings = () => {
   const [bookings, setBookings] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const userEmail =process.env.USER_EMAIL;
+  const userEmail = "thameeshisenade@gmail.com";
 
   useEffect(() => {
     const fetchBookings = async () => {
