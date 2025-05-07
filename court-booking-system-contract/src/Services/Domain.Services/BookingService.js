@@ -62,6 +62,3 @@ export class BookingService {
         });
     }
 }
-=======
-}
->>>>>>> 1f1e6f51ba62a1cfa0abd0381d6d20cbc454e21c
