@@ -1,6 +1,5 @@
 import { Tables } from "../Constants/Tables";
 
-
 const fs = require("fs");
 const sqlite3 = require("sqlite3").verbose();
 const path = require("path");
@@ -31,7 +30,7 @@ export class DBInitializer {
             PRIMARY KEY("Id" AUTOINCREMENT)
         )`);
 
-        // Create Court table
+        // Create Court table with new fields
         await this.#runQuery(`
             CREATE TABLE IF NOT EXISTS ${Tables.COURT} (
                 Id INTEGER,
@@ -44,22 +43,24 @@ export class DBInitializer {
                 Availability TEXT NOT NULL,
                 Image TEXT,
                 OwnerID INTEGER NOT NULL,
+                AvailableDate TEXT,
+                AvailableStartTime TEXT,
+                AvailableEndTime TEXT,
                 PRIMARY KEY("Id" AUTOINCREMENT)
             )
         `);
 
-// Insert dummy court data
-const courtList = await this.#runSelectQuery(`SELECT COUNT(*) as count FROM ${Tables.COURT}`);
-if (courtList[0].count === 0) {
-    await this.#runQuery(`
-        INSERT INTO ${Tables.COURT} 
-        (Name, Location, Type, PricePerHour, Email, Description, Availability, Image, OwnerID) 
-        VALUES 
-        ('Badminton Court A', 'Downtown Sports Arena', 'Badminton', 10.00, 'hayeshahp6@gmail.com', 'Indoor court with wooden flooring', 'Available', 'badminton.jpg', 1),
-        ('Tennis Court B', 'Uptown Club', 'Tennis', 15.00, 'hayeshahp6@gmail.com', 'Outdoor hard court', 'Booked', 'tennis.jpg', 1),
-        ('Futsal Court C', 'City Park', 'Futsal', 20.00, 'hayeshahp6@gmail.com', 'Artificial turf futsal court', 'Available', 'futsal.jpg', 1)
-    `);
-}
+        // Insert dummy court data with new fields
+        const courtList = await this.#runSelectQuery(`SELECT COUNT(*) as count FROM ${Tables.COURT}`);
+        if (courtList[0].count === 0) {
+            await this.#runQuery(`INSERT INTO ${Tables.COURT} 
+                (Name, Location, Type, PricePerHour, Email, Description, Availability, Image, OwnerID, AvailableDate, AvailableStartTime, AvailableEndTime) 
+                VALUES 
+                ('Badminton Court A', 'Downtown Sports Arena', 'Badminton', 10.00, 'hayeshahp6@gmail.com', 'Indoor court with wooden flooring', 'Available', 'badminton.jpg', 1, '2025-05-10', '09:00', '17:00'),
+                ('Tennis Court B', 'Uptown Club', 'Tennis', 15.00, 'hayeshahp6@gmail.com', 'Outdoor hard court', 'Booked', 'tennis.jpg', 1, '2025-05-11', '08:00', '18:00'),
+                ('Futsal Court C', 'City Park', 'Futsal', 20.00, 'hayeshahp6@gmail.com', 'Artificial turf futsal court', 'Available', 'futsal.jpg', 1, '2025-05-12', '10:00', '20:00')
+            `);
+        }
 
         // Create bookings table
         await this.#runQuery(`
@@ -96,7 +97,8 @@ if (courtList[0].count === 0) {
                     INSERT INTO bookings (UserEmail, CourtId, Date, StartTime, EndTime, Status, BookingType)
                     VALUES ${insertValues}
                 `);
-            }        }
+            }
+        }
 
         this.#db.close();
     }

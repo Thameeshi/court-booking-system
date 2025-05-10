@@ -50,6 +50,43 @@ const EditCourt = () => {
                 <input name="Location" value={court.Location} onChange={handleChange} placeholder="Location" className="form-control mb-2" />
                 <input name="Type" value={court.Type} onChange={handleChange} placeholder="Type" className="form-control mb-2" />
                 <input name="PricePerHour" value={court.PricePerHour} onChange={handleChange} placeholder="Price" className="form-control mb-2" />
+                
+                <div className="mb-2">
+                    <label htmlFor="AvailableDate" className="form-label">Available Date</label>
+                    <input 
+                        type="date" 
+                        name="AvailableDate" 
+                        id="AvailableDate"
+                        value={court.AvailableDate || ""} 
+                        onChange={handleChange} 
+                        className="form-control" 
+                    />
+                </div>
+                
+                <div className="mb-2">
+                    <label htmlFor="AvailableStartTime" className="form-label">Available Start Time</label>
+                    <input 
+                        type="time" 
+                        name="AvailableStartTime" 
+                        id="AvailableStartTime"
+                        value={court.AvailableStartTime || ""} 
+                        onChange={handleChange} 
+                        className="form-control" 
+                    />
+                </div>
+                
+                <div className="mb-2">
+                    <label htmlFor="AvailableEndTime" className="form-label">Available End Time</label>
+                    <input 
+                        type="time" 
+                        name="AvailableEndTime" 
+                        id="AvailableEndTime"
+                        value={court.AvailableEndTime || ""} 
+                        onChange={handleChange} 
+                        className="form-control" 
+                    />
+                </div>
+                
                 <input name="Availability" value={court.Availability} onChange={handleChange} placeholder="Availability" className="form-control mb-2" />
                 <button type="submit" className="btn btn-success">Update Court</button>
             </form>

@@ -15,7 +15,7 @@ export class CourtService {
     async addCourt(data) {
         let resObj = {};
         resObj.reqId = this.#message.reqId;
-    
+
         try {
             // Validate the required fields
             if (
@@ -30,27 +30,27 @@ export class CourtService {
                     "Missing required fields: Name, Location, Type, PricePerHour, Email, or Availability."
                 );
             }
-    
+
             await this.#dbContext.open();
-    
+
             // Fetch OwnerID from User table using the provided email
             const ownerQuery = `SELECT Id FROM ${Tables.USER} WHERE Email = ?`;
             const ownerResult = await this.#dbContext.runSelectQuery(ownerQuery, [data.Email]);
-    
-            console.log("Owner query result:", ownerResult); // Add this debug log
-            
+
+            console.log("Owner query result:", ownerResult); // Debug log
+
             if (!ownerResult || ownerResult.length === 0) {
                 throw new Error(`No user found with email: ${data.Email}. User must exist before adding a court.`);
             }
-    
+
             const ownerId = ownerResult[0].Id;
-            
+
             // Verify ownerId exists and is not undefined/null
             if (!ownerId) {
                 throw new Error(`User found with email ${data.Email}, but has no valid ID.`);
             }
-    
-            // Build the court entity with all necessary fields including OwnerID
+
+            // Build the court entity with all necessary fields including new fields
             const courtEntity = {
                 Name: data.Name,
                 Location: data.Location,
@@ -61,13 +61,16 @@ export class CourtService {
                 Availability: data.Availability,
                 Image: data.Image || null,
                 OwnerID: ownerId,
+                AvailableDate: data.AvailableDate || null,
+                AvailableStartTime: data.AvailableStartTime || null,
+                AvailableEndTime: data.AvailableEndTime || null,
             };
-    
+
             // Raw insert query to add court
             const insertQuery = `INSERT INTO ${Tables.COURT} 
-            (Name, Location, Type, PricePerHour, Email, description, Availability, Image, OwnerID)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`;
-    
+            (Name, Location, Type, PricePerHour, Email, description, Availability, Image, OwnerID, AvailableDate, AvailableStartTime, AvailableEndTime)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+
             const rowValues = [
                 courtEntity.Name,
                 courtEntity.Location,
@@ -77,15 +80,17 @@ export class CourtService {
                 courtEntity.description,
                 courtEntity.Availability,
                 courtEntity.Image,
-                courtEntity.OwnerID // Make sure this is included
+                courtEntity.OwnerID,
+                courtEntity.AvailableDate,
+                courtEntity.AvailableStartTime,
+                courtEntity.AvailableEndTime
             ];
-    
+
             console.log("Insert Query: ", insertQuery);
             console.log("Values: ", rowValues);
-            console.log("OwnerID being used:", courtEntity.OwnerID); // Add this debug log
-    
+
             const result = await this.#dbContext.runQuery(insertQuery, rowValues);
-    
+
             resObj.success = { message: "Court added successfully", changes: result.changes };
             return resObj;
         } catch (error) {
@@ -167,22 +172,24 @@ export class CourtService {
         }
     }
 
-    async getCourtByOwner(ownerEmail) {
-        let resObj = {};
+    async getCourtByOwner(email) {
+        if (!email) {
+            throw new Error("Email is required to fetch courts.");
+        }
+
+        const query = `SELECT * FROM ${Tables.COURT} WHERE Email = ?`;
         try {
-            await this.#dbContext.open();
-
-            const query = `SELECT * FROM ${Tables.COURT} WHERE Email = ?`;
-            const courts = await this.#dbContext.runSelectQuery(query, [ownerEmail]);
-
-            resObj.success = courts.length > 0 ? courts : null;
-            return resObj;
+            await this.#dbContext.open(); // Ensure the database connection is open
+            const courts = await this.#dbContext.runSelectQuery(query, [email]);
+            if (courts.length === 0) {
+                return { success: null, message: "No courts found for the provided email." };
+            }
+            return { success: courts };
         } catch (error) {
-            console.log("Error in retrieving owner's courts: ", error);
-            resObj.error = `Error in retrieving owner's courts: ${error.message}`;
-            return resObj;
+            console.error("Error fetching courts:", error.message);
+            return { success: null, message: "An error occurred while fetching courts." };
         } finally {
-            this.#dbContext.close();
+            this.#dbContext.close(); // Ensure the database connection is closed
         }
     }
 }

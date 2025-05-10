@@ -10,7 +10,10 @@ const CreateCourt = () => {
         Type: "",
         Availability: "Available",
         Email: "",
-        Image: null, // Added Image field to formData
+        Image: null,
+        AvailableDate: "",       // Added field for date
+        AvailableStartTime: "",  // Added field for start time
+        AvailableEndTime: ""     // Added field for end time
     });
 
     const [isLoading, setIsLoading] = useState(false);
@@ -27,19 +30,14 @@ const CreateCourt = () => {
 
     const handleImageChange = (e) => {
         const file = e.target.files[0];
-    
         if (file) {
-            // Only save the file name to the form data, actual file upload handled differently
             setFormData(prevData => ({
                 ...prevData,
-                Image: file // Just the file name
+                Image: file
             }));
-    
-            // Save file to local file system or another channel if needed
-            // Depends on how you’ve configured HotPocket contract's FS
         }
     };
-    
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         setIsLoading(true);
@@ -53,8 +51,6 @@ const CreateCourt = () => {
                 return;
             }
 
-            
-
             const formDataToSend = new FormData();
             formDataToSend.append("Name", formData.Name);
             formDataToSend.append("description", formData.description);
@@ -63,7 +59,10 @@ const CreateCourt = () => {
             formDataToSend.append("Type", formData.Type);
             formDataToSend.append("Availability", formData.Availability);
             formDataToSend.append("Email", formData.Email);
-            formDataToSend.append("Image", formData.Image); // Include the Image file
+            formDataToSend.append("Image", formData.Image);
+            formDataToSend.append("AvailableDate", formData.AvailableDate);
+            formDataToSend.append("AvailableStartTime", formData.AvailableStartTime);
+            formDataToSend.append("AvailableEndTime", formData.AvailableEndTime);
 
             console.log("Sending court data to backend...");
 
@@ -81,7 +80,10 @@ const CreateCourt = () => {
                     Type: "",
                     Availability: "Available",
                     Email: "",
-                    Image: null, // Reset Image field
+                    Image: null,
+                    AvailableDate: "",
+                    AvailableStartTime: "",
+                    AvailableEndTime: ""
                 });
             } else {
                 setError("Failed to add court. Please try again.");
@@ -157,6 +159,45 @@ const CreateCourt = () => {
                         required
                     />
                 </div>
+                
+                {/* New form fields for date and times */}
+                <div className="mb-3">
+                    <label htmlFor="AvailableDate" className="form-label">Available Date</label>
+                    <input
+                        type="date"
+                        name="AvailableDate"
+                        id="AvailableDate"
+                        value={formData.AvailableDate}
+                        onChange={handleInputChange}
+                        className="form-control"
+                        required
+                    />
+                </div>
+                <div className="mb-3">
+                    <label htmlFor="AvailableStartTime" className="form-label">Available Start Time</label>
+                    <input
+                        type="time"
+                        name="AvailableStartTime"
+                        id="AvailableStartTime"
+                        value={formData.AvailableStartTime}
+                        onChange={handleInputChange}
+                        className="form-control"
+                        required
+                    />
+                </div>
+                <div className="mb-3">
+                    <label htmlFor="AvailableEndTime" className="form-label">Available End Time</label>
+                    <input
+                        type="time"
+                        name="AvailableEndTime"
+                        id="AvailableEndTime"
+                        value={formData.AvailableEndTime}
+                        onChange={handleInputChange}
+                        className="form-control"
+                        required
+                    />
+                </div>
+                
                 <div className="mb-3">
                     <label htmlFor="Availability" className="form-label">Availability</label>
                     <select

@@ -6,11 +6,7 @@ const ManageCourt = () => {
     const [courts, setCourts] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
-<<<<<<< HEAD
     const ownerEmail = process.env.USER_EMAIL; // Replace with the logged-in owner's email
-=======
-    const ownerEmail = process.env.USER_EMAIL ;// Replace with the logged-in owner's email
->>>>>>> 1f1e6f51ba62a1cfa0abd0381d6d20cbc454e21c
 
     useEffect(() => {
         const fetchCourts = async () => {
@@ -54,6 +50,12 @@ const ManageCourt = () => {
         navigate(`/dashboard/edit-court/${courtId}`);
     };
 
+    // Helper function to format dates
+    const formatDate = (dateString) => {
+        if (!dateString) return "Not set";
+        return new Date(dateString).toLocaleDateString();
+    };
+
     return (
         <div className="container mt-5">
             <h1 className="mb-4">Manage My Courts</h1>
@@ -66,10 +68,10 @@ const ManageCourt = () => {
                         <div className="col-md-4 mb-4" key={court.Id}>
                             <div className="card">
                                 <img
-                                    src={court.Image} // Assuming Image contains the image URL
+                                    src={court.Image}
                                     alt={court.Name}
                                     className="card-img-top"
-                                    style={{ height: "200px", objectFit: "cover" }} // Adjust size as needed
+                                    style={{ height: "200px", objectFit: "cover" }}
                                 />
                                 <div className="card-body">
                                     <h5 className="card-title">{court.Name}</h5>
@@ -77,7 +79,10 @@ const ManageCourt = () => {
                                         <strong>Location:</strong> {court.Location} <br />
                                         <strong>Type:</strong> {court.Type} <br />
                                         <strong>Price Per Hour:</strong> ${court.PricePerHour} <br />
-                                        <strong>Availability:</strong> {court.Availability}
+                                        <strong>Availability:</strong> {court.Availability} <br />
+                                        {/* Display new fields */}
+                                        <strong>Available Date:</strong> {formatDate(court.AvailableDate)} <br />
+                                        <strong>Available Time:</strong> {court.AvailableStartTime || "Not set"} - {court.AvailableEndTime || "Not set"}
                                     </p>
                                     <button
                                         className="btn btn-primary btn-sm me-2"
