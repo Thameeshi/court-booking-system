@@ -89,79 +89,84 @@ const SignUp = () => {
     };
 
     return (
-        <div className="container mt-5">
-            <h1 className="mb-4">Register for Court Booking</h1>
+  <div style={{
+    display: "flex",
+    height: "100vh",
+    width: "100vw"
+  }}>
+    {/* Left Half - Background Color + Form */}
+    <div style={{
+      flex: 1,
+      backgroundColor: "rgba(255, 255, 252, 0.94)", // your preferred color
+      display: "flex",
+      flexDirection: "column",
+      justifyContent: "center",
+      alignItems: "center",
+      padding: "40px"
+    }}>
+      <div className="container" style={{ maxWidth: "500px", width: "100%" }}>
+        <h1 className="mb-4" style={{ color: "#0e6304" }}>Register Your Account</h1>
 
-            <form onSubmit={handleSubmit} className="card p-4 shadow-sm">
-                {/* Name */}
-                <div className="mb-3">
-                    <label htmlFor="name" className="form-label">Full Name</label>
-                    <input
-                        type="text"
-                        name="name"
-                        id="name"
-                        value={formData.name}
-                        onChange={handleInputChange}
-                        className="form-control"
-                        required
-                    />
-                </div>
+        <form onSubmit={handleSubmit} className="card p-4 shadow-l"
+          style={{
+            borderRadius: "15px",
+            backgroundColor: "white", // or any light color for contrast
+            boxShadow: "0 12px 30px rgba(0, 0, 0, )", //
+            
+            //borderWidth: "10px",
+            //borderColor: "rgba(15, 146, 43, 0.85)"
+          }}>
+          
+          {/* Name */}
+          <div className="mb-3">
+            <label htmlFor="name" className="form-label">Full Name</label>
+            <input type="text" name="name" id="name" value={formData.name} onChange={handleInputChange} className="form-control" required />
+          </div>
 
-                {/* XRPL Address */}
-                <div className="mb-3">
-                    <label htmlFor="xrplAddress" className="form-label">XRPL Address</label>
-                    <input
-                        type="text"
-                        name="xrplAddress"
-                        id="xrplAddress"
-                        value={formData.xrplAddress}
-                        className="form-control"
-                        readOnly
-                        disabled
-                    />
-                </div>
+          {/* XRPL Address */}
+          <div className="mb-3">
+            <label htmlFor="xrplAddress" className="form-label">XRPL Address</label>
+            <input type="text" name="xrplAddress" id="xrplAddress" value={formData.xrplAddress} className="form-control" readOnly disabled />
+          </div>
 
-                {/* Email */}
-                <div className="mb-3">
-                    <label htmlFor="email" className="form-label">Email</label>
-                    <input
-                        type="email"
-                        name="email"
-                        id="email"
-                        value={formData.email}
-                        className="form-control"
-                        readOnly
-                        disabled
-                    />
-                </div>
+          {/* Email */}
+          <div className="mb-3">
+            <label htmlFor="email" className="form-label">Email</label>
+            <input type="email" name="email" id="email" value={formData.email} className="form-control" readOnly disabled />
+          </div>
 
-                {/* Role */}
-                <div className="mb-3">
-                    <label htmlFor="userRole" className="form-label">Account Type</label>
-                    <select
-                        name="userRole"
-                        id="userRole"
-                        value={formData.userRole}
-                        onChange={handleInputChange}
-                        className="form-select"
-                        required
-                    >
-                        <option value="PublicUser">Public User</option>
-                        <option value="CourtOwner">Court Owner</option>
-                    </select>
-                </div>
+          {/* Role */}
+          <div className="mb-3">
+            <label htmlFor="userRole" className="form-label">Account Type</label>
+            <select name="userRole" id="userRole" value={formData.userRole} onChange={handleInputChange} className="form-select" required>
+              <option value="PublicUser">Public User</option>
+              <option value="CourtOwner">Court Owner</option>
+            </select>
+          </div>
 
-                {/* Submit Button */}
-                <button type="submit" className="btn btn-success" disabled={isLoading}>
-                    {isLoading ? "Registering..." : "Register"}
-                </button>
+          {/* Submit Button */}
+          <button type="submit" className="btn btn-success" disabled={isLoading}>
+            {isLoading ? "Registering..." : "Register"}
+          </button>
 
-                {/* Messages */}
-                {error && <p className="text-danger mt-3">{error}</p>}
-                {successMessage && <p className="text-success mt-3">{successMessage}</p>}
-            </form>
-        </div>
-    );
+          {/* Messages */}
+          {error && <p className="text-danger mt-3">{error}</p>}
+          {successMessage && <p className="text-success mt-3">{successMessage}</p>}
+        </form>
+      </div>
+    </div>
+
+    {/* Right Half - Background Image */}
+    <div style={{
+      flex: 1,
+      backgroundImage: `url(${process.env.PUBLIC_URL + '/court2.jpg'})`,
+      backgroundSize: 'cover',
+      backgroundPosition: 'center'
+    }}>
+    </div>
+  </div>
+);
+
 };
 
 export default SignUp;

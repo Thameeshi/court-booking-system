@@ -7,6 +7,7 @@ import { XrplPrivateKeyProvider } from "@web3auth/xrpl-provider";
 import { setWeb3auth, setProvider, setWeb3Authorized, setLoading, setUserInfo } from "../store/slices/authSlice";
 import XrplService from "../services/common-services/XrplService.ts";
 import { setXrpBalance, setXrplAccount } from "../store/slices/walletSlice";
+import "./Web3AuthPage.css";
 
 const clientId = process.env.WEB3AUTH_CLIENT_ID || "";
 
@@ -136,14 +137,89 @@ const Web3AuthPage = () => {
 
   return (
     <div>
+      <div className="login-page"
+        style={{
+        backgroundImage: `url(${process.env.PUBLIC_URL + '/greencourt.jpg'})`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat',
+        height: '100vh',
+        width: '100vw',
+      }}
+      >
+      <div className="login-container"
+        style={{
+        display: "flex",
+        justifyContent: "center",     // centers horizontally
+        alignItems: "center",         // centers vertically
+        height: "100vh",              // full screen height
+        flexWrap: "wrap",             
+        }}>
+      <div
+        style={{
+        display: "flex",
+        flexDirection: "column", // stack boxes vertically
+        alignItems: "center",
+        //boxShadow: "0 12px 30px rgba(0, 0, 0, 0.3)",
+        borderRadius: "15px",
+        overflow: "hidden",
+        }}
+      >
+      <div className="login-boxup"
+        style={{
+        backgroundImage: `url(${process.env.PUBLIC_URL + '/greencourt.jpg'})`,
+        padding: "40px",
+        boxShadow: "0 8px 20px rgba(0, 1, 0, 1)",
+        width: "450px",
+        height: "260px",
+        maxWidth: "90%",
+        textAlign: "center",
+        backgroundPosition: 'center',
+        }}>
+        
+        <h5>Welcome to Courtify</h5>
+        <p>Book your favorite sports court anytime, anywhere. 
+          Hassle-free reservations at your fingertips!</p>
+      </div>
+      <div className="login-box"
+        style={{
+        background: "rgba(180, 235, 192, 0.85)",
+        backdropFilter: "blur(5px)", // gives glassmorphism blur effect
+        padding: "10px",
+        boxShadow: "0 8px 20px rgba(0, 1, 1, 1)",
+        width: "450px",
+        height: "260px",
+        maxWidth: "90%",
+        textAlign: "center",
+        backgroundPosition: 'center',
+        }}>
+
+        <h2>Login</h2>
+        <img
+          src={`${process.env.PUBLIC_URL}/logo.png`}
+          alt="Logo"
+          style={{
+          width: "30%",        // adjust size as needed
+          //marginTop: "10px",
+         marginBottom: "20px",
+         
+  }}
+/>
+      
       {loading ? (
         <div className="loading-spinner"></div>
       ) : (
-        <button onClick={web3authorize} className="button">
-          web3auth log in
+        <button className="login-button" 
+        onClick={web3authorize} >
+           log in
         </button>
       )}
     </div>
+    </div>
+    </div>
+    </div>
+    </div>
+    
   );
 };
 
