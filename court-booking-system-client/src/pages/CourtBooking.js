@@ -51,7 +51,7 @@ const CourtBooking = () => {
               <div className="row align-items-center">
                 <div className="col-md-3">
                   <img
-                    src={court.Image}
+                    src={`/${court.Image}`}
                     alt={court.Name}
                     className="img-fluid rounded"
                     style={{ height: "100px", objectFit: "cover" }}

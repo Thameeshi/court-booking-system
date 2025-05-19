@@ -68,7 +68,7 @@ const ManageCourt = () => {
                         <div className="col-md-4 mb-4" key={court.Id}>
                             <div className="card">
                                 <img
-                                    src={court.Image}
+                                    src={`/${court.Image}`}
                                     alt={court.Name}
                                     className="card-img-top"
                                     style={{ height: "200px", objectFit: "cover" }}
