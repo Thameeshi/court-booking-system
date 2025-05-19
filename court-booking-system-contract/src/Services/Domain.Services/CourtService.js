@@ -83,9 +83,10 @@ export class CourtService {
                 courtEntity.OwnerID,
                 courtEntity.AvailableDate,
                 courtEntity.AvailableStartTime,
-                courtEntity.AvailableEndTime
+                courtEntity.AvailableEndTime,
             ];
 
+           
             console.log("Insert Query: ", insertQuery);
             console.log("Values: ", rowValues);
 

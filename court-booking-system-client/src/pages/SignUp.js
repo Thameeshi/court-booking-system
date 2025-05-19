@@ -110,11 +110,7 @@ const SignUp = () => {
         <form onSubmit={handleSubmit} className="card p-4 shadow-l"
           style={{
             borderRadius: "15px",
-            backgroundColor: "white", // or any light color for contrast
-            boxShadow: "0 12px 30px rgba(0, 0, 0, )", //
-            
-            //borderWidth: "10px",
-            //borderColor: "rgba(15, 146, 43, 0.85)"
+            backgroundColor: "white", // or any light color for contra
           }}>
           
           {/* Name */}
