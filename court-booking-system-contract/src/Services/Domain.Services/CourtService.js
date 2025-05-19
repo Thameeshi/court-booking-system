@@ -68,7 +68,7 @@ export class CourtService {
 
             // Raw insert query to add court
             const insertQuery = `INSERT INTO ${Tables.COURT} 
-            (Name, Location, Type, PricePerHour, Email, description, Availability, Image, OwnerID, AvailableDate, AvailableStartTime, AvailableEndTime,TokenID)
+            (Name, Location, Type, PricePerHour, Email, description, Availability, Image, OwnerID, AvailableDate, AvailableStartTime, AvailableEndTime)
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
 
             const rowValues = [
@@ -84,11 +84,9 @@ export class CourtService {
                 courtEntity.AvailableDate,
                 courtEntity.AvailableStartTime,
                 courtEntity.AvailableEndTime,
-                courtEntity.TokenID
             ];
 
-            await this.db.runQuery(query, values);
-
+           
             console.log("Insert Query: ", insertQuery);
             console.log("Values: ", rowValues);
 
