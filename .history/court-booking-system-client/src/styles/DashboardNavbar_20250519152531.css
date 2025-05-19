@@ -1,0 +1,44 @@
+.navbar {
+
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  font-family: 'Segoe UI', Arial, sans-serif;
+  margin-bottom: 2rem;
+}
+
+.navbar-brand {
+  font-weight: bold;
+  font-size: 1.6rem;
+  letter-spacing: 1px;
+  color: #00b894 !important;
+}
+
+.navbar-nav .nav-link {
+  color: #fff !important;
+  font-weight: 500;
+  margin-right: 10px;
+  transition: color 0.2s;
+}
+
+.navbar-nav .nav-link:hover,
+.navbar-nav .nav-link.active {
+  color: #00b894 !important;
+  background: rgba(0, 184, 148, 0.08);
+  border-radius: 8px;
+}
+
+.d-lg-flex span {
+  font-size: 1rem;
+}
+
+@media (max-width: 991px) {
+  .d-none.d-lg-flex {
+    display: none !important;
+  }
+  .navbar {
+    border-radius: 0;
+  }
+}
+
+.container.mt-4 {
+  margin-top: 2rem !important;
+}
