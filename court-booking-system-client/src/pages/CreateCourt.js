@@ -1,5 +1,9 @@
 import React, { useState } from "react";
 import courtService from "../services/domain-services/CourtService";
+import XrplService from "../services/common-services/XrplService.ts"; // adjust path if needed
+import { useSelector } from "react-redux";
+
+
 
 const CreateCourt = () => {
     const [formData, setFormData] = useState({
@@ -19,6 +23,11 @@ const CreateCourt = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState("");
     const [successMessage, setSuccessMessage] = useState("");
+    const [nftMinted, setNftMinted] = useState(false);
+    const [nftTokenId, setNftTokenId] = useState(""); // to store returned NFTokenID
+    const { provider } = useSelector((state) => state.auth);
+
+
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
@@ -64,6 +73,15 @@ const CreateCourt = () => {
             formDataToSend.append("AvailableStartTime", formData.AvailableStartTime);
             formDataToSend.append("AvailableEndTime", formData.AvailableEndTime);
 
+            if (!nftMinted || !nftTokenId) {
+            setError("Please mint NFT before adding the court.");
+            setIsLoading(false);
+            return;
+            }
+
+            formDataToSend.append("TokenID", nftTokenId); // Pass Token ID to backend
+
+
             console.log("Sending court data to backend...");
 
             const response = await courtService.addCourt(formDataToSend);
@@ -95,6 +113,37 @@ const CreateCourt = () => {
             setIsLoading(false);
         }
     };
+
+    const handleMintNFT = async () => {
+    try {
+        if (!provider) {
+            alert("XRPL provider not found. Please log in.");
+            return;
+            }
+        const xrplService = new XrplService(provider);
+
+        const metadata = `Court: ${formData.Name}, Location: ${formData.Location}, Price: ${formData.PricePerHour}, Time: ${formData.AvailableStartTime}-${formData.AvailableEndTime}`;
+        const uri = `${formData.Name}-${Date.now()}`; // unique URI
+
+        const result = await xrplService.mintNFT(metadata, uri);
+
+        const txHash = result?.result?.tx_json?.hash;
+        const txDetails = await xrplService.waitForConfirmation(txHash);
+
+        if (txDetails.meta && txDetails.meta.nftoken_id) {
+        const tokenId = txDetails.meta.nftoken_id;
+        setNftTokenId(tokenId);
+        setNftMinted(true);
+        alert("NFT minted successfully with Token ID: " + tokenId);
+        } else {
+        alert("NFT minting completed, but Token ID not found in response.");
+        }
+    } catch (error) {
+        console.error("Error minting NFT:", error);
+        alert("Minting failed");
+    }
+    };
+
 
     return (
         <div className="container mt-5">
@@ -236,6 +285,16 @@ const CreateCourt = () => {
                         required
                     />
                 </div>
+
+                <button
+                type="button"
+                className="btn btn-warning me-3"
+                onClick={handleMintNFT}
+                disabled={nftMinted || isLoading}
+                >
+                {nftMinted ? "NFT Minted" : "Mint NFT"}
+                </button>
+
                 <button type="submit" className="btn btn-primary" disabled={isLoading}>
                     {isLoading ? "Adding..." : "Add Court"}
                 </button>

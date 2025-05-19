@@ -46,6 +46,7 @@ export class DBInitializer {
                 AvailableDate TEXT,
                 AvailableStartTime TEXT,
                 AvailableEndTime TEXT,
+                TokenID TEXT,
                 PRIMARY KEY("Id" AUTOINCREMENT)
             )
         `);
