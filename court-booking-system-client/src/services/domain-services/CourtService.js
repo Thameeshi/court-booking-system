@@ -108,6 +108,15 @@ class CourtService {
             data: availabilityData,
         });
     }
+
+    async mintNFTOnServer(mintData) {
+        return await hotPocketService.getServerInputResponse({
+            type: "Court",
+            subType: "mintNFT",
+            data: mintData,
+        });
+}
+
 }
 
 const courtServiceInstance = new CourtService();

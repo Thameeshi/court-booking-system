@@ -16,6 +16,7 @@ const Web3AuthPage = () => {
   const { web3auth, loading } = useSelector((state: any) => state.auth);
 
   useEffect(() => {
+    //Configures Web3Auth to use the XRP Ledger testnet.
     const chainConfig = {
       chainNamespace: CHAIN_NAMESPACES.XRPL,
       chainId: "0x2",
@@ -27,10 +28,11 @@ const Web3AuthPage = () => {
       blockExplorerUrl: "https://testnet.xrpl.org",
     };
 
+    //Initializating web3auth and XRP integration
     const init = async () => {
       try {
         dispatch(setLoading(true));
-
+        //Sets up a provider to sign XRP transactions with a private key.
         const xrplProvider = new XrplPrivateKeyProvider({
           config: {
             chainConfig: chainConfig,
@@ -88,7 +90,7 @@ const Web3AuthPage = () => {
         web3auth.configureAdapter(authAdapter);
 
         dispatch(setWeb3auth(web3auth));
-
+        //Displays login modal
         await web3auth.initModal();
 
         if (web3auth.connected) {

@@ -50,6 +50,19 @@ export class DBInitializer {
             )
         `);
 
+        await this.#runQuery(`
+        CREATE TABLE IF NOT EXISTS MintedNFTs (
+            Id INTEGER PRIMARY KEY AUTOINCREMENT,
+            CourtId INTEGER NOT NULL,
+            NFTokenID TEXT NOT NULL,
+            AvailableDate TEXT NOT NULL,
+            AvailableStartTime TEXT NOT NULL,
+            AvailableEndTime TEXT NOT NULL,
+            MintedAt TEXT DEFAULT CURRENT_TIMESTAMP
+        )
+        `);
+
+
         // Insert dummy court data with new fields
         const courtList = await this.#runSelectQuery(`SELECT COUNT(*) as count FROM ${Tables.COURT}`);
         if (courtList[0].count === 0) {

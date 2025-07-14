@@ -232,5 +232,37 @@ export class CourtService {
         }
     }
 
+    async saveMintedNFT(data) {
+        let resObj = {};
+        resObj.reqId = this.#message.reqId;
+
+        try {
+            await this.#dbContext.open();
+
+            const insertQuery = `
+            INSERT INTO MintedNFTs (CourtId, NFTokenID, AvailableDate, AvailableStartTime, AvailableEndTime)
+            VALUES (?, ?, ?, ?, ?)
+            `;
+            const values = [
+            data.courtId,
+            data.NFTokenID,
+            data.AvailableDate,
+            data.AvailableStartTime,
+            data.AvailableEndTime
+            ];
+
+            const result = await this.#dbContext.runQuery(insertQuery, values);
+            resObj.success = { message: "NFT minting data saved", nftId: result.lastID };
+            return resObj;
+        } catch (err) {
+            console.log("Error saving NFT:", err);
+            resObj.error = `Error saving NFT data: ${err.message}`;
+            return resObj;
+        } finally {
+            this.#dbContext.close();
+        }
+        }
+
+
 
 }

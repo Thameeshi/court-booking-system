@@ -93,14 +93,21 @@ async waitForConfirmation(txHash: string, timeout = 30000): Promise<any> {
 
   getNftFromUri = async (uri: string): Promise<any> => {
     try {
+
       const allNfts = await this.getAllNfts();
       const nfts = allNfts['account_nfts'];
-      console.log("1232 nfts", nfts);
+      console.log("NFTs found in wallet:", nfts);
   
       if (Array.isArray(nfts)) {
-        const foundNft = nfts.find((nft) => nft.URI === uri);
+        const foundNft = nfts.find((nft) => {
+        const decodedUri = Buffer.from(nft.URI, "hex").toString("utf-8");
+        console.log("🔍 Comparing decoded URI:", decodedUri, "with:", uri);
+        return decodedUri === uri;
+      });
+
   
         if (foundNft) {
+          console.log("✅ NFT matched:", foundNft);
           return foundNft.NFTokenID;
         } else {
           console.error("Error in getNftFromUri. NFT not found");

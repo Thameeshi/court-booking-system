@@ -56,6 +56,13 @@ export class CourtController {
                     }
                     return await this.#service.addAvailability(data);
 
+                case "mintNFT":
+                    if (!data?.courtId || !data?.NFTokenID || !data?.AvailableDate || !data?.AvailableStartTime || !data?.AvailableEndTime) {
+                        return { error: "Missing NFT minting fields." };
+                    }
+                    return await this.#service.saveMintedNFT(data);
+
+
                 // BOOKING MANAGEMENT
                 case "createBooking":
                     if (!data?.CourtId || !data?.UserEmail || !data?.Date || !data?.StartTime || !data?.EndTime) {

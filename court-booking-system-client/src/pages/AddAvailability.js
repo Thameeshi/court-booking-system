@@ -1,9 +1,12 @@
 import React, { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import courtService from "../services/domain-services/CourtService";
+import XrplService from "../services/common-services/XrplService.ts";
+import { useSelector } from "react-redux";
 
 const AddAvailability = () => {
   const { courtId } = useParams();
+  const { provider } = useSelector((state) => state.auth);
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     AvailableDate: "",
@@ -60,6 +63,47 @@ const AddAvailability = () => {
     }
   };
 
+  const mintNft = async () => {
+  if (!formData.AvailableDate || !formData.AvailableStartTime || !formData.AvailableEndTime) {
+    setError("Please enter date and time before minting NFT.");
+    return;
+  }
+
+  try {
+    const plainUri = `court-${courtId}-${formData.AvailableDate}-${formData.AvailableStartTime}`;
+    const memo = `Court #${courtId} | ${formData.AvailableDate} ${formData.AvailableStartTime}-${formData.AvailableEndTime}`;
+    
+    const xrplService = new XrplService(provider);
+    const mintResult = await xrplService.mintNFT(memo, plainUri);
+
+    if (mintResult?.result?.tx_json?.hash) {
+      // Wait for confirmation
+      const confirmedTx = await xrplService.waitForConfirmation(mintResult.result.tx_json.hash);
+      const mintedNft = await xrplService.getNftFromUri(plainUri);
+
+
+      if (mintedNft) {
+        await courtService.mintNFTOnServer({
+          courtId,
+          NFTokenID: mintedNft,
+          AvailableDate: formData.AvailableDate,
+          AvailableStartTime: formData.AvailableStartTime,
+          AvailableEndTime: formData.AvailableEndTime
+        });
+
+        setSuccessMessage(`NFT minted and stored successfully! Token ID: ${mintedNft}`);
+      } else {
+        setError("NFT mint confirmed but token not found.");
+      }
+    } else {
+      setError("NFT minting failed.");
+    }
+  } catch (err) {
+    setError("Error minting NFT: " + err.message);
+  }
+};
+
+
   return (
     <div className="container mt-5">
       <h2 className="mb-4">Add Availability for Court #{courtId}</h2>
@@ -105,6 +149,15 @@ const AddAvailability = () => {
         </button>
         {error && <p className="text-danger mt-3">{error}</p>}
         {successMessage && <p className="text-success mt-3">{successMessage}</p>}
+        <button
+          type="button"
+          className="btn btn-secondary mt-3"
+          onClick={mintNft}
+          disabled={isLoading}
+        >
+          Mint NFT
+        </button>
+
       </form>
     </div>
   );
