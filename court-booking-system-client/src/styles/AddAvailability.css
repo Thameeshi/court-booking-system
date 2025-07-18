@@ -1,0 +1,143 @@
+/* Wrapper Container */
+.addavailability-container {
+  max-width: 600px;
+  margin: 2rem auto;
+  padding: 2rem 1.5rem;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: #f9fdf9; /* very light greenish background */
+  border-radius: 16px;
+  box-shadow: 0 12px 25px rgba(26, 93, 26, 0.15);
+  transition: box-shadow 0.3s ease;
+}
+
+.addavailability-container:hover {
+  box-shadow: 0 16px 40px rgba(26, 93, 26, 0.25);
+}
+
+/* Page Heading */
+.addavailability-title {
+  text-align: center;
+  color: #1a5d1a; /* dark green */
+  font-weight: 700;
+  font-size: 2.2rem;
+  margin-bottom: 2.5rem;
+  letter-spacing: 1.1px;
+  text-transform: uppercase;
+  text-shadow: 0 1px 2px rgba(26, 93, 26, 0.2);
+}
+
+/* Form Card */
+.addavailability-card {
+  background: linear-gradient(145deg, #eaf3ea, #d2e3d1);
+  border-radius: 16px;
+  padding: 2.5rem 3rem;
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.12);
+  border: 1px solid #c1d3bf;
+  transition: transform 0.3s ease;
+}
+
+.addavailability-card:hover {
+  transform: translateY(-5px);
+}
+
+/* Labels */
+.addavailability-label {
+  font-weight: 600;
+  color: #2a7c2a; /* stronger green */
+  margin-bottom: 0.5rem;
+  display: block;
+  font-size: 1.1rem;
+  letter-spacing: 0.03em;
+}
+
+/* Inputs */
+.addavailability-input {
+  border-radius: 8px;
+  border: 1.8px solid #8bc98b;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  width: 100%;
+  padding: 12px 14px;
+  color: #1a5d1a; /* green input text */
+  font-weight: 500;
+  font-size: 1rem;
+  background-color: #f4faf4;
+  box-shadow: inset 1px 1px 5px rgba(255, 255, 255, 0.7);
+  outline: none;
+}
+
+.addavailability-input::placeholder {
+  color: #7ea77e;
+  font-style: italic;
+}
+
+.addavailability-input:focus {
+  border-color: #2e9e2e;
+  box-shadow: 0 0 8px rgba(46, 158, 46, 0.5);
+  background-color: #fff;
+}
+
+/* Submit Button */
+.addavailability-btn {
+  background: linear-gradient(45deg, #1a5d1a, #3ea63e);
+  border: none;
+  color: white;
+  padding: 14px 22px;
+  font-weight: 700;
+  font-size: 1.15rem;
+  transition: background 0.4s ease, box-shadow 0.3s ease;
+  width: 100%;
+  margin-top: 1.5rem;
+  border-radius: 12px;
+  cursor: pointer;
+  box-shadow: 0 5px 15px rgba(26, 93, 26, 0.4);
+  user-select: none;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.addavailability-btn:hover {
+  background: linear-gradient(45deg, #3ea63e, #1a5d1a);
+  box-shadow: 0 8px 20px rgba(26, 93, 26, 0.65);
+}
+
+.addavailability-btn:active {
+  transform: scale(0.98);
+}
+
+/* Feedback Messages */
+.addavailability-error,
+.addavailability-success {
+  font-size: 1rem;
+  margin-top: 1.2rem;
+  text-align: center;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  user-select: none;
+}
+
+.addavailability-error {
+  color: #e74c3c;
+  text-shadow: 0 0 4px rgba(231, 76, 60, 0.4);
+}
+
+.addavailability-success {
+  color: #27ae60;
+  text-shadow: 0 0 4px rgba(39, 174, 96, 0.5);
+}
+
+/* Responsive */
+@media (max-width: 576px) {
+  .addavailability-container {
+    padding: 1.5rem 1rem;
+    margin: 1rem;
+  }
+
+  .addavailability-card {
+    padding: 2rem 2rem;
+  }
+
+  .addavailability-title {
+    font-size: 1.8rem;
+    margin-bottom: 2rem;
+  }
+}

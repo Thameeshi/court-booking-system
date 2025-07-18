@@ -1,0 +1,105 @@
+.editcourt-wrapper {
+  max-width: 600px;
+  margin: 2rem auto;
+  padding: 2.5rem 2rem;
+  background: linear-gradient(135deg, #eaf6ea, #d7edd7);
+  border-radius: 16px;
+  box-shadow: 0 12px 32px rgba(6, 68, 32, 0.1);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  transition: box-shadow 0.3s ease;
+}
+
+.editcourt-wrapper:hover {
+  box-shadow: 0 20px 45px rgba(6, 68, 32, 0.18);
+}
+
+.editcourt-title {
+  text-align: center;
+  margin-bottom: 2rem;
+  color: #0b3d0b;
+  font-weight: 700;
+  font-size: 2.4rem;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  text-shadow: 0 1px 2px rgba(11, 61, 11, 0.25);
+}
+
+.editcourt-error {
+  color: #e74c3c;
+  font-weight: 600;
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+/* Form styles */
+.editcourt-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+
+/* Labels */
+.editcourt-label {
+  font-weight: 700;
+  color: #2a7c2a;
+  font-size: 1.1rem;
+  user-select: none;
+}
+
+/* Inputs */
+.editcourt-input {
+  border-radius: 10px;
+  border: 1.8px solid #a3d4a5;
+  background-color: #f9fef9;
+  padding: 0.65rem 1rem;
+  font-size: 1.1rem;
+  color: #1a5d1a;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
+  box-shadow: inset 1px 1px 6px rgba(255, 255, 255, 0.8);
+  outline: none;
+}
+
+.editcourt-input::placeholder {
+  color: #88b388;
+  font-style: italic;
+}
+
+.editcourt-input:focus {
+  border-color: #3ba95b;
+  background-color: #ffffff;
+  box-shadow: 0 0 10px 2px rgba(59, 169, 91, 0.4);
+}
+
+/* Button */
+.editcourt-btn {
+  padding: 0.75rem 0;
+  background: linear-gradient(45deg, #2a7c2a, #064420);
+  border: none;
+  color: #e6f2e6;
+  font-weight: 700;
+  font-size: 1.2rem;
+  border-radius: 14px;
+  box-shadow: 0 6px 16px rgba(6, 68, 32, 0.35);
+  cursor: pointer;
+  user-select: none;
+  transition: background 0.35s ease, box-shadow 0.35s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.editcourt-btn:hover {
+  background: linear-gradient(45deg, #3ea63e, #0b3d0b);
+  box-shadow: 0 10px 24px rgba(11, 61, 11, 0.55);
+}
+
+.editcourt-btn:active {
+  transform: scale(0.97);
+}
+
+/* Loading text */
+.editcourt-loading {
+  text-align: center;
+  font-size: 1.2rem;
+  color: #1a5d1a;
+  font-weight: 600;
+}

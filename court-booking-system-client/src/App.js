@@ -21,6 +21,8 @@ import CourtHome from "./pages/CourtHome.js";
 import UserHome from "./pages/UserHome.js";
 import "./App.css";
 import AddAvailability from "./pages/AddAvailability.js";
+import EditProfile from "./pages/EditProfile.js";
+import WalletManagement from "./pages/WalletManagement.js";
 
 const App = () => {
   const dispatch = useDispatch();
@@ -114,19 +116,24 @@ const App = () => {
                     <Route path="/userdashboard/user-home" element={<UserHome />} />
                     <Route path="/userdashboard/booking" element={<CourtBooking />} />
                     <Route path="/userdashboard/myBookings" element={<MyBookings />} />
+                    <Route path="/userdashboard/profile" element={<ProfileInfo />} />
+
                   </>
                 )}
 
                 {/* Routes for Court Owners */}
-                {userDetails?.UserRole === "CourtOwner" && (
-                  <>
-                    <Route path="/dashboard/court-home" element={<CourtHome />} />
-                    <Route path="/dashboard/court" element={<CreateCourt />} />
-                    <Route path="/dashboard/myCourts" element={<ManageCourt />} />
-                    <Route path="/dashboard/edit-court/:courtId" element={<EditCourt />} />
-                    <Route path="/dashboard/add-availability/:courtId" element={<AddAvailability />} />
-                  </>
-                )}
+              {userDetails?.UserRole === "CourtOwner" && (
+  <>
+    <Route path="/dashboard/court-home" element={<CourtHome />} />
+    <Route path="/dashboard/court" element={<CreateCourt />} />
+    <Route path="/dashboard/myCourts" element={<ManageCourt />} />
+    <Route path="/dashboard/edit-court/:courtId" element={<EditCourt />} />
+    <Route path="/dashboard/add-availability/:courtId" element={<AddAvailability />} />
+    
+    <Route path="/dashboard/profile/edit" element={<EditProfile />} />
+    <Route path="/dashboard/wallet" element={<WalletManagement />} />
+  </>
+)}
               </>
             )}
 
