@@ -15,7 +15,7 @@
   content: "";
   position: absolute;
   top: 0; left: 0; right: 0; bottom: 0;
-  background-image: url(D:\courtify\cbs-contract\court-booking-system-client\public\addcourt.png); /* Use relative path from public folder */
+  background-image: url('../../public/addcourt.png'); /* Use relative path from public folder */
   background-repeat: no-repeat;
   background-position: center center;
   background-size: cover;

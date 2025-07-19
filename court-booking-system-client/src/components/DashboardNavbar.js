@@ -1,16 +1,31 @@
 import React, { useState } from "react";
 import { Outlet, Link, useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { logout as authLogout } from "../store/slices/authSlice";
+import { clearUserDetails } from "../store/slices/userSlice";
 import "../styles/DashboardNavbar.css";
 
 const DashboardNavbar = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const userDetails = useSelector((state) => state.user.userDetails);
   const { xrpBalance } = useSelector((state) => state.wallet);
+  const { web3auth } = useSelector((state) => state.auth);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const handleLogoClick = () => {
     navigate("/");
+  };
+
+  const handleLogout = async () => {
+    if (web3auth) {
+      await web3auth.logout();
+    }
+    dispatch(authLogout());
+    dispatch(clearUserDetails());
+    localStorage.removeItem("userDetails");
+    localStorage.removeItem("token");
+    navigate("/login"); // Or "/" if that's your login route
   };
 
   return (
@@ -62,6 +77,27 @@ const DashboardNavbar = () => {
       Edit Profile
     </Link>
   </li>
+  <li>
+            <button
+              className="logout-btn"
+              onClick={async () => {
+                setSidebarOpen(false);
+                await handleLogout();
+              }}
+              style={{
+                background: "#e74c3c",
+                color: "#fff",
+                border: "none",
+                padding: "8px 16px",
+                borderRadius: "4px",
+                cursor: "pointer",
+                width: "100%",
+                marginTop: "10px"
+              }}
+            >
+              Logout
+            </button>
+          </li>
 </ul>
 
       </aside>
