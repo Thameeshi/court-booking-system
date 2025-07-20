@@ -1,0 +1,105 @@
+.mybookings-container {
+  max-width: 700px;
+  margin: 48px auto;
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.10);
+  padding: 36px 28px 28px 28px;
+}
+
+.mybookings-title {
+  text-align: center;
+  font-weight: 200;
+  color: #4AB420;
+  margin-bottom: 32px;
+  letter-spacing: 1px;
+  font-size: 1.8rem;
+}
+
+/* ...existing styles... */
+
+.mybookings-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.mybookings-item {
+  background: #f8fafc;
+  border-radius: 12px;
+  box-shadow: 0 1px 8px rgba(44,62,80,0.08);
+  padding: 22px 18px 18px 18px;
+  border: 1px solid #e5e7eb;
+  display: flex;
+  flex-direction: row; /* Make items horizontal */
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+}
+
+.mybookings-item-details {
+  display: flex;
+  flex-direction: row;
+  gap: 32px;
+  flex-wrap: wrap;
+}
+
+.mybookings-item h5 {
+  font-size: 1.1rem;
+  color: #222;
+  font-weight: 500;
+  margin-bottom: 0;
+  margin-right: 24px;
+  min-width: 160px;
+}
+
+.mybookings-item p {
+  color: #444;
+  font-size: 1rem;
+  margin-bottom: 0;
+  margin-right: 18px;
+  min-width: 120px;
+}
+
+.cancel-btn {
+  background: #4AB420;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 8px 18px;
+  font-size: 0.98rem;
+  font-weight: 600;
+  margin-top: 0;
+  transition: background 0.2s;
+  align-self: center;
+}
+
+.cancel-btn:disabled {
+  background: #b0b0b0;
+  color: #fff;
+  cursor: not-allowed;
+}
+
+.cancel-btn:hover:not(:disabled) {
+  background: #388e1f;
+}
+
+/* Responsive for mobile */
+@media (max-width: 700px) {
+  .mybookings-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+  .mybookings-item-details {
+    flex-direction: column;
+    gap: 4px;
+  }
+  .mybookings-item h5, .mybookings-item p {
+    margin-right: 0;
+    min-width: unset;
+  }
+}

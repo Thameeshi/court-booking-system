@@ -1,0 +1,166 @@
+.viewcourt-card {
+  display: flex;
+  flex-direction: column;
+  background: #fff;
+  border-radius: 20px;
+  box-shadow: 0 8px 32px rgba(44,62,80,0.13);
+  overflow: hidden;
+  transition: box-shadow 0.2s;
+  position: relative;
+}
+
+@media (min-width: 900px) {
+  .viewcourt-card {
+    flex-direction: row;
+    min-height: 420px;
+  }
+  .viewcourt-divider {
+    width: 2px;
+    background: linear-gradient(180deg, #eafaf1 0%, #f3f6fa 100%);
+    margin: 32px 0;
+    align-self: stretch;
+    display: block;
+  }
+}
+@media (max-width: 900px) {
+  .viewcourt-divider {
+    display: none;
+  }
+}
+
+.viewcourt-img-section {
+  flex: 1 1 380px;
+  background: linear-gradient(135deg, #eafaf1 60%, #f3f6fa 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 320px;
+}
+
+.viewcourt-img {
+  width: 100%;
+  max-width: 400px;
+  height: 320px;
+  object-fit: cover;
+  border-radius: 14px;
+  box-shadow: 0 2px 18px rgba(44,62,80,0.13);
+  margin: 32px 18px;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.viewcourt-img:hover {
+  transform: scale(1.04);
+  box-shadow: 0 8px 32px rgba(44,62,80,0.18);
+}
+
+.viewcourt-details-section {
+  flex: 2 1 480px;
+  padding: 38px 32px 32px 32px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.viewcourt-title {
+  font-size: 2.2rem;
+  font-weight: 700;
+  color: #4AB420;
+  margin-bottom: 18px;
+  letter-spacing: 1px;
+  text-shadow: 0 2px 8px rgba(74,180,32,0.07);
+}
+
+.viewcourt-details-list p {
+  margin-bottom: 12px;
+  color: #222;
+  font-size: 1.13rem;
+  line-height: 1.7;
+  letter-spacing: 0.2px;
+  font-weight: 400;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.viewcourt-details-list strong {
+  color: #222;
+  font-weight: 500;
+}
+
+.price-highlight {
+  color: #4AB420;
+  font-weight: 700;
+  font-size: 1.15em;
+}
+
+.viewcourt-details-list a {
+  color: #388e1f;
+  text-decoration: underline dotted;
+  transition: color 0.2s;
+}
+.viewcourt-details-list a:hover {
+  color: #4AB420;
+}
+
+.viewcourt-actions {
+  margin-top: 32px;
+  display: flex;
+  gap: 18px;
+}
+
+.btn-success, .btn-secondary {
+  min-width: 140px;
+  font-weight: 600;
+  border-radius: 7px;
+  padding: 12px 0;
+  font-size: 1.08rem;
+  box-shadow: 0 1px 6px rgba(44,62,80,0.09);
+  transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+  outline: none;
+}
+
+.btn-success {
+  background: #4AB420;
+  border: none;
+  color: #fff;
+}
+
+.btn-success.prominent {
+  font-size: 1.13rem;
+  padding: 14px 0;
+  background: linear-gradient(90deg, #4AB420 80%, #7ed957 100%);
+  box-shadow: 0 4px 16px rgba(74,180,32,0.13);
+}
+
+.btn-success:hover, .btn-success.prominent:hover {
+  background: #388e1f;
+  color: #fff;
+  box-shadow: 0 8px 24px rgba(74,180,32,0.18);
+}
+
+.btn-secondary {
+  background: #e5e7eb;
+  border: none;
+  color: #444;
+}
+
+.btn-secondary:hover {
+  background: #cbd5e1;
+  color: #444;
+}
+
+@media (max-width: 900px) {
+  .viewcourt-card {
+    flex-direction: column;
+  }
+  .viewcourt-img {
+    margin: 24px auto;
+    height: 220px;
+    max-width: 95vw;
+  }
+  .viewcourt-details-section {
+    padding: 24px 12px;
+  }
+  .viewcourt-title {
+    font-size: 1.3rem;
+  }
+}

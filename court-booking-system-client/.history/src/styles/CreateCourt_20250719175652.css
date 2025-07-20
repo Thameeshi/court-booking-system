@@ -1,0 +1,142 @@
+.createcourt-page {
+  position: relative; /* needed for ::before positioning */
+  min-height: 100vh;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding-right: 5vw;
+  box-sizing: border-box;
+  overflow: hidden; /* keep pseudo-element inside */
+}
+
+/* Background image with opacity */
+.createcourt-page::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-image: url('/addcourt.png'); /* Leading slash, refers to public folder */
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: cover;
+  opacity: 0.6;
+  z-index: 0;
+}
+
+/* Form above the image */
+.createcourt-form {
+  position: relative;
+  z-index: 1;
+  background-color: rgba(255, 255, 255, 0.95);
+  padding: 20px 24px;
+  border-radius: 12px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.2);
+  width: 480px;
+  max-width: 90%;
+  max-height: 80vh;
+  overflow-y: auto;
+}
+
+
+/* Heading */
+.createcourt-form h1 {
+  margin-bottom: 1.5rem; /* 🔽 Less space below heading */
+  font-weight: 700;
+  font-size: 2rem;       /* 🔽 Slightly smaller font */
+}
+
+/* Labels */
+.createcourt-label {
+  font-weight: 600;
+  margin-bottom: 4px;    /* 🔽 Tighter spacing */
+  font-size: 1rem;
+  color: #444444;
+}
+
+/* Inputs, textarea, select */
+.createcourt-input,
+.createcourt-select,
+.createcourt-textarea {
+  width: 100%;
+  padding: 8px 12px;    /* 🔽 Less padding inside inputs */
+  margin-bottom: 12px;  /* 🔽 Less gap between fields */
+  border-radius: 6px;
+  border: 1.2px solid #ccc;
+  font-size: 0.95rem;
+  background-color: #fafafa;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  resize: vertical;
+}
+
+.createcourt-input:focus,
+.createcourt-select:focus,
+.createcourt-textarea:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 6px 1px rgba(0, 123, 255, 0.2);
+  outline: none;
+  background-color: #fff;
+}
+
+/* Button */
+.createcourt-button {
+  padding: 10px 0;      /* 🔽 Less vertical padding */
+  background-color: #0e5720;
+  border: none;
+  color: #fff;
+  font-weight: 600;
+  font-size: 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+  box-shadow: 0 5px 10px rgba(18, 97, 28, 0.25);
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+  user-select: none;
+  margin-top: 10px;
+  width: 
+  100%; /* Full width button */
+}
+
+.createcourt-button:hover:not(:disabled) {
+  background-color: #00b345;
+  box-shadow: 0 8px 16px rgba(129, 137, 145, 0.5);
+}
+
+.createcourt-button:disabled {
+  background-color: #a8c1f7;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+/* Error and success messages */
+.createcourt-error,
+.createcourt-success {
+  font-size: 0.85rem;  /* 🔽 Smaller text */
+  margin-top: -8px;
+  margin-bottom: 10px;
+  text-align: left;
+}
+
+.createcourt-error {
+  color: #dc3545;
+}
+
+.createcourt-success {
+  color: #28a745;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .createcourt-page {
+    justify-content: center;
+    padding: 1rem;
+  }
+
+  .createcourt-form {
+    width: 95%;
+    padding: 1.5rem;
+  }
+
+  .createcourt-form h1 {
+    font-size: 1.6rem;
+  }
+}

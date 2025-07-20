@@ -1,0 +1,91 @@
+.mybookings-container {
+  max-width: 800px;
+  margin: 60px auto;
+  background: #ffffff;
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  padding: 40px 32px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.mybookings-title {
+  text-align: center;
+  font-weight: 600;
+  color: #1f2937;
+  margin-bottom: 36px;
+  letter-spacing: 0.5px;
+  font-size: 2rem;
+  border-bottom: 2px solid #e5e7eb;
+  padding-bottom: 10px;
+}
+
+.mybookings-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.mybookings-item {
+  background: #f9fafb;
+  border-radius: 14px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+  padding: 24px;
+  margin-bottom: 20px;
+  border: 1px solid #d1d5db;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  transition: box-shadow 0.2s ease;
+}
+
+.mybookings-item:hover {
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  background-color: #f3f4f6;
+}
+
+.mybookings-item h5 {
+  font-size: 1.25rem;
+  color: #111827;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.mybookings-item p {
+  color: #374151;
+  font-size: 0.95rem;
+  margin: 2px 0;
+  line-height: 1.5;
+}
+
+.cancel-btn {
+  background: #dc2626;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 20px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  margin-top: 14px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+  align-self: flex-end;
+}
+
+.cancel-btn:hover {
+  background: #b91c1c;
+}
+
+.cancel-btn:disabled {
+  background: #9ca3af;
+  cursor: not-allowed;
+}
+
+/* Success message */
+.alert-success {
+  background-color: #e6ffed;
+  color: #065f46;
+  border: 1px solid #34d399;
+  padding: 12px;
+  border-radius: 8px;
+  font-size: 0.95rem;
+}
