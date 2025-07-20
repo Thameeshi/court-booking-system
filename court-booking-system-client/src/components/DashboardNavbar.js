@@ -13,6 +13,9 @@ const DashboardNavbar = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
+  // Debugging: Log userDetails on each render
+  console.log("DashboardNavbar userDetails:", userDetails);
+
   const handleLogoClick = () => {
     navigate("/");
   };
@@ -25,7 +28,7 @@ const DashboardNavbar = () => {
     dispatch(clearUserDetails());
     localStorage.removeItem("userDetails");
     localStorage.removeItem("token");
-    navigate("/login"); // Or "/" if that's your login route
+    navigate("/login");
   };
 
   return (
@@ -38,7 +41,7 @@ const DashboardNavbar = () => {
         </div>
 
         <div className="balance-info">
-          <span className="user-name">👤 {userDetails.Name ||"User"}</span>
+          <span className="user-name">👤 {userDetails?.Name || "User"}</span>
           <span className="xrp-balance">||💰 {(xrpBalance / 1000000).toFixed(6)} XRP</span>
         </div>
 
@@ -58,48 +61,55 @@ const DashboardNavbar = () => {
 
       {/* Sidebar */}
       <aside className={`sidebar ${sidebarOpen ? "open" : ""}`}>
-        <div className="profile">
-          <img
-            src={userDetails.imageUrl || "/default-user.png"}
-            alt="User"
-            className="profile-img"
-          />
-          <div className="profile-name">{userDetails.Name || "User"}</div>
+        <div className="sidebar-content">
+          <div className="profile">
+            <img
+              key={userDetails?.imageUrl} // Force re-render when image URL changes
+              src={userDetails?.imageUrl || "/default-user.png"}
+              alt="User"
+              className="profile-img"
+            />
+            <div className="profile-name">{userDetails?.Name || "User"}</div>
+            {userDetails?.bio && (
+              <div className="profile-bio">
+                <p>{userDetails.bio}</p>
+              </div>
+            )}
+          </div>
+          <ul>
+            <li>
+              <Link to="/dashboard/wallet" onClick={() => setSidebarOpen(false)}>
+                Wallet Management
+              </Link>
+            </li>
+            <li>
+              <Link to="/dashboard/profile/edit" onClick={() => setSidebarOpen(false)}>
+                Edit Profile
+              </Link>
+            </li>
+          </ul>
         </div>
-       <ul>
-  <li>
-    <Link to="/dashboard/wallet" onClick={() => setSidebarOpen(false)}>
-      Wallet Management
-    </Link>
-  </li>
-  <li>
-    <Link to="/dashboard/profile/edit" onClick={() => setSidebarOpen(false)}>
-      Edit Profile
-    </Link>
-  </li>
-  <li>
-            <button
-              className="logout-btn"
-              onClick={async () => {
-                setSidebarOpen(false);
-                await handleLogout();
-              }}
-              style={{
-                background: "#e74c3c",
-                color: "#fff",
-                border: "none",
-                padding: "8px 16px",
-                borderRadius: "4px",
-                cursor: "pointer",
-                width: "100%",
-                marginTop: "10px"
-              }}
-            >
-              Logout
-            </button>
-          </li>
-</ul>
-
+        <div className="sidebar-logout">
+          <button
+            className="logout-btn"
+            onClick={async () => {
+              setSidebarOpen(false);
+              await handleLogout();
+            }}
+            style={{
+              background: "#e74c3c",
+              color: "#fff",
+              border: "none",
+              padding: "8px 16px",
+              borderRadius: "4px",
+              cursor: "pointer",
+              width: "100%",
+              marginTop: "10px",
+            }}
+          >
+            Logout
+          </button>
+        </div>
       </aside>
 
       {/* Main Content */}

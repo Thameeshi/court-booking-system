@@ -54,7 +54,7 @@ const ProfileInfo = () => {
           alignItems: "center",
           padding: "40px" 
          }}>
-          <h1 className="mb-4" style={{ color: "#0e6304" }}>My Profile</h1>
+          <h1 className="mb-4" style={{ color: "#0e6304" }}>My Profile</h1> 
       <div className="card p-4 shadow-l">
         <div className="card-body">
           <h2 className="card-title mb-3" style={{ color: "#0e6304", fontSize:"25px", justifySelf:"center" }} >Profile Information</h2>

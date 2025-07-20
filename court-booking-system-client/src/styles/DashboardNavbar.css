@@ -3,6 +3,7 @@
   display: flex;
   flex-direction: column;
   height: 100vh;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 /* Navbar styles */
@@ -15,51 +16,75 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background-color: #004d00; /* Dark green */
+  background: linear-gradient(90deg, #006400, #228B22); /* Beautiful green gradient */
   color: white;
-  padding: 10px 16px;
-  z-index: 1100; /* on top */
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  padding: 10px 20px;
+  z-index: 1100;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
 }
 
 .brand {
   display: flex;
-  align-items: center; /* vertically center logo and text */
+  align-items: center;
   cursor: pointer;
 }
 
 .logo {
-  height: 40px;
-  margin-right: 8px;
-  display: block; /* remove extra space below image */
+  height: 42px;
+  margin-right: 10px;
 }
 
 .title {
-  font-size: 1.5rem;
+  font-size: 1.6rem;
   font-weight: bold;
-  line-height: 40px; /* vertically align with logo */
   margin: 0;
-}
-
-.balance-info {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  white-space: nowrap;
-  font-size: 0.95rem;
-  font-weight: 500;
+  color: white;
 }
 
 .nav-links {
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 20px;
 }
 
 .nav-links a {
   color: white;
   text-decoration: none;
   font-weight: 500;
+  position: relative;
+  transition: color 0.3s;
+}
+
+.nav-links a:hover::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background-color: white;
+  border-radius: 1px;
+}
+
+/* Stylish pill for name and balance */
+.balance-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: white;
+  background-color: rgba(255, 255, 255, 0.1);
+  padding: 6px 14px;
+  border-radius: 25px;
+  backdrop-filter: blur(4px);
+}
+
+.user-name,
+.wallet-amount {
+  font-weight: 600;
+  font-size: 1rem;
+  color: white;
 }
 
 .hamburger {
@@ -68,26 +93,26 @@
   color: white;
   font-size: 1.8rem;
   cursor: pointer;
-  position: relative;
-  z-index: 1150; /* above sidebar */
+  z-index: 1150;
 }
 
 /* Sidebar styles */
 .sidebar {
   position: fixed;
-  top: 64px; /* below navbar */
-  left: -260px; /* hidden initially */
+  top: 64px;
+  left: -260px;
   width: 260px;
   height: calc(100% - 64px);
-  background-color: rgba(46, 125, 50, 0.07); /* light transparent green */
+  background-color: rgba(0, 80, 40, 0.07);
   backdrop-filter: blur(8px);
-  box-shadow: none;
-  border-right: 2px solid white; /* subtle white line */
+  border-right: 2px solid #d0f0d0;
   transition: left 0.3s ease-in-out;
   z-index: 1050;
   padding: 20px;
-  color: #2e7d32; /* darker green text */
+  color: #1b5e20;
   overflow-y: auto;
+  display: flex;
+  flex-direction: column;
 }
 
 .sidebar.open {
@@ -104,35 +129,53 @@
   height: 80px;
   border-radius: 50%;
   object-fit: cover;
-  border: 2px solid #2e7d32;
+  border: 3px solid #388e3c;
 }
 
 .profile-name {
-  margin-top: 8px;
+  margin-top: 10px;
   font-weight: bold;
-  color: #2e7d32;
+  color: #1b5e20;
+  font-size: 1.1rem;
 }
 
 .sidebar ul {
   list-style: none;
   padding: 0;
-  margin-top: 16px;
+  margin-top: 20px;
 }
 
 .sidebar ul li {
-  margin: 10px 0;
+  margin: 12px 0;
 }
 
 .sidebar ul li a {
   text-decoration: none;
   color: #2e7d32;
   font-weight: 500;
+  display: block;
+  transition: all 0.2s;
+}
+
+.sidebar ul li a:hover {
+  text-decoration: underline;
+  color: #1b5e20;
+}
+
+.sidebar-content {
+  flex: 1 1 auto;
+}
+
+.sidebar-logout {
+  margin-top: auto;
+  padding-bottom: 20px;
 }
 
 /* Main content */
 .main-content {
-  padding-top: 64px; /* Pushes internal content down */
-  margin-top: 0;
+  padding-top: 64px;
+  margin-left: 0;
+  transition: margin-left 0.3s ease-in-out;
 }
 
 .main-content.shifted {
