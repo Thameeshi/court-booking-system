@@ -47,12 +47,25 @@
   gap: 20px;
 }
 
+/* Explicitly set navbar link colors to white */
 .nav-links a {
-  color: white;
+  color: white !important;
   text-decoration: none;
   font-weight: 500;
   position: relative;
   transition: color 0.3s;
+}
+
+.nav-links a:visited {
+  color: white !important;
+}
+
+.nav-links a:hover {
+  color: white !important;
+}
+
+.nav-links a:active {
+  color: white !important;
 }
 
 .nav-links a:hover::after {
@@ -90,11 +103,12 @@
 .hamburger {
   background: none;
   border: none;
-  color: white;
+  color: white !important;
   font-size: 1.8rem;
   cursor: pointer;
   z-index: 1150;
 }
+
 
 /* Sidebar styles */
 .sidebar {

@@ -19,10 +19,13 @@ import ViewCourt from "./pages/ViewCourt.js";
 import ConfirmBooking from "./pages/ConfirmBooking.js";
 import CourtHome from "./pages/CourtHome.js";
 import UserHome from "./pages/UserHome.js";
-import "./App.css";
 import AddAvailability from "./pages/AddAvailability.js";
 import EditProfile from "./pages/EditProfile.js";
 import WalletManagement from "./pages/WalletManagement.js";
+
+import Chatbot from "./components/Chatbot";  // <-- Import your Chatbot component here
+
+import "./App.css";
 
 const App = () => {
   const dispatch = useDispatch();
@@ -33,29 +36,21 @@ const App = () => {
   const [isUserChecked, setIsUserChecked] = useState(false);
   const [userExists, setUserExists] = useState(false);
 
-  
   useEffect(() => {
-   
     if (web3Authorized) {
-
       const initHotPocket = async () => {
         const connected = await hotPocketService.initialize();
         setIsHotPocketConnected(connected);
       };
-      
       initHotPocket();
     }
   }, [web3Authorized]);
 
-
   useEffect(() => {
     const checkUserExistence = async () => {
       if (isHotPocketConnected && userInfo?.email) {
-       
         try {
-         
           const res = await userService.checkUser(userInfo?.email);
-          
           if (res?.success === true) {
             setUserExists(true);
             dispatch(setUserDetails(res.user));
@@ -69,11 +64,9 @@ const App = () => {
         }
       }
     };
-    
     checkUserExistence();
   }, [isHotPocketConnected, userInfo, dispatch]);
 
- 
   if (web3Authorized && (!isHotPocketConnected || !isUserChecked)) {
     return <div>Loading...</div>;
   }
@@ -106,7 +99,6 @@ const App = () => {
 
                 {/* Shared routes for all logged-in users */}
                 <Route path="/dashboard/profile" element={<ProfileInfo />} />
-                
                 <Route path="/viewcourt" element={<ViewCourt />} />
                 <Route path="/confirmbooking" element={<ConfirmBooking />} />
 
@@ -117,33 +109,34 @@ const App = () => {
                     <Route path="/userdashboard/booking" element={<CourtBooking />} />
                     <Route path="/userdashboard/myBookings" element={<MyBookings />} />
                     <Route path="/userdashboard/profile" element={<ProfileInfo />} />
-
                   </>
                 )}
 
                 {/* Routes for Court Owners */}
-              {userDetails?.UserRole === "CourtOwner" && (
-  <>
-    <Route path="/dashboard/court-home" element={<CourtHome />} />
-    <Route path="/dashboard/court" element={<CreateCourt />} />
-    <Route path="/dashboard/myCourts" element={<ManageCourt />} />
-    <Route path="/dashboard/edit-court/:courtId" element={<EditCourt />} />
-    <Route path="/dashboard/add-availability/:courtId" element={<AddAvailability />} />
-    
-    <Route path="/dashboard/profile/edit" element={<EditProfile />} />
-    <Route path="/dashboard/wallet" element={<WalletManagement />} />
-  </>
-)}
+                {userDetails?.UserRole === "CourtOwner" && (
+                  <>
+                    <Route path="/dashboard/court-home" element={<CourtHome />} />
+                    <Route path="/dashboard/court" element={<CreateCourt />} />
+                    <Route path="/dashboard/myCourts" element={<ManageCourt />} />
+                    <Route path="/dashboard/edit-court/:courtId" element={<EditCourt />} />
+                    <Route path="/dashboard/add-availability/:courtId" element={<AddAvailability />} />
+                    <Route path="/dashboard/profile/edit" element={<EditProfile />} />
+                    <Route path="/dashboard/wallet" element={<WalletManagement />} />
+                  </>
+                )}
               </>
             )}
 
-            {/* Fallback route for invalid paths */}
+            {/* Fallback route */}
             <Route path="*" element={<Navigate to="/" />} />
           </Routes>
         </div>
       </div>
+
+      {/* Show chatbot only when user is logged in and userDetails are loaded */}
+      {web3Authorized && userDetails && <Chatbot />}
     </Router>
   );
 };
 
-export default App;
+export default App;
