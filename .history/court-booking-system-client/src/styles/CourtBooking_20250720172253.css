@@ -1,0 +1,105 @@
+/* CourtBooking.css */
+
+.court-booking-title {
+  font-size: 1.5rem;
+  text-align: center;
+  margin-top: 100px;
+  color: #206b02ff; /* primary green-blue tone */
+}
+
+.court-booking-caption {
+  font-size: 1rem;
+  text-align: center;
+  color: #9d9d9dff; /* light green highlight */
+  marrgin-bottom: 50px;
+}
+
+/* Court grid layout */
+.court-grid {
+  display: grid;
+  gap: 10px;
+  padding: 0 20px 40px;
+  align-items: center;
+}
+
+/* Individual court card */
+.court-card {
+  background-color: #ffffff;
+  border-radius: 6px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+  padding: 25px;
+  transition: transform 0.2s, box-shadow 0.2s;
+  width: 390px;
+  gap: 10px;
+  margin: 0 auto;
+}
+
+.court-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.2);
+}
+
+/* Court image */
+.court-card-image img {
+  width: 100%;
+  height: auto;
+  border-radius: 12px;
+}
+
+/* Court title */
+.court-card-title {
+  font-size: 20px;
+  font-weight: 600;
+  margin-top: 15px;
+  color: #1f2937;
+}
+
+/* Court details */
+.court-card-details {
+  margin-top: 10px;
+  font-size: 14px;
+  color: #4b5563;
+}
+
+/* Button actions */
+.court-card-actions {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+  color:#4ab420;
+}
+
+.btn-primary,
+.btn-successs {
+  padding: 16px 26px;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  background-color: #4ab420;
+}
+
+.btn-primary {
+  background-color: #4ab420;;
+  color: white;
+}
+
+.btn-primary:hover {
+  background-color: #0f6f2e;
+}
+
+.btn-successs {
+  background-color: #4ab420;
+  color: white;
+}
+
+.btn-success:hover {
+  background-color: #3c991a;
+}
+
+/* Text styling inside buttons */
+.view-text,
+.book-text {
+  font-weight: 500;
+}
