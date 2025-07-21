@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import courtService from "../services/domain-services/CourtService";
+import { useSelector } from "react-redux";
+import XrplService from "../services/common-services/XrplService.ts";
 import "../styles/EditCourt.css";
 
 const EditCourt = () => {
@@ -8,6 +10,9 @@ const EditCourt = () => {
   const navigate = useNavigate();
   const [court, setCourt] = useState(null);
   const [error, setError] = useState("");
+  const { provider } = useSelector((state) => state.auth);
+  const [tokenId, setTokenId] = useState("");
+  const [offerId, setOfferId] = useState("");
 
   useEffect(() => {
     const fetchCourt = async () => {
@@ -40,6 +45,23 @@ const EditCourt = () => {
       alert("Error while updating court.");
     }
   };
+
+  const handleBurnNFT = async () => {
+      if (!tokenId) {
+        alert("Please enter a valid Token ID");
+        return;
+      }
+  
+      try {
+        const rpc = new XrplService(provider);
+        const result = await rpc.burnNFT(tokenId);
+        console.log(`NFT burned successfully: ${result}`);
+        alert("NFT burned successfully!");
+        setTokenId("");
+      } catch (error) {
+        console.error("Error burning NFT:", error);
+      }
+    };
 
   if (!court) return <p className="editcourt-loading">Loading...</p>;
 
@@ -135,6 +157,23 @@ const EditCourt = () => {
         />
 
         <button type="submit" className="editcourt-btn">Update Court</button>
+
+        <div className="mb-3">
+            <input
+              type="text"
+              className="form-control mb-2"
+              placeholder="Enter Token ID"
+              value={tokenId}
+              onChange={(e) => setTokenId(e.target.value)}
+            />
+            <button className="btn btn-danger" onClick={handleBurnNFT} style={{
+              width:"100%",
+              padding: "3px",
+              fontSize: "14px"
+            }} >
+              Burn NFT
+            </button>
+          </div>
       </form>
     </div>
   );

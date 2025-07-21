@@ -5,24 +5,10 @@ import XrplService from "../services/common-services/XrplService.ts";
 const ProfileInfo = () => {
   const { provider } = useSelector((state) => state.auth);
   const userDetails = useSelector((state) => state.user.userDetails);
-  const [tokenId, setTokenId] = useState("");
+
   const [offerId, setOfferId] = useState("");
 
-  const handleBurnNFT = async () => {
-    if (!tokenId) {
-      alert("Please enter a valid Token ID");
-      return;
-    }
-
-    try {
-      const rpc = new XrplService(provider);
-      const result = await rpc.burnNFT(tokenId);
-      console.log(`NFT burned successfully: ${result}`);
-      setTokenId("");
-    } catch (error) {
-      console.error("Error burning NFT:", error);
-    }
-  };
+  
 
   const handleBuySellOffer = async () => {
     if (!offerId) {
@@ -34,6 +20,7 @@ const ProfileInfo = () => {
       const rpc = new XrplService(provider);
       const result = await rpc.acceptSellOffer(offerId);
       console.log(`Offer bought:`,result);
+      alert("offer bought!");
       setOfferId("");
     } catch (error) {
       console.error("Error buying offer:", error);
@@ -72,23 +59,7 @@ const ProfileInfo = () => {
 
           <h3 className="mb-3" style={{ color: "#0e6304", fontSize:"25px",justifySelf:"center" }} >Dev Tools</h3>
           <br></br>
-          <div className="mb-3">
-            <input
-              type="text"
-              className="form-control mb-2"
-              placeholder="Enter Token ID"
-              value={tokenId}
-              onChange={(e) => setTokenId(e.target.value)}
-            />
-            <button className="btn btn-danger" onClick={handleBurnNFT} style={{
-              width:"100%",
-              padding: "3px",
-              fontSize: "14px"
-            }} >
-              Burn NFT
-            </button>
-          </div>
-
+          
           <div className="mb-3">
             <input
               type="text"

@@ -1,5 +1,5 @@
 import { IProvider } from "@web3auth/base";
-import { convertStringToHex, NFTokenBurn, NFTokenMint, NFTokenCreateOffer, Payment, xrpToDrops, NFTokenAcceptOffer } from "xrpl";
+import { convertStringToHex, NFTokenBurn, NFTokenMint, NFTokenCreateOffer, Payment, xrpToDrops, NFTokenAcceptOffer, } from "xrpl";
 
 export default class XrplService {
   private provider: IProvider;
