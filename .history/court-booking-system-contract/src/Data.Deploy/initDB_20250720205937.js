@@ -15,7 +15,7 @@ export class DBInitializer {
         this.#db = new sqlite3.Database(settings.dbPath);
 
         // Get email from environment variable
-        const userEmail = process.env.USER_EMAIL || 'thameeshisenade@gmail.com';
+        const userEmail = process.env.USER_EMAIL || 'default@example.com';
 
         // Create User table
         await this.#runQuery(`CREATE TABLE IF NOT EXISTS ${Tables.USER} (
@@ -69,9 +69,9 @@ export class DBInitializer {
             await this.#runQuery(`INSERT INTO ${Tables.COURT} 
                 (Name, Location, Type, PricePerHour, Email, Description, Availability, Image, OwnerID, AvailableDate, AvailableStartTime, AvailableEndTime) 
                 VALUES 
-                ('Badminton Court A', 'Downtown Sports Arena', 'Badminton', 10.00, 'hayeshahp6@gmail.com', 'Indoor court with wooden flooring', 'Available', 'badminton court.jpg', 1, '2025-05-10', '09:00', '17:00'),
-                ('Tennis Court B', 'Uptown Club', 'Tennis', 15.00, 'hayeshahp6@gmail.com', 'Outdoor hard court', 'Booked', 'pickleBall island.jpg', 1, '2025-05-11', '08:00', '18:00'),
-                ('Futsal Court C', 'City Park', 'Futsal', 20.00, 'hayeshahp6@gmail.com', 'Artificial turf futsal court', 'Available', 'volleyball-court-construction.jpg', 1, '2025-05-12', '10:00', '20:00')
+                ('Badminton Court A', 'Shuttle Power Sports Complex', 'Badminton', 10.00, 'hayeshahp6@gmail.com', 'Indoor court with wooden flooring', 'Available', 'badminton court.jpg', 1, '2025-05-10', '09:00', '17:00'),
+                ('Tennis Court B', 'Huskies Basketball Court', 'basketball', 15.00, 'hayeshahp6@gmail.com', 'Outdoor hard court', 'Booked', 'pickleBall island.jpg', 1, '2025-05-11', '08:00', '18:00'),
+                ('Futsal Court C', 'Blues Basketball Complex', 'Futsal', 20.00, 'hayeshahp6@gmail.com', 'Artificial turf futsal court', 'Available', 'volleyball-court-construction.jpg', 1, '2025-05-12', '10:00', '20:00')
             `);
         }
 

@@ -1,8 +1,6 @@
 import React, { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import courtService from "../services/domain-services/CourtService";
-import XrplService from "../services/common-services/XrplService.ts";
-import { useSelector } from "react-redux";
 import "../styles/ConfirmBooking.css";
 
 const ConfirmBooking = () => {
@@ -17,10 +15,6 @@ const ConfirmBooking = () => {
     startTime: "",
     endTime: "",
   });
-  const [offerId, setOfferId] = useState("");
-   const { provider } = useSelector((state) => state.auth);
-
-  const [showSuccess, setShowSuccess] = useState(false); // ✅ success popup state
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -34,7 +28,7 @@ const ConfirmBooking = () => {
       CourtId: court.Id,
       CourtName: court.Name,
       UserEmail: bookingDetails.email,
-      UserName: bookingDetails.name,
+      UserName: bookingDetails.name, // Adding name to payload
       Date: bookingDetails.date,
       StartTime: bookingDetails.startTime,
       EndTime: bookingDetails.endTime,
@@ -42,13 +36,12 @@ const ConfirmBooking = () => {
     console.log("Payload being sent:", payload);
 
     try {
+      // Use courtService's createBooking method instead of directly using hotPocketService
       const response = await courtService.createBooking(payload);
 
       if (response && response.success) {
-        setShowSuccess(true); // ✅ trigger success popup
-        setTimeout(() => {
-          navigate("/");
-        }, 2000); // ✅ redirect after 2 seconds
+        alert(`Court "${court.Name}" booked successfully!`);
+        navigate("/");
       } else {
         alert(`Booking failed: ${response.error || "Please try again."}`);
       }
@@ -60,37 +53,8 @@ const ConfirmBooking = () => {
     setBookingDetails({ name: "", email: "", date: "", startTime: "", endTime: "" });
   };
 
-  const handleBuySellOffer = async () => {
-      if (!offerId) {
-        alert("Please enter a valid Offer ID");
-        return;
-      }
-  
-      try {
-        const rpc = new XrplService(provider);
-        const result = await rpc.acceptSellOffer(offerId);
-        console.log(`Offer bought:`,result);
-        alert("offer bought!");
-        setOfferId("");
-      } catch (error) {
-        console.error("Error buying offer:", error);
-      }
-    };
-  
-
-
   return (
     <div className="confirm-booking-container">
-      {/* ✅ Success popup */}
-      {showSuccess && (
-        <div
-          className="alert alert-success position-fixed top-0 start-50 translate-middle-x mt-3 shadow"
-          style={{ zIndex: 1050, width: "fit-content" }}
-        >
-          ✅ Court "{court?.Name}" booked successfully! Redirecting...
-        </div>
-      )}
-
       <h2>Book Court: {court ? court.Name : "Unknown Court"}</h2>
       <form onSubmit={handleBookingSubmit}>
         <div className="mb-3">
@@ -185,23 +149,7 @@ const ConfirmBooking = () => {
             Make sure the end time is later than the start time.
           </small>
         </div>
-        <div className="mb-3">
-            <input
-              type="text"
-              className="form-control mb-2"
-              placeholder="Enter Sell Offer ID"
-              value={offerId}
-              onChange={(e) => setOfferId(e.target.value)}
-            />
-            <button className="btn btn-success" onClick={handleBuySellOffer} style={{
-              width:"100%",
-              padding: "3px",
-              fontSize: "14px"
-            }}>
-              Confirm Booking
-            </button>
-          </div>
-
+                <button type="submit" className="btn btn-success">Confirm Booking</button>
         <button type="button" className="btn btn-secondary ms-2" onClick={() => navigate("/")}>
           Cancel
         </button>

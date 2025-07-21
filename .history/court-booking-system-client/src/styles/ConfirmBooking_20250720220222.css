@@ -1,8 +1,8 @@
 /* ConfirmBooking.css */
 
 .confirm-booking-container {
-  width: 600px;
-  height:730px;
+  width: 500px;
+  height:700px;
   margin: 0 auto;
   padding: 20px;
   margin-top: 70px;
@@ -45,7 +45,6 @@ h2 {
 
 .btn {
   padding: 10px 20px;
-  margin-top: 16px;
   font-size: 16px;
   border-radius: 10px;
   transition: all 0.3s ease-in-out;

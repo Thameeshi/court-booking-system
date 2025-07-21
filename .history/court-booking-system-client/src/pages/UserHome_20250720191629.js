@@ -39,7 +39,7 @@ const CourtHome = () => {
           </div>
         </div>
 
-        <div className="welcome-text-box w-655 h-550 bg-white shadow-lg rounded-lg p-6 md:p-8 flex flex-col justify-center items-center text-center">
+        <div className="welcome-text-box w-625 h-550 bg-white shadow-lg rounded-lg p-6 md:p-8 flex flex-col justify-center items-center text-center">
           <p className="text-black font-semibold italic text-xl">
             <span className="text-green-600">WELCOME TO COURTIFY</span>
           </p>

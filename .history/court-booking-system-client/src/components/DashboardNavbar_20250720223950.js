@@ -32,12 +32,12 @@ const DashboardNavbar = () => {
   };
 
   return (
-    <div className="user-navbar-container">
+    <div className="dashboard-navbar-container">
       {/* Top Navbar */}
       <nav className="top-navbar">
         <div className="brand" onClick={handleLogoClick} role="button" tabIndex={0}>
           <img src="/logo.png" alt="Courtify Logo" className="logo" />
-          <span className="title_user">Courtify</span>
+          <span className="title">Courtify</span>
         </div>
 
         <div className="balance-info">
@@ -46,8 +46,8 @@ const DashboardNavbar = () => {
         </div>
 
         <div className="nav-links">
-          <Link to="/userdashboard/booking"> Book a Court</Link>
-          <Link to="/userdashboard/myBookings"> My Bookings</Link>
+          <Link to="/dashboard/court">Add Court</Link>
+          <Link to="/dashboard/myCourts">Manage Court</Link>
           <Link to="/dashboard/profile">Profile</Link>
           <button
             className="hamburger"
