@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 import courtService from "../services/domain-services/CourtService";
+import XrplService from "../services/common-services/XrplService.ts";
 import "../styles/ManageCourt.css"; // Ensure you have this CSS file for styling
 
 const ManageCourt = () => {
@@ -11,6 +13,8 @@ const ManageCourt = () => {
   const courtsPerPage = 6;
   const ownerEmail = process.env.USER_EMAIL; // Replace with actual owner email if needed
   const navigate = useNavigate();
+  const { provider } = useSelector((state) => state.auth);
+  const [tokenIds, setTokenIds] = useState({});
 
   useEffect(() => {
     const fetchCourts = async () => {
@@ -56,6 +60,21 @@ const ManageCourt = () => {
     if (!dateString) return "Not set";
     return new Date(dateString).toLocaleDateString();
   };
+
+  const handleCreateSellOffer = async (nftId) => {
+  if (!nftId) {
+    alert("Please provide the NFTokenID.");
+    return;
+  }
+  const amountInXRP = 1.0; // 1 XRP
+  const memo = "Court booking sell offer";
+  const xrpl = new XrplService(provider);
+  const response = await xrpl.createSellOffer(nftId, amountInXRP, memo);
+  console.log("Sell offer response:", response);
+  alert("Sell offer created successfully! ");
+};
+
+
 
   // Pagination logic
   const indexOfLastCourt = currentPage * courtsPerPage;
@@ -105,6 +124,25 @@ const ManageCourt = () => {
                     >
                       Delete
                     </button>
+                    <br></br>
+                    <div>
+                    <input
+                        type="text"
+                        className="form-control mb-2"
+                        placeholder="Enter Token ID"
+                        value={tokenIds[court.Id] || ""}
+                        onChange={(e) =>
+                          setTokenIds({ ...tokenIds, [court.Id]: e.target.value })
+                        }
+                      />
+                      <button
+                        onClick={() => handleCreateSellOffer(tokenIds[court.Id] || court.NFTokenID)}
+                        className="btn btn-primary"
+                        disabled={!tokenIds[court.Id] && !court.NFTokenID}
+                      >
+                        Create Sell Offer
+                      </button>
+                    </div>
                   </div>
                 </div>
               </div>

@@ -1,31 +1,8 @@
-import React, { useState } from "react";
 import { useSelector } from "react-redux";
-import XrplService from "../services/common-services/XrplService.ts";
 
 const ProfileInfo = () => {
-  const { provider } = useSelector((state) => state.auth);
   const userDetails = useSelector((state) => state.user.userDetails);
 
-  const [offerId, setOfferId] = useState("");
-
-  
-
-  const handleBuySellOffer = async () => {
-    if (!offerId) {
-      alert("Please enter a valid Offer ID");
-      return;
-    }
-
-    try {
-      const rpc = new XrplService(provider);
-      const result = await rpc.acceptSellOffer(offerId);
-      console.log(`Offer bought:`,result);
-      alert("offer bought!");
-      setOfferId("");
-    } catch (error) {
-      console.error("Error buying offer:", error);
-    }
-  };
 
   if (!userDetails) {
     return <div className="alert alert-warning">No user details found.</div>;
@@ -60,22 +37,6 @@ const ProfileInfo = () => {
           <h3 className="mb-3" style={{ color: "#0e6304", fontSize:"25px",justifySelf:"center" }} >Dev Tools</h3>
           <br></br>
           
-          <div className="mb-3">
-            <input
-              type="text"
-              className="form-control mb-2"
-              placeholder="Enter Sell Offer ID"
-              value={offerId}
-              onChange={(e) => setOfferId(e.target.value)}
-            />
-            <button className="btn btn-success" onClick={handleBuySellOffer} style={{
-              width:"100%",
-              padding: "3px",
-              fontSize: "14px"
-            }}>
-              Buy Sell Offer
-            </button>
-          </div>
 
           <div className="mb-3">
             <a
