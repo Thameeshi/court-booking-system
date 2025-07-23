@@ -4,205 +4,141 @@ import courtService from "../services/domain-services/CourtService";
 import "../styles/CreateCourt.css";
 
 const CreateCourt = () => {
-  const [formData, setFormData] = useState({
-    Name: "",
-    description: "",
-    PricePerHour: "",
-    Location: "",
-    Type: "",
-    Availability: "Available",
-    Email: "",
-    Image: null,
-  });
+  const [name, setName] = useState("");
+  const [location, setLocation] = useState("");
+  const [sport, setSport] = useState("");
+  const [price, setPrice] = useState("");
+  const [availability, setAvailability] = useState("Available");
+  const [moreDetails, setMoreDetails] = useState("");
+  const [image, setImage] = useState(null);
+  const [loading, setLoading] = useState(false);
 
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState("");
-  const [successMessage, setSuccessMessage] = useState("");
   const navigate = useNavigate();
+  const userEmail = localStorage.getItem("userEmail") || "test@example.com";
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
-  };
+  const handleImageUpload = async () => {
+    if (!image) throw new Error("No image selected");
 
-  const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      setFormData((prevData) => ({ ...prevData, Image: file }));
+    const formData = new FormData();
+    formData.append("file", image);
+    formData.append("upload_preset", "easycourt_upload");
+
+    const response = await fetch(
+      "https://api.cloudinary.com/v1_1/dhrejmsev/image/upload",
+      {
+        method: "POST",
+        body: formData,
+      }
+    );
+
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}));
+      throw new Error(
+        "Image upload failed: " +
+          (errorData.error?.message || response.statusText)
+      );
     }
+
+    const data = await response.json();
+    return data.secure_url;
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setIsLoading(true);
-    setError("");
-    setSuccessMessage("");
+    setLoading(true);
 
     try {
-      if (!formData.Image) {
-        setError("Please upload a court image.");
-        setIsLoading(false);
+      if (!image) {
+        alert("Please select an image.");
+        setLoading(false);
         return;
       }
 
-      const formDataToSend = new FormData();
-      formDataToSend.append("Name", formData.Name);
-      formDataToSend.append("description", formData.description);
-      formDataToSend.append("PricePerHour", formData.PricePerHour);
-      formDataToSend.append("Location", formData.Location);
-      formDataToSend.append("Type", formData.Type);
-      formDataToSend.append("Availability", formData.Availability);
-      formDataToSend.append("Email", formData.Email);
-      formDataToSend.append("Image", formData.Image);
+      const imageUrl = await handleImageUpload();
 
-      const response = await courtService.addCourt(formDataToSend);
+      const courtData = {
+        name,
+        location,
+        sport,
+        price,
+        email: userEmail,
+        moreDetails,
+        availability, // now simple string: "Available" or "Unavailable"
+        imageUrl,
+      };
 
-      const newCourtId =
-        response?.success?.courtId ||
-        response?.court?._id ||
-        response?.court?.Id ||
-        response?.success?.Id;
+      const result = await courtService.addCourt(courtData);
 
-      if (response?.success && newCourtId) {
-        setSuccessMessage("Court added successfully!");
-        navigate(`/dashboard/add-availability/${newCourtId}`);
+      if (result?.success) {
+        alert("Court added successfully!");
+        navigate(`/dashboard/add-availability/${result.success.courtId}`);
       } else {
-        setError("Failed to add court. Please try again.");
+        alert("Failed to add court: " + (result?.error || "Unknown error"));
       }
-    } catch (error) {
-      setError(error.message || "An error occurred while adding the court.");
+    } catch (err) {
+      alert("Error: " + err.message);
     } finally {
-      setIsLoading(false);
+      setLoading(false);
     }
   };
 
   return (
-    <div className="createcourt-page">
-      <form
-        onSubmit={handleSubmit}
-        className="createcourt-form"
-        encType="multipart/form-data"
-      >
-        <h1>Add New Court</h1>
-
-        <label htmlFor="Name" className="createcourt-label">
-          Court Name
-        </label>
+    <div className="create-court">
+      
+      <form onSubmit={handleSubmit}>
+        <h2>Create Court</h2>
         <input
-          type="text"
-          name="Name"
-          id="Name"
-          value={formData.Name}
-          onChange={handleInputChange}
-          className="createcourt-input"
+          placeholder="Court Name"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
           required
         />
-
-        <label htmlFor="description" className="createcourt-label">
-          Description
-        </label>
-        <textarea
-          name="description"
-          id="description"
-          value={formData.description}
-          onChange={handleInputChange}
-          className="createcourt-textarea"
-          rows={4}
-          required
-        />
-
-        <label htmlFor="PricePerHour" className="createcourt-label">
-          Hourly Price
-        </label>
         <input
-          type="text"
-          name="PricePerHour"
-          id="PricePerHour"
-          value={formData.PricePerHour}
-          onChange={handleInputChange}
-          className="createcourt-input"
+          placeholder="Location"
+          value={location}
+          onChange={(e) => setLocation(e.target.value)}
           required
         />
-
-        <label htmlFor="Location" className="createcourt-label">
-          Location
-        </label>
         <input
-          type="text"
-          name="Location"
-          id="Location"
-          value={formData.Location}
-          onChange={handleInputChange}
-          className="createcourt-input"
+          placeholder="Sport"
+          value={sport}
+          onChange={(e) => setSport(e.target.value)}
           required
         />
-
-        <label htmlFor="Type" className="createcourt-label">
-          Court Type
-        </label>
         <input
-          type="text"
-          name="Type"
-          id="Type"
-          value={formData.Type}
-          onChange={handleInputChange}
-          className="createcourt-input"
+          placeholder="Price"
+          type="number"
+          value={price}
+          onChange={(e) => setPrice(e.target.value)}
           required
         />
 
-        <label htmlFor="Availability" className="createcourt-label">
-          Availability
-        </label>
+        {/* Dropdown for Availability */}
         <select
-          name="Availability"
-          id="Availability"
-          value={formData.Availability}
-          onChange={handleInputChange}
-          className="createcourt-select"
+          value={availability}
+          onChange={(e) => setAvailability(e.target.value)}
           required
         >
           <option value="Available">Available</option>
           <option value="Unavailable">Unavailable</option>
         </select>
 
-        <label htmlFor="Email" className="createcourt-label">
-          Email
-        </label>
-        <input
-          type="email"
-          name="Email"
-          id="Email"
-          value={formData.Email}
-          onChange={handleInputChange}
-          className="createcourt-input"
-          required
+        <textarea
+          placeholder="More Details"
+          value={moreDetails}
+          onChange={(e) => setMoreDetails(e.target.value)}
         />
 
-        <label htmlFor="image" className="createcourt-label">
-          Court Image
-        </label>
         <input
           type="file"
-          id="image"
-          name="Image"
-          className="createcourt-input"
           accept="image/*"
-          onChange={handleImageChange}
+          onChange={(e) => setImage(e.target.files[0])}
           required
         />
 
-        <button
-          type="submit"
-          className="createcourt-button"
-          disabled={isLoading}
-        >
-          {isLoading ? "Adding..." : "Add Court"}
+        <button type="submit" disabled={loading}>
+          {loading ? "Submitting..." : "Add Court"}
         </button>
-
-        {error && <p className="createcourt-error">{error}</p>}
-        {successMessage && (
-          <p className="createcourt-success">{successMessage}</p>
-        )}
       </form>
     </div>
   );

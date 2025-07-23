@@ -17,6 +17,8 @@ const AddAvailability = () => {
   });
 
   const [isLoading, setIsLoading] = useState(false);
+  const [isMinting, setIsMinting] = useState(false);
+  const [isNftMinted, setIsNftMinted] = useState(false);
   const [error, setError] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
 
@@ -39,11 +41,28 @@ const AddAvailability = () => {
 
   const isTodaySelected = formData.AvailableDate === today;
 
+  // --- New helper function to save minted NFT (courtId + tokenId) in localStorage ---
+  const saveMintedNft = (courtId, tokenId) => {
+    const existing = JSON.parse(localStorage.getItem("mintedNFTs") || "[]");
+    if (!existing.some((item) => item.tokenId === tokenId)) {
+      existing.push({ courtId, tokenId });
+      localStorage.setItem("mintedNFTs", JSON.stringify(existing));
+    }
+    // Also save last minted tokenId for quick access if needed
+    localStorage.setItem("lastMintedNFTTokenId", tokenId);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
     setError("");
     setSuccessMessage("");
+
+    if (!isNftMinted) {
+      setError("You must mint the NFT before adding availability.");
+      setIsLoading(false);
+      return;
+    }
 
     const { AvailableDate, AvailableStartTime, AvailableEndTime } = formData;
 
@@ -78,6 +97,7 @@ const AddAvailability = () => {
           AvailableStartTime: "",
           AvailableEndTime: "",
         });
+        setIsNftMinted(false); // Reset for next entry
       } else {
         setError(response.error || "Failed to add availability. Please try again.");
       }
@@ -96,6 +116,10 @@ const AddAvailability = () => {
       return;
     }
 
+    setIsMinting(true);
+    setError("");
+    setSuccessMessage("");
+
     try {
       const plainUri = `court-${courtId}-${AvailableDate}-${AvailableStartTime}`;
       const memo = `Court #${courtId} | ${AvailableDate} ${AvailableStartTime}-${AvailableEndTime}`;
@@ -104,7 +128,7 @@ const AddAvailability = () => {
       const mintResult = await xrplService.mintNFT(memo, plainUri);
 
       if (mintResult?.result?.tx_json?.hash) {
-        const confirmedTx = await xrplService.waitForConfirmation(mintResult.result.tx_json.hash);
+        await xrplService.waitForConfirmation(mintResult.result.tx_json.hash);
         const mintedNft = await xrplService.getNftFromUri(plainUri);
 
         if (mintedNft) {
@@ -116,19 +140,38 @@ const AddAvailability = () => {
             AvailableEndTime,
           });
 
+          // Save minted NFT tokenId along with courtId to localStorage
+          saveMintedNft(courtId, mintedNft);
+
           setSuccessMessage(`NFT minted and stored successfully! Token ID: ${mintedNft}`);
           setError("");
+          setIsNftMinted(true);
+          alert("NFT minted! You will now be able to add availability.");
         } else {
           setError("NFT mint confirmed but token not found.");
           setSuccessMessage("");
+          setIsNftMinted(false);
         }
       } else {
         setError("NFT minting failed.");
         setSuccessMessage("");
+        setIsNftMinted(false);
       }
     } catch (err) {
       setError("Error minting NFT: " + err.message);
       setSuccessMessage("");
+      setIsNftMinted(false);
+    } finally {
+      setIsMinting(false);
+    }
+  };
+
+  // Copy to clipboard handler
+  const copyTokenIdToClipboard = () => {
+    const tokenId = localStorage.getItem("lastMintedNFTTokenId");
+    if (tokenId) {
+      navigator.clipboard.writeText(tokenId);
+      alert("Token ID copied to clipboard!");
     }
   };
 
@@ -174,19 +217,61 @@ const AddAvailability = () => {
             required
           />
         </div>
-        <button type="submit" className="addavailability-btn" disabled={isLoading}>
-          {isLoading ? "Adding..." : "Add Availability"}
-        </button>
-        {error && <p className="addavailability-error">{error}</p>}
-        {successMessage && <p className="addavailability-success">{successMessage}</p>}
+
+        {/* Error message for trying to add before minting NFT */}
+        {!isNftMinted && (
+          <div className="addavailability-error" style={{ marginBottom: "1rem" }}>
+            You must mint the NFT before adding availability.
+          </div>
+        )}
+
+        {/* Mint NFT button */}
         <button
           type="button"
-          className="addavailability-btn mt-3"
+          className="addavailability-btn mint-nft mt-3"
           onClick={mintNft}
-          disabled={isLoading}
+          disabled={isLoading || isMinting}
+          style={{ marginBottom: "1rem" }}
         >
-          Mint NFT
+          {isMinting ? "Minting NFT..." : "Mint NFT"}
         </button>
+
+        {/* Add Availability button */}
+        <button
+          type="submit"
+          className="addavailability-btn"
+          disabled={isLoading || !isNftMinted}
+        >
+          {isLoading ? "Adding..." : "Add Availability"}
+        </button>
+
+        {/* Display errors and success messages */}
+        {error && <p className="addavailability-error">{error}</p>}
+
+        {successMessage && (
+          <>
+            <p className="addavailability-success">{successMessage}</p>
+
+            <div className="copy-token-wrapper">
+  <label className="copy-token-label">Last Minted NFT Token ID:</label>
+  <input
+    className="copy-token-input"
+    type="text"
+    readOnly
+    value={localStorage.getItem("lastMintedNFTTokenId") || ""}
+    onFocus={(e) => e.target.select()}
+  />
+  <button
+    type="button"
+    className="copy-token-button"
+    onClick={copyTokenIdToClipboard}
+  >
+    Copy Token ID
+  </button>
+</div>
+
+          </>
+        )}
       </form>
     </div>
   );

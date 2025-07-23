@@ -1,4 +1,5 @@
-import { CourtService } from "../Services/Domain.Services/CourtService.js";
+import CourtService from "../Services/Domain.Services/CourtService.js";
+
 import { BookingService } from "../Services/Domain.Services/BookingService.js";
 
 export class CourtController {
@@ -89,6 +90,6 @@ export class CourtController {
                 error: err.message || "An unexpected error occurred.",
                 request: this.#message
             };
-        }
-    }
+        }
+    }
 }

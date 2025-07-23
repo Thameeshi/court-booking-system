@@ -29,11 +29,11 @@ const Chatbot = () => {
       return "We support PayPal, credit/debit cards, and XRPL crypto payments.";
     if (msg.includes("refund"))
       return "Refunds are available for cancellations within 24 hours of booking.";
-    if (msg.includes("add court"))
+    if (msg.includes("add a court"))
       return "As a Court Owner, you can add courts by going to Dashboard → 'Add New Court'.";
     if (msg.includes("delete a court"))
       return "To delete a court, go to Dashboard → 'Manage My Courts' and click the delete icon.";
-    if (msg.includes("update court") || msg.includes("edit court"))
+    if (msg.includes("update a court") || msg.includes("edit court"))
       return "Visit 'Manage My Courts' in your dashboard to update court details.";
     if (msg.includes("edit profile") || msg.includes("update profile"))
       return "To edit your profile, click the Edit button on the sidebar.";

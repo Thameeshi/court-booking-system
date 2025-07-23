@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import courtService from "../services/domain-services/CourtService";
 import XrplService from "../services/common-services/XrplService.ts";
-import "../styles/ManageCourt.css"; // Ensure you have this CSS file for styling
+import "../styles/ManageCourt.css";
 
 const ManageCourt = () => {
   const [courts, setCourts] = useState([]);
@@ -11,7 +11,9 @@ const ManageCourt = () => {
   const [error, setError] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const courtsPerPage = 6;
-  const ownerEmail = process.env.USER_EMAIL; // Replace with actual owner email if needed
+
+  // Replace this with your actual owner email, or get from auth/Redux
+  const ownerEmail = process.env.USER_EMAIL || "hayeshahp6@gmail.com"; 
   const navigate = useNavigate();
   const { provider } = useSelector((state) => state.auth);
   const [tokenIds, setTokenIds] = useState({});
@@ -23,6 +25,7 @@ const ManageCourt = () => {
         const response = await courtService.getCourtByOwner(ownerEmail);
         if (response.success) {
           setCourts(response.success);
+          console.log("Courts data:", response.success);
         } else {
           setError("Failed to fetch courts.");
         }
@@ -62,19 +65,17 @@ const ManageCourt = () => {
   };
 
   const handleCreateSellOffer = async (nftId) => {
-  if (!nftId) {
-    alert("Please provide the NFTokenID.");
-    return;
-  }
-  const amountInXRP = 1.0; // 1 XRP
-  const memo = "Court booking sell offer";
-  const xrpl = new XrplService(provider);
-  const response = await xrpl.createSellOffer(nftId, amountInXRP, memo);
-  console.log("Sell offer response:", response);
-  alert("Sell offer created successfully! ");
-};
-
-
+    if (!nftId) {
+      alert("Please provide the NFTokenID.");
+      return;
+    }
+    const amountInXRP = 1.0; // 1 XRP
+    const memo = "Court booking sell offer";
+    const xrpl = new XrplService(provider);
+    const response = await xrpl.createSellOffer(nftId, amountInXRP, memo);
+    console.log("Sell offer response:", response);
+    alert("Sell offer created successfully!");
+  };
 
   // Pagination logic
   const indexOfLastCourt = currentPage * courtsPerPage;
@@ -96,7 +97,7 @@ const ManageCourt = () => {
             {currentCourts.map((court) => (
               <div className="card" key={court.Id}>
                 <img
-                  src={`/${court.Image}`}
+                  src={court.Image || "/default-placeholder.png"} // Use image URL directly, fallback if missing
                   alt={court.Name}
                   className="card-img-top"
                 />
@@ -124,9 +125,9 @@ const ManageCourt = () => {
                     >
                       Delete
                     </button>
-                    <br></br>
+                    <br />
                     <div>
-                    <input
+                      <input
                         type="text"
                         className="form-control mb-2"
                         placeholder="Enter Token ID"

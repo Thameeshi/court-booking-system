@@ -23,7 +23,10 @@ import AddAvailability from "./pages/AddAvailability.js";
 import EditProfile from "./pages/EditProfile.js";
 import WalletManagement from "./pages/WalletManagement.js";
 
-import Chatbot from "./components/Chatbot";  // <-- Import your Chatbot component here
+// Import your MyNFTs component
+import MyNFTs from "./pages/MyNFTs.js";
+
+import Chatbot from "./components/Chatbot";
 
 import "./App.css";
 
@@ -122,6 +125,9 @@ const App = () => {
                     <Route path="/dashboard/add-availability/:courtId" element={<AddAvailability />} />
                     <Route path="/dashboard/profile/edit" element={<EditProfile />} />
                     <Route path="/dashboard/wallet" element={<WalletManagement />} />
+
+                    {/* Add the MyNFTs route here */}
+                    <Route path="/dashboard/myNFTs" element={<MyNFTs />} />
                   </>
                 )}
               </>

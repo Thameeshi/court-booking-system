@@ -34,7 +34,8 @@ const EditCourt = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await courtService.editCourt(courtId, court);
+      const response = await courtService.updateCourt(courtId, court);
+
       if (response.success) {
         alert("Court updated.");
         navigate("/manage-court");

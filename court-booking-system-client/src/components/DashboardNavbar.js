@@ -35,19 +35,30 @@ const DashboardNavbar = () => {
     <div className="dashboard-container">
       {/* Top Navbar */}
       <nav className="top-navbar">
-        <div className="brand" onClick={handleLogoClick} role="button" tabIndex={0}>
+        <div
+          className="brand"
+          onClick={handleLogoClick}
+          role="button"
+          tabIndex={0}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") handleLogoClick();
+          }}
+        >
           <img src="/logo.png" alt="Courtify Logo" className="logo" />
           <span className="title">Courtify</span>
         </div>
 
         <div className="balance-info">
           <span className="user-name">👤 {userDetails?.Name || "User"}</span>
-          <span className="xrp-balance">||💰 {(xrpBalance / 1000000).toFixed(6)} XRP</span>
+          <span className="xrp-balance">
+            💰 {(xrpBalance / 1000000).toFixed(6)} XRP
+          </span>
         </div>
 
         <div className="nav-links">
           <Link to="/dashboard/court">Add Court</Link>
           <Link to="/dashboard/myCourts">Manage Court</Link>
+          <Link to="/dashboard/myNFTs">My NFTs</Link> {/* Added My NFTs link */}
           <Link to="/dashboard/profile">Profile</Link>
           <button
             className="hamburger"
@@ -83,8 +94,16 @@ const DashboardNavbar = () => {
               </Link>
             </li>
             <li>
-              <Link to="/dashboard/profile/edit" onClick={() => setSidebarOpen(false)}>
+              <Link
+                to="/dashboard/profile/edit"
+                onClick={() => setSidebarOpen(false)}
+              >
                 Edit Profile
+              </Link>
+            </li>
+            <li>
+              <Link to="/dashboard/myNFTs" onClick={() => setSidebarOpen(false)}>
+                My NFTs
               </Link>
             </li>
           </ul>
