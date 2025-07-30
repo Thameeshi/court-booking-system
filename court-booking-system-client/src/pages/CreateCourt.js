@@ -10,37 +10,43 @@ const CreateCourt = () => {
   const [price, setPrice] = useState("");
   const [availability, setAvailability] = useState("Available");
   const [moreDetails, setMoreDetails] = useState("");
-  const [image, setImage] = useState(null);
+  const [images, setImages] = useState([]);
   const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
-  const userEmail = localStorage.getItem("userEmail") || "test@example.com";
+  const userEmail = localStorage.getItem("userEmail") || "hayeshahp6@gmail.com";
 
   const handleImageUpload = async () => {
-    if (!image) throw new Error("No image selected");
+    if (!images.length) throw new Error("No images selected");
 
-    const formData = new FormData();
-    formData.append("file", image);
-    formData.append("upload_preset", "easycourt_upload");
+    const uploadedUrls = [];
 
-    const response = await fetch(
-      "https://api.cloudinary.com/v1_1/dhrejmsev/image/upload",
-      {
-        method: "POST",
-        body: formData,
-      }
-    );
+    for (let i = 0; i < images.length && i < 3; i++) {
+      const formData = new FormData();
+      formData.append("file", images[i]);
+      formData.append("upload_preset", "easycourt_upload");
 
-    if (!response.ok) {
-      const errorData = await response.json().catch(() => ({}));
-      throw new Error(
-        "Image upload failed: " +
-          (errorData.error?.message || response.statusText)
+      const response = await fetch(
+        "https://api.cloudinary.com/v1_1/dhrejmsev/image/upload",
+        {
+          method: "POST",
+          body: formData,
+        }
       );
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(
+          "Image upload failed: " +
+            (errorData.error?.message || response.statusText)
+        );
+      }
+
+      const data = await response.json();
+      uploadedUrls.push(data.secure_url);
     }
 
-    const data = await response.json();
-    return data.secure_url;
+    return uploadedUrls;
   };
 
   const handleSubmit = async (e) => {
@@ -48,13 +54,13 @@ const CreateCourt = () => {
     setLoading(true);
 
     try {
-      if (!image) {
-        alert("Please select an image.");
+      if (!images.length) {
+        alert("Please select up to 3 images.");
         setLoading(false);
         return;
       }
 
-      const imageUrl = await handleImageUpload();
+      const imageUrls = await handleImageUpload();
 
       const courtData = {
         name,
@@ -63,8 +69,8 @@ const CreateCourt = () => {
         price,
         email: userEmail,
         moreDetails,
-        availability, // now simple string: "Available" or "Unavailable"
-        imageUrl,
+        availability,
+        imageUrls, // Send all 3 image URLs as an array
       };
 
       const result = await courtService.addCourt(courtData);
@@ -84,7 +90,6 @@ const CreateCourt = () => {
 
   return (
     <div className="create-court">
-      
       <form onSubmit={handleSubmit}>
         <h2>Create Court</h2>
         <input
@@ -113,7 +118,6 @@ const CreateCourt = () => {
           required
         />
 
-        {/* Dropdown for Availability */}
         <select
           value={availability}
           onChange={(e) => setAvailability(e.target.value)}
@@ -132,9 +136,23 @@ const CreateCourt = () => {
         <input
           type="file"
           accept="image/*"
-          onChange={(e) => setImage(e.target.files[0])}
+          multiple
+          onChange={(e) => setImages(Array.from(e.target.files).slice(0, 3))}
           required
         />
+
+        {images.length > 0 && (
+          <div className="image-preview">
+            {images.map((img, index) => (
+              <img
+                key={index}
+                src={URL.createObjectURL(img)}
+                alt={`preview-${index}`}
+                style={{ width: "100px", marginRight: "10px" }}
+              />
+            ))}
+          </div>
+        )}
 
         <button type="submit" disabled={loading}>
           {loading ? "Submitting..." : "Add Court"}

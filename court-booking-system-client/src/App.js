@@ -22,6 +22,7 @@ import UserHome from "./pages/UserHome.js";
 import AddAvailability from "./pages/AddAvailability.js";
 import EditProfile from "./pages/EditProfile.js";
 import WalletManagement from "./pages/WalletManagement.js";
+import BookingChart from "./pages/BookingChart.js";
 
 // Import your MyNFTs component
 import MyNFTs from "./pages/MyNFTs.js";
@@ -125,7 +126,7 @@ const App = () => {
                     <Route path="/dashboard/add-availability/:courtId" element={<AddAvailability />} />
                     <Route path="/dashboard/profile/edit" element={<EditProfile />} />
                     <Route path="/dashboard/wallet" element={<WalletManagement />} />
-
+                    <Route path="/dashboard/booking-stats" element={<BookingChart />} />
                     {/* Add the MyNFTs route here */}
                     <Route path="/dashboard/myNFTs" element={<MyNFTs />} />
                   </>

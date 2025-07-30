@@ -58,7 +58,8 @@ const DashboardNavbar = () => {
         <div className="nav-links">
           <Link to="/dashboard/court">Add Court</Link>
           <Link to="/dashboard/myCourts">Manage Court</Link>
-          <Link to="/dashboard/myNFTs">My NFTs</Link> {/* Added My NFTs link */}
+          <Link to="/dashboard/myNFTs">My NFTs</Link>
+          <Link to="/dashboard/booking-stats">Booking Stats</Link> {/* Added Booking Stats here */}
           <Link to="/dashboard/profile">Profile</Link>
           <button
             className="hamburger"
@@ -88,11 +89,7 @@ const DashboardNavbar = () => {
             )}
           </div>
           <ul>
-            <li>
-              <Link to="/dashboard/wallet" onClick={() => setSidebarOpen(false)}>
-                Wallet Management
-              </Link>
-            </li>
+           
             <li>
               <Link
                 to="/dashboard/profile/edit"
@@ -104,6 +101,14 @@ const DashboardNavbar = () => {
             <li>
               <Link to="/dashboard/myNFTs" onClick={() => setSidebarOpen(false)}>
                 My NFTs
+              </Link>
+            </li>
+            <li>
+              <Link
+                to="/dashboard/booking-stats"
+                onClick={() => setSidebarOpen(false)}
+              >
+                Booking Stats
               </Link>
             </li>
           </ul>

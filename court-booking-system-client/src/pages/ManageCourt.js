@@ -12,11 +12,14 @@ const ManageCourt = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const courtsPerPage = 6;
 
-  // Replace this with your actual owner email, or get from auth/Redux
-  const ownerEmail = process.env.USER_EMAIL || "hayeshahp6@gmail.com"; 
+  const ownerEmail = process.env.USER_EMAIL || "hayeshahp6@gmail.com";
   const navigate = useNavigate();
   const { provider } = useSelector((state) => state.auth);
   const [tokenIds, setTokenIds] = useState({});
+
+  // Modal state
+  const [modalOpen, setModalOpen] = useState(false);
+  const [modalImage, setModalImage] = useState(null);
 
   useEffect(() => {
     const fetchCourts = async () => {
@@ -69,7 +72,7 @@ const ManageCourt = () => {
       alert("Please provide the NFTokenID.");
       return;
     }
-    const amountInXRP = 1.0; // 1 XRP
+    const amountInXRP = 1.0;
     const memo = "Court booking sell offer";
     const xrpl = new XrplService(provider);
     const response = await xrpl.createSellOffer(nftId, amountInXRP, memo);
@@ -77,12 +80,21 @@ const ManageCourt = () => {
     alert("Sell offer created successfully!");
   };
 
-  // Pagination logic
+  // Modal open/close handlers
+  const openModal = (img) => {
+    setModalImage(img);
+    setModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setModalOpen(false);
+    setModalImage(null);
+  };
+
   const indexOfLastCourt = currentPage * courtsPerPage;
   const indexOfFirstCourt = indexOfLastCourt - courtsPerPage;
   const currentCourts = courts.slice(indexOfFirstCourt, indexOfLastCourt);
   const totalPages = Math.ceil(courts.length / courtsPerPage);
-
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
   return (
@@ -96,12 +108,23 @@ const ManageCourt = () => {
           <div className="court-grid">
             {currentCourts.map((court) => (
               <div className="card" key={court.Id}>
-                <img
-                  src={court.Image || "/default-placeholder.png"} // Use image URL directly, fallback if missing
-                  alt={court.Name}
-                  className="card-img-top"
-                />
-                <div className="card-body">
+                {/* Images container */}
+                <div className="card-images-container">
+                  {[court.Image1, court.Image2, court.Image3]
+                    .filter(Boolean)
+                    .map((img, idx) => (
+                      <img
+                        key={idx}
+                        src={img}
+                        alt={`${court.Name}-${idx}`}
+                        onClick={() => openModal(img)}
+                        style={{ cursor: "pointer" }}
+                      />
+                    ))}
+                </div>
+
+                {/* Court details */}
+                <div className="card-content">
                   <h5 className="card-title">{court.Name}</h5>
                   <p className="card-text">
                     <strong>Location:</strong> {court.Location} <br />
@@ -112,6 +135,7 @@ const ManageCourt = () => {
                     <strong>Available Time:</strong>{" "}
                     {court.AvailableStartTime || "Not set"} - {court.AvailableEndTime || "Not set"}
                   </p>
+
                   <div className="card-buttons">
                     <button
                       className="btn btn-edit"
@@ -137,7 +161,9 @@ const ManageCourt = () => {
                         }
                       />
                       <button
-                        onClick={() => handleCreateSellOffer(tokenIds[court.Id] || court.NFTokenID)}
+                        onClick={() =>
+                          handleCreateSellOffer(tokenIds[court.Id] || court.NFTokenID)
+                        }
                         className="btn btn-primary"
                         disabled={!tokenIds[court.Id] && !court.NFTokenID}
                       >
@@ -150,7 +176,7 @@ const ManageCourt = () => {
             ))}
           </div>
 
-          {/* Pagination Controls */}
+          {/* Pagination */}
           <nav className="mt-4 d-flex justify-content-center">
             <ul className="pagination">
               {Array.from({ length: totalPages }, (_, i) => i + 1).map((number) => (
@@ -158,10 +184,7 @@ const ManageCourt = () => {
                   key={number}
                   className={`page-item ${currentPage === number ? "active" : ""}`}
                 >
-                  <button
-                    onClick={() => paginate(number)}
-                    className="page-link"
-                  >
+                  <button onClick={() => paginate(number)} className="page-link">
                     {number}
                   </button>
                 </li>
@@ -169,6 +192,18 @@ const ManageCourt = () => {
             </ul>
           </nav>
         </>
+      )}
+
+      {/* Modal for full image */}
+      {modalOpen && (
+        <div className="modal-overlay" onClick={closeModal}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            <img src={modalImage} alt="Full view" />
+            <button onClick={closeModal} className="modal-close-btn">
+              Close
+            </button>
+          </div>
+        </div>
       )}
     </div>
   );

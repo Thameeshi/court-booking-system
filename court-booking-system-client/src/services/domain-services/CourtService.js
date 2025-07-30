@@ -1,10 +1,10 @@
 import hotPocketService from "../common-services/HotPocketService";
 
 class CourtService {
-  // Add a new court
+  // Add a new court with 3 images
   async addCourt(courtData) {
-    if (!courtData.imageUrl) {
-      throw new Error("Image URL is required.");
+    if (!courtData.imageUrls?.length) {
+      throw new Error("Image URLs are required.");
     }
 
     const message = {
@@ -17,8 +17,10 @@ class CourtService {
         PricePerHour: Number(courtData.price),
         Email: courtData.email,
         Availability: courtData.availability || [],
-        MoreDetails: courtData.moreDetails || null,
-        Image: courtData.imageUrl,
+        Description: courtData.description || null,
+        Image1: courtData.imageUrls[0] || null,
+        Image2: courtData.imageUrls[1] || null,
+        Image3: courtData.imageUrls[2] || null,
       },
     };
 
@@ -56,13 +58,32 @@ class CourtService {
     return this.getCourtByOwner(email);
   }
 
-  // ✅ FIXED: Update court details using subType "editCourt"
+  // Update court details with 3 images and availability
   async updateCourt(courtId, updatedData) {
-    return await hotPocketService.getServerInputResponse({
+    const message = {
       type: "Court",
-      subType: "editCourt", // ✅ MUST match backend
-      data: { courtId, updatedData },
-    });
+      subType: "editCourt",
+      data: {
+        courtId,
+        updatedData: {
+          Name: updatedData.name,
+          Location: updatedData.location,
+          Type: updatedData.sport,
+          PricePerHour: Number(updatedData.price),
+          Email: updatedData.email,
+          Availability: updatedData.availability || [],
+          Description: updatedData.description || null,
+          Image1: updatedData.imageUrls?.[0] || null,
+          Image2: updatedData.imageUrls?.[1] || null,
+          Image3: updatedData.imageUrls?.[2] || null,
+          AvailableDate: updatedData.AvailableDate || null,
+          AvailableStartTime: updatedData.AvailableStartTime || null,
+          AvailableEndTime: updatedData.AvailableEndTime || null,
+        },
+      },
+    };
+
+    return await hotPocketService.getServerInputResponse(message);
   }
 
   // Delete court
@@ -74,7 +95,7 @@ class CourtService {
     });
   }
 
-  // Add availability to court
+  // Add availability
   async addAvailability(availabilityData) {
     return await hotPocketService.getServerInputResponse({
       type: "Court",
@@ -115,7 +136,7 @@ class CourtService {
     });
   }
 
-  // Get bookings for a user
+  // Get user bookings
   async getUserBookings(userEmail) {
     if (!userEmail) {
       throw new Error("UserEmail is required to fetch bookings.");
@@ -127,13 +148,27 @@ class CourtService {
     });
   }
 
-  // Mint NFT on server
+  // Mint NFT
   async mintNFTOnServer(mintData) {
     return await hotPocketService.getServerInputResponse({
       type: "Court",
       subType: "mintNFT",
       data: mintData,
     });
+  }
+
+async getCourtBookingStats() {
+    const message = {
+      type: "Court",
+      subType: "getCourtBookingStats",
+      data: {},
+    };
+
+    const response = await hotPocketService.getServerReadReqResponse(message);
+    console.log("[CourtService] getCourtBookingStats response:", response);
+
+    // Return the array of stats or empty array if undefined
+    return response.success || [];
   }
 }
 

@@ -31,24 +31,19 @@ class CourtService {
 
       await this.#dbContext.open();
 
-      // Find Owner ID by Email
       const ownerQuery = `SELECT Id FROM ${Tables.USER} WHERE Email = ?`;
-      const ownerResult = await this.#dbContext.runSelectQuery(ownerQuery, [
-        data.Email,
-      ]);
+      const ownerResult = await this.#dbContext.runSelectQuery(ownerQuery, [data.Email]);
 
       if (!ownerResult || ownerResult.length === 0) {
-        throw new Error(
-          `No user found with email: ${data.Email}. User must exist before adding a court.`
-        );
+        throw new Error(`No user found with email: ${data.Email}.`);
       }
 
       const ownerId = ownerResult[0].Id;
 
       const insertQuery = `
         INSERT INTO ${Tables.COURT} 
-        (Name, Location, Type, PricePerHour, Email, description, Availability, Image, OwnerID, AvailableDate, AvailableStartTime, AvailableEndTime)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        (Name, Location, Type, PricePerHour, Email, description, Availability, Image1, Image2, Image3, OwnerID, AvailableDate, AvailableStartTime, AvailableEndTime)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
       `;
 
       const rowValues = [
@@ -59,7 +54,9 @@ class CourtService {
         data.Email,
         data.description || null,
         data.Availability,
-        data.Image || null,
+        data.Image1 || null,
+        data.Image2 || null,
+        data.Image3 || null,
         ownerId,
         data.AvailableDate || null,
         data.AvailableStartTime || null,
@@ -82,6 +79,9 @@ class CourtService {
       this.#dbContext.close();
     }
   }
+
+  // The rest of your class remains unchanged...
+  // Make sure your COURT table schema includes Image1, Image2, Image3 columns
 
   async editCourt(courtId, updatedData) {
     const resObj = { reqId: this.#message.reqId };
