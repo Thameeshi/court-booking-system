@@ -30,7 +30,16 @@ class UserService {
             data: userData
         });
     }
-};
+
+   async deleteUser(id) {
+  return await hotPocketService.getServerInputResponse({
+    type: "User",
+    subType: "deleteUser",
+    data: { id }
+  });
+}
+
+}
 
 const userServiceInstance = new UserService();
 export default userServiceInstance;

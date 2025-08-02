@@ -152,9 +152,9 @@ button.btn-edit:hover {
 }
 
 .pagination .active .page-link {
-  background-color: #064420;
-  color: #fff;
-  border-color: #064420;
+  background-color: #ffffff;
+  color: #02240b;
+  
 }
 
 .court-grid {
@@ -208,7 +208,7 @@ button.btn-edit:hover {
   position: relative;
   max-width: 90vw;
   max-height: 90vh;
-  background: white;
+  background: white !important;
   padding: 10px;
   border-radius: 10px;
   box-shadow: 0 0 20px rgba(0,0,0,0.4);

@@ -4,9 +4,18 @@ import { Web3Auth } from "@web3auth/modal";
 import { CHAIN_NAMESPACES, UX_MODE, WEB3AUTH_NETWORK } from "@web3auth/base";
 import { AuthAdapter } from "@web3auth/auth-adapter";
 import { XrplPrivateKeyProvider } from "@web3auth/xrpl-provider";
-import { setWeb3auth, setProvider, setWeb3Authorized, setLoading, setUserInfo } from "../store/slices/authSlice";
+import {
+  setWeb3auth,
+  setProvider,
+  setWeb3Authorized,
+  setLoading,
+  setUserInfo,
+} from "../store/slices/authSlice";
 import XrplService from "../services/common-services/XrplService.ts";
-import { setXrpBalance, setXrplAccount } from "../store/slices/walletSlice";
+import {
+  setXrpBalance,
+  setXrplAccount,
+} from "../store/slices/walletSlice";
 import "./Web3AuthPage.css";
 
 const clientId = process.env.WEB3AUTH_CLIENT_ID || "";
@@ -16,7 +25,6 @@ const Web3AuthPage = () => {
   const { web3auth, loading } = useSelector((state: any) => state.auth);
 
   useEffect(() => {
-    //Configures Web3Auth to use the XRP Ledger testnet.
     const chainConfig = {
       chainNamespace: CHAIN_NAMESPACES.XRPL,
       chainId: "0x2",
@@ -28,11 +36,9 @@ const Web3AuthPage = () => {
       blockExplorerUrl: "https://testnet.xrpl.org",
     };
 
-    //Initializating web3auth and XRP integration
     const init = async () => {
       try {
         dispatch(setLoading(true));
-        //Sets up a provider to sign XRP transactions with a private key.
         const xrplProvider = new XrplPrivateKeyProvider({
           config: {
             chainConfig: chainConfig,
@@ -87,10 +93,10 @@ const Web3AuthPage = () => {
             },
           },
         });
-        web3auth.configureAdapter(authAdapter);
 
+        web3auth.configureAdapter(authAdapter);
         dispatch(setWeb3auth(web3auth));
-        //Displays login modal
+
         await web3auth.initModal();
 
         if (web3auth.connected) {
@@ -106,7 +112,6 @@ const Web3AuthPage = () => {
             dispatch(setXrpBalance(accBalance));
             console.log("setting web3auth authorized", true);
             dispatch(setWeb3Authorized(true));
-
           } else {
             console.error("web3auth provider is null");
           }
@@ -138,90 +143,90 @@ const Web3AuthPage = () => {
   };
 
   return (
-    <div>
-      <div className="login-page"
-        style={{
-        backgroundImage: `url(${process.env.PUBLIC_URL + '/greencourt.jpg'})`,
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        backgroundRepeat: 'no-repeat',
-        height: '100vh',
-        width: '100vw',
-      }}
-      >
-      <div className="login-container"
-        style={{
+    <div
+      className="login-bg"
+      style={{
+        minHeight: "100vh",
+        width: "100vw",
+        background: `url("/greencourt.jpg") center center / cover no-repeat`,
         display: "flex",
-        justifyContent: "center",     // centers horizontally
-        alignItems: "center",         // centers vertically
-        height: "100vh",              // full screen height
-        flexWrap: "wrap",             
-        }}>
-      <div
-        style={{
-        display: "flex",
-        flexDirection: "column", // stack boxes vertically
         alignItems: "center",
-        //boxShadow: "0 12px 30px rgba(0, 0, 0, 0.3)",
-        borderRadius: "15px",
-        overflow: "hidden",
+        justifyContent: "center",
+      }}
+    >
+      <div
+        className="login-card"
+        style={{
+          background: "rgba(237, 242, 235, 0.85)",
+          borderRadius: "24px",
+          boxShadow: "0 8px 32px rgba(34,139,34,0.18)",
+          padding: "40px 36px 32px 36px",
+          maxWidth: "370px",
+          width: "100%",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          backdropFilter: "blur(8px)",
         }}
       >
-      <div className="login-boxup"
-        style={{
-        backgroundImage: `url(${process.env.PUBLIC_URL + '/greencourt.jpg'})`,
-        padding: "40px",
-        boxShadow: "0 8px 20px rgba(0, 1, 0, 1)",
-        width: "450px",
-        height: "260px",
-        maxWidth: "90%",
-        textAlign: "center",
-        backgroundPosition: 'center',
-        }}>
-        
-        <h5>Welcome to Courtify</h5>
-        <p>Book your favorite sports court anytime, anywhere. 
-          Hassle-free reservations at your fingertips!</p>
-      </div>
-      <div className="login-box"
-        style={{
-        background: "rgba(180, 235, 192, 0.85)",
-        backdropFilter: "blur(5px)", // gives glassmorphism blur effect
-        padding: "10px",
-        boxShadow: "0 8px 20px rgba(0, 1, 1, 1)",
-        width: "450px",
-        height: "260px",
-        maxWidth: "90%",
-        textAlign: "center",
-        backgroundPosition: 'center',
-        }}>
-
-        <h2>Login</h2>
         <img
           src={`${process.env.PUBLIC_URL}/logo.png`}
-          alt="Logo"
+          alt="Courtify Logo"
           style={{
-          width: "30%",        // adjust size as needed
-          //marginTop: "10px",
-         marginBottom: "20px",
-         
-  }}
-/>
-      
-      {loading ? (
-        <div className="loading-spinner"></div>
-      ) : (
-        <button className="login-button" 
-        onClick={web3authorize} >
-           log in
-        </button>
-      )}
+            width: "80px",
+            marginBottom: "18px",
+            borderRadius: "12px",
+            boxShadow: "0 2px 8px rgba(34,139,34,0.10)",
+          }}
+        />
+        <h2
+          style={{
+            color: "#0e6304",
+            marginBottom: 8,
+            fontWeight: 700,
+            letterSpacing: 1,
+            fontSize: "2rem",
+          }}
+        >
+          COURTIFY
+        </h2>
+        <p
+          style={{
+            color: "#6d716dff",
+            fontSize: "1rem",
+            marginBottom: 28,
+            textAlign: "center",
+          }}
+        >
+          Book your favorite sports court anytime, anywhere.
+          <br />
+        </p>
+        {loading ? (
+          <div className="loading-spinner" style={{ margin: "24px 0" }}></div>
+        ) : (
+          <button
+            className="login-button"
+            onClick={web3authorize}
+            style={{
+              width: "100%",
+              padding: "12px 0",
+              background: "linear-gradient(90deg, #0e6304 60%, #4AB420 100%)",
+              border: "none",
+              color: "#fff",
+              fontSize: "1.1rem",
+              fontWeight: 600,
+              borderRadius: "8px",
+              cursor: "pointer",
+              boxShadow: "0 2px 8px rgba(34,139,34,0.10)",
+              transition: "background 0.2s",
+              marginBottom: "8px",
+            }}
+          >
+            sign up with Web3
+          </button>
+        )}
+      </div>
     </div>
-    </div>
-    </div>
-    </div>
-    </div>
-    
   );
 };
 

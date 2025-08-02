@@ -94,6 +94,33 @@ export class UserService {
 		}
 	}
 
+
+	async deleteUser() {
+  let resObj = {};
+  const id = this.#message.data?.id;
+
+  try {
+    await this.#dbContext.open();
+
+    let query = `DELETE FROM USER WHERE Id = ?`;
+    await this.#dbContext.runQuery(query, [id]);
+
+    resObj.success = { message: "User deleted successfully" };
+    return resObj;
+  } catch (error) {
+    console.log("Error in deleting user: ", error.message);
+    resObj.error = "Error in deleting user.";
+    return resObj;
+  } finally {
+    this.#dbContext.close();
+  }
+}
+
+
+
+	
+
+
 	async getFoodRecipientList() {
 		let resObj = {};
 

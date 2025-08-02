@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import { Routes, Route, Navigate, useLocation } from "react-router-dom"; // NO Router import here
 import userService from "./services/domain-services/UserService.js";
 import hotPocketService from "./services/common-services/HotPocketService";
 import { setUserDetails } from "./store/slices/userSlice.js";
@@ -24,7 +24,10 @@ import EditProfile from "./pages/EditProfile.js";
 import WalletManagement from "./pages/WalletManagement.js";
 import BookingChart from "./pages/BookingChart.js";
 
-// Import your MyNFTs component
+import AdminNavbar from "./components/AdminNavbar.js";
+import AdminUsers from "./pages/AdminUsers.js";
+import AdminCourts from "./pages/AdminCourts.js";
+
 import MyNFTs from "./pages/MyNFTs.js";
 
 import Chatbot from "./components/Chatbot";
@@ -39,6 +42,8 @@ const App = () => {
   const [isHotPocketConnected, setIsHotPocketConnected] = useState(false);
   const [isUserChecked, setIsUserChecked] = useState(false);
   const [userExists, setUserExists] = useState(false);
+
+  const location = useLocation();
 
   useEffect(() => {
     if (web3Authorized) {
@@ -75,22 +80,27 @@ const App = () => {
     return <div>Loading...</div>;
   }
 
+  // Hide navbar on certain routes like /signup
+  const noNavbarPaths = ["/signup"];
+  const showNavbar = web3Authorized && userDetails && !noNavbarPaths.includes(location.pathname);
+
   return (
-    <Router>
-      {/* Show navbars based on user role */}
-      {userDetails?.UserRole === "CourtOwner" && <DashboardNavbar />}
-      {userDetails?.UserRole === "PublicUser" && <UserNavbar />}
+    <>
+      {showNavbar && (
+        <>
+          {userDetails.UserRole === "CourtOwner" && <DashboardNavbar />}
+          {userDetails.UserRole === "PublicUser" && <UserNavbar />}
+          {userDetails.UserRole === "Admin" && <AdminNavbar />}
+        </>
+      )}
 
       <div className="app-container">
         <div className="grid">
           <Routes>
-            {/* Route for unauthorized users */}
             {!web3Authorized && <Route path="/" element={<Web3AuthPage />} />}
 
-            {/* Routes for authorized users */}
             {web3Authorized && (
               <>
-                {/* Redirects based on user existence and role */}
                 {!userExists && <Route path="/" element={<Navigate to="/signup" />} />}
                 {userExists && userDetails?.UserRole === "CourtOwner" && (
                   <Route path="/" element={<Navigate to="/dashboard/court-home" />} />
@@ -98,15 +108,16 @@ const App = () => {
                 {userExists && userDetails?.UserRole === "PublicUser" && (
                   <Route path="/" element={<Navigate to="/userdashboard/user-home" />} />
                 )}
+                {userExists && userDetails?.UserRole === "Admin" && (
+                  <Route path="/" element={<Navigate to="/admin/users" />} />
+                )}
 
                 <Route path="/signup" element={<SignUp />} />
 
-                {/* Shared routes for all logged-in users */}
                 <Route path="/dashboard/profile" element={<ProfileInfo />} />
                 <Route path="/viewcourt" element={<ViewCourt />} />
                 <Route path="/confirmbooking" element={<ConfirmBooking />} />
 
-                {/* Routes for Public Users */}
                 {userDetails?.UserRole === "PublicUser" && (
                   <>
                     <Route path="/userdashboard/user-home" element={<UserHome />} />
@@ -116,7 +127,6 @@ const App = () => {
                   </>
                 )}
 
-                {/* Routes for Court Owners */}
                 {userDetails?.UserRole === "CourtOwner" && (
                   <>
                     <Route path="/dashboard/court-home" element={<CourtHome />} />
@@ -127,22 +137,26 @@ const App = () => {
                     <Route path="/dashboard/profile/edit" element={<EditProfile />} />
                     <Route path="/dashboard/wallet" element={<WalletManagement />} />
                     <Route path="/dashboard/booking-stats" element={<BookingChart />} />
-                    {/* Add the MyNFTs route here */}
                     <Route path="/dashboard/myNFTs" element={<MyNFTs />} />
+                  </>
+                )}
+
+                {userDetails?.UserRole === "Admin" && (
+                  <>
+                    <Route path="/admin/users" element={<AdminUsers />} />
+                    <Route path="/admin/courts" element={<AdminCourts />} />
                   </>
                 )}
               </>
             )}
 
-            {/* Fallback route */}
             <Route path="*" element={<Navigate to="/" />} />
           </Routes>
         </div>
       </div>
 
-      {/* Show chatbot only when user is logged in and userDetails are loaded */}
       {web3Authorized && userDetails && <Chatbot />}
-    </Router>
+    </>
   );
 };
 

@@ -12,7 +12,7 @@ const ManageCourt = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const courtsPerPage = 6;
 
-  const ownerEmail = process.env.USER_EMAIL || "hayeshahp6@gmail.com";
+  const ownerEmail = "hayeshahp6@gmail.com";
   const navigate = useNavigate();
   const { provider } = useSelector((state) => state.auth);
   const [tokenIds, setTokenIds] = useState({});
@@ -21,6 +21,11 @@ const ManageCourt = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [modalImage, setModalImage] = useState(null);
 
+  // Delete reason modal state
+  const [deletionReason, setDeletionReason] = useState("");
+  const [selectedCourtId, setSelectedCourtId] = useState(null);
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+
   useEffect(() => {
     const fetchCourts = async () => {
       try {
@@ -28,7 +33,6 @@ const ManageCourt = () => {
         const response = await courtService.getCourtByOwner(ownerEmail);
         if (response.success) {
           setCourts(response.success);
-          console.log("Courts data:", response.success);
         } else {
           setError("Failed to fetch courts.");
         }
@@ -43,10 +47,17 @@ const ManageCourt = () => {
   }, [ownerEmail]);
 
   const handleDelete = async (courtId) => {
-    if (!window.confirm("Are you sure you want to delete this court?")) return;
+    if (!deletionReason) {
+      alert("Please select a reason.");
+      return;
+    }
 
     try {
-      const response = await courtService.deleteCourt(courtId);
+      const response = await courtService.deleteCourt(courtId, {
+        email: "hayeshahp6@gmail.com",
+        reason: deletionReason,
+      });
+
       if (response.success) {
         setCourts(courts.filter((court) => court.Id !== courtId));
         alert("Court deleted successfully.");
@@ -55,6 +66,10 @@ const ManageCourt = () => {
       }
     } catch (err) {
       alert(err.message || "An error occurred while deleting the court.");
+    } finally {
+      setShowDeleteDialog(false);
+      setDeletionReason("");
+      setSelectedCourtId(null);
     }
   };
 
@@ -80,7 +95,6 @@ const ManageCourt = () => {
     alert("Sell offer created successfully!");
   };
 
-  // Modal open/close handlers
   const openModal = (img) => {
     setModalImage(img);
     setModalOpen(true);
@@ -129,7 +143,7 @@ const ManageCourt = () => {
                   <p className="card-text">
                     <strong>Location:</strong> {court.Location} <br />
                     <strong>Type:</strong> {court.Type} <br />
-                    <strong>Price Per Hour:</strong> ${court.PricePerHour} <br />
+                    <strong>Price Per Hour:</strong> LKR {court.PricePerHour} <br />
                     <strong>Availability:</strong> {court.Availability} <br />
                     <strong>Available Date:</strong> {formatDate(court.AvailableDate)} <br />
                     <strong>Available Time:</strong>{" "}
@@ -145,7 +159,10 @@ const ManageCourt = () => {
                     </button>
                     <button
                       className="btn btn-danger"
-                      onClick={() => handleDelete(court.Id)}
+                      onClick={() => {
+                        setSelectedCourtId(court.Id);
+                        setShowDeleteDialog(true);
+                      }}
                     >
                       Delete
                     </button>
@@ -202,6 +219,51 @@ const ManageCourt = () => {
             <button onClick={closeModal} className="modal-close-btn">
               Close
             </button>
+          </div>
+        </div>
+      )}
+
+      {/* Modal for delete confirmation with reason */}
+      {showDeleteDialog && (
+        <div className="modal-overlay" onClick={() => setShowDeleteDialog(false)}>
+          <div
+            className="modal-content modal-content-delete"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <h5>Confirm Court Deletion</h5>
+            <p>Please select a reason:</p>
+
+            <select
+              className="form-control mb-3"
+              value={deletionReason}
+              onChange={(e) => setDeletionReason(e.target.value)}
+            >
+              <option value="">-- Select Reason --</option>
+              <option value="Court closed permanently">Court closed permanently</option>
+              <option value="Wrong details entered">Wrong details entered</option>
+              <option value="Duplicate entry">Duplicate entry</option>
+              <option value="Other">Other</option>
+            </select>
+
+            <div className="d-flex justify-content-end">
+              <button
+                className="btn btn-secondary me-2"
+                onClick={() => {
+                  setShowDeleteDialog(false);
+                  setSelectedCourtId(null);
+                  setDeletionReason("");
+                }}
+              >
+                Cancel
+              </button>
+              <button
+                className="btn btn-danger"
+                disabled={!deletionReason}
+                onClick={() => handleDelete(selectedCourtId)}
+              >
+                Confirm & Delete
+              </button>
+            </div>
           </div>
         </div>
       )}

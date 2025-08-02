@@ -1,44 +1,48 @@
 import React, { useEffect, useState } from "react";
 import courtService from "../services/domain-services/CourtService";
+import Footer from "../components/Footer";
 import {
   PieChart,
   Pie,
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
   Cell,
   Tooltip,
-  Legend,
   ResponsiveContainer,
 } from "recharts";
 
 const COLORS = [
-  "#1E90FF", "#32CD32", "#FFA500", "#FF4500",
-  "#6A5ACD", "#FF69B4", "#00CED1", "#9932CC",
+  "rgba(30,144,255,0.8)",   // Dodger Blue
+  "rgba(50,205,50,0.8)",    // Lime Green
+  "rgba(255,165,0,0.8)",    // Orange
+  "rgba(255,69,0,0.8)",     // Orange Red
+  "rgba(106,90,205,0.8)",   // Slate Blue
+  "rgba(255,105,180,0.8)",  // Hot Pink
+  "rgba(0,206,209,0.8)",    // Dark Turquoise
+  "rgba(153,50,204,0.8)",   // Dark Orchid
 ];
 
 const tooltipStyle = {
   backgroundColor: "#fff",
-  border: "1px solid #ddd",
-  padding: "10px 16px",
-  borderRadius: 10,
+  borderRadius: 4,
+  padding: "10px 14px",
+  boxShadow: "0 2px 8px rgba(0,0,0,0.15)",
   fontSize: 14,
-  color: "#222",
-  boxShadow: "0 4px 12px rgba(0, 0, 0, 0.15)",
-};
-
-const labelStyle = {
-  fontWeight: "600",
-  fontSize: 14,
-  fill: "#333",
-  textShadow: "0 1px 1px #fff",
+  color: "#333",
+  fontWeight: 500,
 };
 
 const BookingChart = () => {
   const [data, setData] = useState([]);
+  const [chartType, setChartType] = useState("pie");
 
   useEffect(() => {
     const fetchStats = async () => {
       try {
         const stats = await courtService.getCourtBookingStats();
-        console.log("[BookingChart] Fetched stats:", stats);
         setData(stats);
       } catch (error) {
         console.error("[BookingChart] Error fetching stats:", error);
@@ -51,12 +55,19 @@ const BookingChart = () => {
     return (
       <div
         style={{
-          fontFamily: "Inter, 'Segoe UI', sans-serif",
+          fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
           fontSize: 16,
-          color: "#777",
+          color: "#999",
           textAlign: "center",
-          padding: 50,
+          padding: 60,
           fontStyle: "italic",
+          userSelect: "none",
+          backgroundColor: "#f9f9f9",
+          borderRadius: 8,
+          maxWidth: 600,
+          margin: "80px auto",
+          border: "1px solid #ddd",
+          boxShadow: "0 2px 8px rgba(0,0,0,0.05)",
         }}
       >
         No booking data available to display.
@@ -65,78 +76,210 @@ const BookingChart = () => {
   }
 
   return (
-    <div
-      style={{
-        maxWidth: 800,
-        margin: "60px auto",
-        padding: 30,
-        background: "#f9f9f9", // Changed to solid off-white
-        borderRadius: 20,
-        boxShadow: "0 8px 24px rgba(0,0,0,0.08)",
-        fontFamily: "Inter, 'Segoe UI', sans-serif",
-      }}
-    >
-      <h2
+    <>
+      <div
         style={{
-          textAlign: "center",
-          marginBottom: 35,
-          fontWeight: "900",
-          fontSize: "2.1rem",
-          color: "#054c2a",
-          textTransform: "uppercase",
-          letterSpacing: 1,
-          textShadow: "0 2px 4px rgba(8, 83, 24, 0.2)",
+          maxWidth: 900,
+          margin: "60px auto",
+          padding: 32,
+          backgroundColor: "#fff",
+          borderRadius: 12,
+          boxShadow: "0 4px 16px rgba(0,0,0,0.1)",
+          fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
+          color: "#222",
+          userSelect: "none",
         }}
       >
-        Court Booking Distribution
-      </h2>
+        <h2
+          style={{
+            textAlign: "center",
+            marginBottom: 24,
+            fontWeight: "700",
+            fontSize: "2.25rem",
+            color: "#2c3e50",
+            userSelect: "none",
+          }}
+        >
+          Court Booking Distribution
+        </h2>
 
-      <ResponsiveContainer width="100%" height={420}>
-        <PieChart>
-          <Pie
-            data={data}
-            dataKey="bookings"
-            nameKey="courtName"
-            cx="50%"
-            cy="50%"
-            outerRadius={150}
-            label={({ courtName, bookings }) => `${courtName}: ${bookings}`}
-            labelLine={false}
-            style={labelStyle}
-          >
-            {data.map((entry, index) => (
-              <Cell
-                key={`cell-${index}`}
-                fill={COLORS[index % COLORS.length]}
-                style={{
-                  transition: "all 0.3s ease",
-                  cursor: "pointer",
-                }}
-              />
-            ))}
-          </Pie>
-          <Tooltip
-            formatter={(value) => [value, "Bookings"]}
-            contentStyle={tooltipStyle}
-            cursor={{ fill: "rgba(30, 144, 255, 0.1)" }}
-          />
-          <Legend
-            verticalAlign="bottom"
-            height={50}
-            iconType="circle"
-            wrapperStyle={{
-              fontSize: 15,
-              color: "#444",
-              fontWeight: "500",
-              letterSpacing: 0.5,
-              marginTop: 16,
-              textAlign: "center",
-              lineHeight: "24px",
+        <div style={{ textAlign: "center", marginBottom: 24 }}>
+          <button
+            onClick={() =>
+              setChartType((prev) => (prev === "pie" ? "bar" : "pie"))
+            }
+            style={{
+              backgroundColor: "transparent",
+              border: "2px solid #000000ff",
+              color: "#000100ff",
+              padding: "10px 28px",
+              borderRadius: 24,
+              cursor: "pointer",
+              fontWeight: "600",
+              fontSize: 16,
+              transition: "all 0.25s ease",
+              userSelect: "none",
             }}
-          />
-        </PieChart>
-      </ResponsiveContainer>
-    </div>
+            onMouseEnter={(e) => {
+              e.currentTarget.style.backgroundColor = "#128151ff";
+              e.currentTarget.style.color = "#fff";
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.backgroundColor = "transparent";
+              e.currentTarget.style.color = "#25865bff";
+            }}
+          >
+            Switch to {chartType === "pie" ? "Bar" : "Pie"} Chart
+          </button>
+        </div>
+
+        <div
+          style={{
+            display: "flex",
+            gap: 48,
+            flexWrap: "wrap",
+            justifyContent: "center",
+            alignItems: "flex-start",
+          }}
+        >
+          {/* Chart */}
+          <div
+            style={{
+              flex: "1 1 580px",
+              height: 400,
+              minWidth: 300,
+            }}
+          >
+            <ResponsiveContainer width="100%" height="100%">
+              {chartType === "pie" ? (
+                <PieChart>
+                  <Pie
+                    data={data}
+                    dataKey="bookings"
+                    nameKey="courtName"
+                    cx="50%"
+                    cy="50%"
+                    outerRadius={140}
+                    innerRadius={70}
+                    paddingAngle={3}
+                    label={({ courtName, bookings }) =>
+                      `${courtName} (${bookings})`
+                    }
+                    labelLine={false}
+                    fontSize={13}
+                    fontWeight={600}
+                    fill="#333"
+                  >
+                    {data.map((entry, index) => (
+                      <Cell
+                        key={`cell-${index}`}
+                        fill={COLORS[index % COLORS.length]}
+                      />
+                    ))}
+                  </Pie>
+                  <Tooltip
+                    formatter={(value) => [value, "Bookings"]}
+                    contentStyle={tooltipStyle}
+                    cursor={{ fill: "rgba(52, 152, 219, 0.1)" }}
+                  />
+                </PieChart>
+              ) : (
+                <BarChart
+                  data={data}
+                  margin={{ top: 20, right: 30, left: 0, bottom: 10 }}
+                >
+                  <CartesianGrid stroke="#f0f0f0" strokeDasharray="3 3" />
+                  <XAxis
+                    dataKey="courtName"
+                    tick={{ fill: "#34495e", fontWeight: 600, fontSize: 14 }}
+                    tickLine={false}
+                  />
+                  <YAxis
+                    tick={{ fill: "#34495e", fontWeight: 600, fontSize: 14 }}
+                    axisLine={false}
+                    tickCount={6}
+                  />
+                  <Tooltip contentStyle={tooltipStyle} />
+                  <Bar dataKey="bookings" radius={[6, 6, 0, 0]} maxBarSize={40}>
+                    {data.map((entry, index) => (
+                      <Cell
+                        key={`bar-cell-${index}`}
+                        fill={COLORS[index % COLORS.length]}
+                      />
+                    ))}
+                  </Bar>
+                </BarChart>
+              )}
+            </ResponsiveContainer>
+          </div>
+
+          {/* Legend */}
+          <aside
+            style={{
+              flex: "0 0 220px",
+              display: "flex",
+              flexDirection: "column",
+              gap: 16,
+              padding: "8px 0",
+              userSelect: "none",
+            }}
+            aria-label="Court color legend"
+          >
+            <h3
+              style={{
+                fontWeight: 600,
+                fontSize: 18,
+                color: "#34495e",
+                marginBottom: 12,
+                borderBottom: "2px solid #3498db",
+                paddingBottom: 6,
+                userSelect: "none",
+              }}
+            >
+              Courts Legend
+            </h3>
+            {data.map((entry, index) => (
+              <div
+                key={`legend-item-${index}`}
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 12,
+                  cursor: "default",
+                }}
+              >
+                <div
+                  style={{
+                    width: 18,
+                    height: 18,
+                    backgroundColor: COLORS[index % COLORS.length],
+                    borderRadius: 4,
+                    boxShadow: "0 0 6px rgba(0,0,0,0.1)",
+                    flexShrink: 0,
+                  }}
+                />
+                <span
+                  title={entry.courtName}
+                  style={{
+                    fontWeight: 500,
+                    fontSize: 15,
+                    color: "#2c3e50",
+                    whiteSpace: "nowrap",
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
+                  }}
+                >
+                  {entry.courtName}
+                </span>
+              </div>
+            ))}
+          </aside>
+        </div>
+      </div>
+
+      {/* Footer */}
+      <Footer />
+    </>
   );
 };
 

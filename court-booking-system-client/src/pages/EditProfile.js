@@ -22,7 +22,6 @@ const EditProfile = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    // Create a new userDetails object with updated info
     const updatedUserDetails = {
       ...userDetails,
       Name: name,
@@ -31,18 +30,24 @@ const EditProfile = () => {
     };
 
     dispatch(setUserDetails(updatedUserDetails));
-
-    // Save to localStorage as well (for persistence on reload)
     localStorage.setItem("userDetails", JSON.stringify(updatedUserDetails));
 
     console.log("Updated userDetails dispatched:", updatedUserDetails);
-
     alert("Profile updated!");
   };
 
   return (
     <div className="edit-profile-container">
+      <div className="profile-pic-wrapper top-center">
+        <img
+          src={profilePic}
+          alt="Profile Preview"
+          className="profile-picture-preview"
+        />
+      </div>
+
       <h2>Edit Profile</h2>
+
       <form className="edit-profile-form" onSubmit={handleSubmit}>
         <label>Name</label>
         <input
@@ -62,11 +67,6 @@ const EditProfile = () => {
         />
 
         <label>Profile Picture</label>
-        <img
-          src={profilePic}
-          alt="Preview"
-          style={{ width: 100, height: 100, objectFit: "cover" }}
-        />
         <input type="file" accept="image/*" onChange={handleFileChange} />
 
         <button type="submit">Save Changes</button>

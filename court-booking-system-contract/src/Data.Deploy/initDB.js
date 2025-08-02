@@ -42,7 +42,7 @@ export class DBInitializer {
           (XrplAddress, Email, Name, UserRole, Description, Lat, Lng) 
           VALUES (?, ?, ?, ?, ?, ?, ?)`,
         [
-          "rADMINXRPLADDRESS", // Replace with actual XRPL address or dummy
+          "rADMINXRPLADDRESS",
           adminEmail,
           "System Administrator",
           "admin",
@@ -51,6 +51,60 @@ export class DBInitializer {
           0,
         ]
       );
+    }
+
+    // ✅ Insert dummy users if not already present
+    const userCount = await this.#runSelectQuery(
+      `SELECT COUNT(*) as count FROM ${Tables.USER} WHERE Email != ?`,
+      [adminEmail]
+    );
+    if (userCount[0].count === 0) {
+      const dummyUsers = [
+        {
+          xrpl: "rUSER1XRPLADDRESS",
+          email: "john.doe@example.com",
+          name: "John Doe",
+          role: "user",
+          desc: "Sports enthusiast",
+          lat: 6.9271,
+          lng: 79.8612,
+        },
+        {
+          xrpl: "rUSER2XRPLADDRESS",
+          email: "jane.smith@example.com",
+          name: "Jane Smith",
+          role: "user",
+          desc: "Futsal player",
+          lat: 6.9270,
+          lng: 79.8600,
+        },
+        {
+          xrpl: "rOWNER1XRPLADDRESS",
+          email: "owner.one@example.com",
+          name: "Owner One",
+          role: "owner",
+          desc: "Court Owner",
+          lat: 6.9280,
+          lng: 79.8620,
+        },
+      ];
+
+      for (const user of dummyUsers) {
+        await this.#runQuery(
+          `INSERT INTO ${Tables.USER} 
+            (XrplAddress, Email, Name, UserRole, Description, Lat, Lng)
+           VALUES (?, ?, ?, ?, ?, ?, ?)`,
+          [
+            user.xrpl,
+            user.email,
+            user.name,
+            user.role,
+            user.desc,
+            user.lat,
+            user.lng,
+          ]
+        );
+      }
     }
 
     // Create Court table with new fields
@@ -88,7 +142,7 @@ export class DBInitializer {
       )
     `);
 
-    // Insert dummy court data with new fields (only if no courts)
+    // Insert dummy court data if not already present
     const courtList = await this.#runSelectQuery(`SELECT COUNT(*) as count FROM ${Tables.COURT}`);
     if (courtList[0].count === 0) {
       await this.#runQuery(`INSERT INTO ${Tables.COURT} 

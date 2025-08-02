@@ -1,0 +1,57 @@
+/* AdminUsers.module.css */
+
+.adminUsersContainer {
+  padding: 20px;
+  max-width: 900px;
+  margin: 0 auto;
+  background-color: #f9f9f9; /* light background */
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+.adminUsersTitle {
+  color: #0e6304; /* your dark green */
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.adminUsersTable {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: Arial, sans-serif;
+}
+
+.adminUsersThead {
+  background-color: #0e6304; /* dark green header */
+  color: white;
+}
+
+.adminUsersTh,
+.adminUsersTd {
+  padding: 12px 15px;
+  border: 1px solid #ddd;
+  text-align: left;
+}
+
+.adminUsersTbody tr:nth-child(even) {
+  background-color: #f1f8e9; /* light green stripe for rows */
+}
+
+.adminUsersTbody tr:hover {
+  background-color: #dcedc8; /* lighter green on hover */
+}
+
+.adminUsersDeleteBtn {
+  background-color: #e53935; /* red delete button */
+  color: white;
+  border: none;
+  padding: 7px 14px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background-color 0.3s ease;
+}
+
+.adminUsersDeleteBtn:hover {
+  background-color: #b71c1c; /* darker red on hover */
+}
