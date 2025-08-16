@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import courtService from "../services/domain-services/CourtService";
 import "../styles/CreateCourt.css";
@@ -15,6 +15,21 @@ const CreateCourt = () => {
 
   const navigate = useNavigate();
   const userEmail = localStorage.getItem("userEmail") || "hayeshahp6@gmail.com";
+
+  useEffect(() => {
+    const savedFormData = JSON.parse(localStorage.getItem("createCourtForm")) || {};
+    if (savedFormData.name) setName(savedFormData.name);
+    if (savedFormData.location) setLocation(savedFormData.location);
+    if (savedFormData.sport) setSport(savedFormData.sport);
+    if (savedFormData.price) setPrice(savedFormData.price);
+    if (savedFormData.availability) setAvailability(savedFormData.availability);
+    if (savedFormData.moreDetails) setMoreDetails(savedFormData.moreDetails);
+  }, []);
+
+  const updateLocalStorage = (field, value) => {
+    const existing = JSON.parse(localStorage.getItem("createCourtForm")) || {};
+    localStorage.setItem("createCourtForm", JSON.stringify({ ...existing, [field]: value }));
+  };
 
   const handleImageUpload = async () => {
     if (!images.length) throw new Error("No images selected");
@@ -70,13 +85,14 @@ const CreateCourt = () => {
         email: userEmail,
         moreDetails,
         availability,
-        imageUrls, // Send all 3 image URLs as an array
+        imageUrls,
       };
 
       const result = await courtService.addCourt(courtData);
 
       if (result?.success) {
         alert("Court added successfully!");
+        localStorage.removeItem("createCourtForm");
         navigate(`/dashboard/add-availability/${result.success.courtId}`);
       } else {
         alert("Failed to add court: " + (result?.error || "Unknown error"));
@@ -90,37 +106,65 @@ const CreateCourt = () => {
 
   return (
     <div className="create-court">
+      {loading && (
+        <div className="full-screen-loader">
+          <div className="spinner" />
+          <p>Uploading images and saving court... Please wait.</p>
+        </div>
+      )}
+
       <form onSubmit={handleSubmit}>
         <h2>Create Court</h2>
+
         <input
           placeholder="Court Name"
           value={name}
-          onChange={(e) => setName(e.target.value)}
+          onChange={(e) => {
+            setName(e.target.value);
+            updateLocalStorage("name", e.target.value);
+          }}
           required
         />
+
         <input
           placeholder="Location"
           value={location}
-          onChange={(e) => setLocation(e.target.value)}
+          onChange={(e) => {
+            setLocation(e.target.value);
+            updateLocalStorage("location", e.target.value);
+          }}
           required
         />
+
         <input
           placeholder="Sport"
           value={sport}
-          onChange={(e) => setSport(e.target.value)}
+          onChange={(e) => {
+            setSport(e.target.value);
+            updateLocalStorage("sport", e.target.value);
+          }}
           required
         />
+
         <input
-          placeholder="Price"
+          placeholder="Price per hour (e.g. 100)"
           type="number"
           value={price}
-          onChange={(e) => setPrice(e.target.value)}
+          onChange={(e) => {
+            setPrice(e.target.value);
+            updateLocalStorage("price", e.target.value);
+          }}
           required
+          min="0"
+          step="0.01"
         />
 
         <select
           value={availability}
-          onChange={(e) => setAvailability(e.target.value)}
+          onChange={(e) => {
+            setAvailability(e.target.value);
+            updateLocalStorage("availability", e.target.value);
+          }}
           required
         >
           <option value="Available">Available</option>
@@ -130,7 +174,10 @@ const CreateCourt = () => {
         <textarea
           placeholder="More Details"
           value={moreDetails}
-          onChange={(e) => setMoreDetails(e.target.value)}
+          onChange={(e) => {
+            setMoreDetails(e.target.value);
+            updateLocalStorage("moreDetails", e.target.value);
+          }}
         />
 
         <input
@@ -155,7 +202,7 @@ const CreateCourt = () => {
         )}
 
         <button type="submit" disabled={loading}>
-          {loading ? "Submitting..." : "Add Court"}
+          {loading ? "Processing..." : "Add Court"}
         </button>
       </form>
     </div>

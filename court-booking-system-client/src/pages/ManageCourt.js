@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import courtService from "../services/domain-services/CourtService";
-import XrplService from "../services/common-services/XrplService.ts";
 import "../styles/ManageCourt.css";
 
 const ManageCourt = () => {
@@ -10,18 +9,16 @@ const ManageCourt = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
+  const [isDeleting, setIsDeleting] = useState(false);
   const courtsPerPage = 6;
 
-  const ownerEmail = "hayeshahp6@gmail.com";
   const navigate = useNavigate();
-  const { provider } = useSelector((state) => state.auth);
-  const [tokenIds, setTokenIds] = useState({});
+  const { userDetails } = useSelector((state) => state.user);
+  const ownerEmail = userDetails?.Email;
 
-  // Modal state
   const [modalOpen, setModalOpen] = useState(false);
   const [modalImage, setModalImage] = useState(null);
 
-  // Delete reason modal state
   const [deletionReason, setDeletionReason] = useState("");
   const [selectedCourtId, setSelectedCourtId] = useState(null);
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
@@ -52,9 +49,11 @@ const ManageCourt = () => {
       return;
     }
 
+    setIsDeleting(true);
+
     try {
       const response = await courtService.deleteCourt(courtId, {
-        email: "hayeshahp6@gmail.com",
+        email: ownerEmail,
         reason: deletionReason,
       });
 
@@ -67,6 +66,7 @@ const ManageCourt = () => {
     } catch (err) {
       alert(err.message || "An error occurred while deleting the court.");
     } finally {
+      setIsDeleting(false);
       setShowDeleteDialog(false);
       setDeletionReason("");
       setSelectedCourtId(null);
@@ -80,19 +80,6 @@ const ManageCourt = () => {
   const formatDate = (dateString) => {
     if (!dateString) return "Not set";
     return new Date(dateString).toLocaleDateString();
-  };
-
-  const handleCreateSellOffer = async (nftId) => {
-    if (!nftId) {
-      alert("Please provide the NFTokenID.");
-      return;
-    }
-    const amountInXRP = 1.0;
-    const memo = "Court booking sell offer";
-    const xrpl = new XrplService(provider);
-    const response = await xrpl.createSellOffer(nftId, amountInXRP, memo);
-    console.log("Sell offer response:", response);
-    alert("Sell offer created successfully!");
   };
 
   const openModal = (img) => {
@@ -122,7 +109,6 @@ const ManageCourt = () => {
           <div className="court-grid">
             {currentCourts.map((court) => (
               <div className="card" key={court.Id}>
-                {/* Images container */}
                 <div className="card-images-container">
                   {[court.Image1, court.Image2, court.Image3]
                     .filter(Boolean)
@@ -137,7 +123,6 @@ const ManageCourt = () => {
                     ))}
                 </div>
 
-                {/* Court details */}
                 <div className="card-content">
                   <h5 className="card-title">{court.Name}</h5>
                   <p className="card-text">
@@ -166,42 +151,20 @@ const ManageCourt = () => {
                     >
                       Delete
                     </button>
-                    <br />
-                    <div>
-                      <input
-                        type="text"
-                        className="form-control mb-2"
-                        placeholder="Enter Token ID"
-                        value={tokenIds[court.Id] || ""}
-                        onChange={(e) =>
-                          setTokenIds({ ...tokenIds, [court.Id]: e.target.value })
-                        }
-                      />
-                      <button
-                        onClick={() =>
-                          handleCreateSellOffer(tokenIds[court.Id] || court.NFTokenID)
-                        }
-                        className="btn btn-primary"
-                        disabled={!tokenIds[court.Id] && !court.NFTokenID}
-                      >
-                        Create Sell Offer
-                      </button>
-                    </div>
                   </div>
                 </div>
               </div>
             ))}
           </div>
 
-          {/* Pagination */}
           <nav className="mt-4 d-flex justify-content-center">
-            <ul className="pagination">
+            <ul className="managecourt-pagination">
               {Array.from({ length: totalPages }, (_, i) => i + 1).map((number) => (
                 <li
                   key={number}
-                  className={`page-item ${currentPage === number ? "active" : ""}`}
+                  className={`managecourt-page-item ${currentPage === number ? "managecourt-active" : ""}`}
                 >
-                  <button onClick={() => paginate(number)} className="page-link">
+                  <button onClick={() => paginate(number)} className="managecourt-page-link">
                     {number}
                   </button>
                 </li>
@@ -211,7 +174,6 @@ const ManageCourt = () => {
         </>
       )}
 
-      {/* Modal for full image */}
       {modalOpen && (
         <div className="modal-overlay" onClick={closeModal}>
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>
@@ -223,20 +185,18 @@ const ManageCourt = () => {
         </div>
       )}
 
-      {/* Modal for delete confirmation with reason */}
       {showDeleteDialog && (
-        <div className="modal-overlay" onClick={() => setShowDeleteDialog(false)}>
-          <div
-            className="modal-content modal-content-delete"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <h5>Confirm Court Deletion</h5>
-            <p>Please select a reason:</p>
+        <div className="delete-confirm-overlay" onClick={() => !isDeleting && setShowDeleteDialog(false)}>
+          <div className="delete-confirm-modal" onClick={(e) => e.stopPropagation()}>
+            <div className="delete-confirm-text">
+              Are you sure you want to delete this court?
+            </div>
 
             <select
-              className="form-control mb-3"
+              className="delete-reason-select"
               value={deletionReason}
               onChange={(e) => setDeletionReason(e.target.value)}
+              disabled={isDeleting}
             >
               <option value="">-- Select Reason --</option>
               <option value="Court closed permanently">Court closed permanently</option>
@@ -245,9 +205,10 @@ const ManageCourt = () => {
               <option value="Other">Other</option>
             </select>
 
-            <div className="d-flex justify-content-end">
+            <div className="delete-confirm-buttons">
               <button
-                className="btn btn-secondary me-2"
+                className="cancel-btn"
+                disabled={isDeleting}
                 onClick={() => {
                   setShowDeleteDialog(false);
                   setSelectedCourtId(null);
@@ -257,11 +218,11 @@ const ManageCourt = () => {
                 Cancel
               </button>
               <button
-                className="btn btn-danger"
-                disabled={!deletionReason}
+                className="delete-btn"
+                disabled={!deletionReason || isDeleting}
                 onClick={() => handleDelete(selectedCourtId)}
               >
-                Confirm & Delete
+                {isDeleting ? "Deleting..." : "Confirm & Delete"}
               </button>
             </div>
           </div>

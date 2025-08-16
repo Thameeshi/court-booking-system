@@ -40,7 +40,6 @@
   background-color: #f5f5f5;
 }
 
-
 .card-images-container img:nth-child(1) {
   grid-column: 1 / 2;
   grid-row: 1 / 3;
@@ -135,28 +134,6 @@ button.btn-edit:hover {
   background-color: #c82333 !important;
 }
 
-.pagination .page-link {
-  background-color: #e8f5e9;
-  color: #064420;
-  border: 1px solid #43ea7c;
-  font-weight: 600;
-  border-radius: 6px;
-  margin: 0 2px;
-  transition: background 0.2s, color 0.2s;
-  cursor: pointer;
-}
-
-.pagination .page-link:hover {
-  background-color: #43ea7c;
-  color: #fff;
-}
-
-.pagination .active .page-link {
-  background-color: #ffffff;
-  color: #02240b;
-  
-}
-
 .court-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -190,6 +167,7 @@ button.btn-edit:hover {
     width: 100%;
   }
 }
+
 /* Modal styles */
 .modal-overlay {
   position: fixed;
@@ -208,10 +186,10 @@ button.btn-edit:hover {
   position: relative;
   max-width: 90vw;
   max-height: 90vh;
-  background: white !important;
-  padding: 10px;
-  border-radius: 10px;
-  box-shadow: 0 0 20px rgba(0,0,0,0.4);
+  background: transparent;
+  padding: 0;
+  border-radius: 0;
+  box-shadow: none;
 }
 
 .modal-content img {
@@ -233,4 +211,154 @@ button.btn-edit:hover {
   font-weight: bold;
   border-radius: 5px;
   box-shadow: 0 0 5px rgba(0,0,0,0.2);
+}
+
+.delete-confirm-overlay {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100vw; height: 100vh;
+  background-color: rgba(0, 0, 0, 0.65); /* lighter overlay */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 10000;
+}
+
+.delete-confirm-modal {
+  background-color: #1a1a1a; /* lighter black */
+  padding: 50px 40px;
+  border-radius: 16px;
+  width: 420px;
+  max-width: 90vw;
+  box-shadow: 0 8px 24px rgba(50, 50, 50, 0.85); /* lighter shadow */
+  color: #ddd; /* lighter text */
+  text-align: center;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+  user-select: none;
+}
+
+.delete-confirm-text {
+  font-size: 22px;
+  font-weight: 700;
+  line-height: 1.2;
+  margin: 0;
+  color: #eee; /* keep bright */
+}
+
+.delete-reason-select {
+  width: 100%;
+  padding: 14px 16px;
+  border-radius: 12px;
+  border: none;
+  font-size: 16px;
+  background-color: #333333; /* lighter dark gray */
+  color: #eee;
+  box-shadow: inset 0 2px 6px rgba(0,0,0,0.7);
+  outline: none;
+  appearance: none;
+  cursor: pointer;
+}
+
+.delete-confirm-buttons {
+  display: flex;
+  flex-direction: column; /* stack buttons vertically */
+  gap: 12px;              /* space between buttons */
+  width: 100%;
+  margin-top: 20px;
+  box-sizing: border-box;
+}
+
+.delete-btn,
+.cancel-btn {
+  width: 100%;           /* full width buttons */
+  height: 44px;          /* fixed height */
+  border-radius: 10px;
+  font-weight: 700;
+  font-size: 16px;
+  border: none;
+  cursor: pointer;
+
+  display: flex;
+  align-items: center;   /* vertical center text */
+  justify-content: center; /* horizontal center text */
+
+  transition: background-color 0.3s ease;
+  user-select: none;
+}
+
+/* Confirm button style */
+.delete-btn {
+  background-color: #e57373; /* lighter red */
+  color: #2c2c2c; /* dark text for better contrast */
+  box-shadow: 0 4px 8px rgba(229, 115, 115, 0.6);
+}
+
+.delete-btn:hover:not(:disabled) {
+  background-color: #ef5350; /* slightly darker hover */
+  box-shadow: 0 6px 12px rgba(239, 83, 80, 0.8);
+}
+
+.delete-btn:disabled {
+  background-color: #bc5e5e;
+  cursor: not-allowed;
+  box-shadow: none;
+  color: #aaa;
+}
+
+/* Cancel button style */
+.cancel-btn {
+  background-color: #757575; /* lighter gray */
+  color: #f0f0f0;
+  box-shadow: 0 4px 8px rgba(117, 117, 117, 0.6);
+}
+
+.cancel-btn:hover {
+  background-color: #616161; /* darker gray hover */
+  box-shadow: 0 6px 12px rgba(97, 97, 97, 0.8);
+}
+
+/* Unique pagination styles */
+.managecourt-pagination {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  gap: 8px;
+}
+
+.managecourt-page-link {
+  outline: none; /* removes default focus outline */
+  border: 1px solid #ccc;
+  background-color: #f0f0f0;
+  color: #333;
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.managecourt-page-link:focus {
+  outline: none;  /* remove default */
+  box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.4); /* subtle green glow */
+}
+
+
+.managecourt-page-link:hover {
+  background-color: #4caf50;   /* nice green hover */
+  color: #fff;                 /* white text on hover */
+  border-color: #4caf50;       /* border matches background on hover */
+  box-shadow: 0 2px 8px rgba(76, 175, 80, 0.4);  /* subtle shadow on hover */
+}
+
+.managecourt-active > .managecourt-page-link {
+  background-color: #388e3c;   /* darker green for active */
+  color: #fff;
+  cursor: default;
+  pointer-events: none;
+  font-weight: 700;
+  border-color: #388e3c;
+  box-shadow: none;
 }

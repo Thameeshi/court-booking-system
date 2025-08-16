@@ -64,39 +64,46 @@ export class BookingService {
     });
   }
 
-  async getCourtBookingStats() {
-    return new Promise((resolve, reject) => {
-      const query = `
-        SELECT c.Name AS courtName, COUNT(b.Id) AS bookings
-        FROM COURT c
-        LEFT JOIN bookings b ON c.Id = b.CourtId
-        GROUP BY c.Id
-        ORDER BY bookings DESC
-      `;
+ async getCourtBookingStats() {
+  return new Promise((resolve, reject) => {
+    const query = `
+      SELECT
+        c.Name AS courtName,
+        COUNT(b.Id) AS bookings,
+        b.UserEmail,
+        b.Date,
+        b.StartTime,
+        b.EndTime
+      FROM COURT c
+      LEFT JOIN bookings b ON c.Id = b.CourtId
+      GROUP BY c.Id, b.UserEmail, b.Date, b.StartTime, b.EndTime
+      ORDER BY bookings DESC
+    `;
 
-      this.#db.all(query, [], (err, rows) => {
-        if (err) {
-          console.error("Error fetching booking stats:", err.message);
-          reject({
-            error: "Error fetching booking statistics.",
-            details: err.message,
-          });
-        } else {
-          const mappedRows = rows.map((row) => ({
-            courtName: row.courtName,
-            bookings: Number(row.bookings) || 0,
-          }));
+    this.#db.all(query, [], (err, rows) => {
+      if (err) {
+        console.error("Error fetching booking stats:", err.message);
+        reject({
+          error: "Error fetching booking statistics.",
+          details: err.message,
+        });
+      } else {
+        // map rows to proper data shape if needed
+        const mappedRows = rows.map((row) => ({
+          courtName: row.courtName,
+          bookings: Number(row.bookings) || 0,
+          userEmail: row.UserEmail,
+          date: row.Date,
+          startTime: row.StartTime,
+          endTime: row.EndTime,
+        }));
 
-          console.log("[BookingService] Booking stats:", mappedRows);
-
-          resolve({
-            reqId: this.message?.reqId,
-            success: mappedRows,
-          });
-        }
-      });
+        resolve({
+          reqId: this.message?.reqId,
+          success: mappedRows,
+        });
+      }
     });
-  }
-
-  // You can add other methods here if needed
+  });
+}
 }

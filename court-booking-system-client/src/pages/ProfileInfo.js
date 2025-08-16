@@ -1,7 +1,34 @@
+import React, { useState } from "react";
 import { useSelector } from "react-redux";
+import XrplService from "../services/common-services/XrplService.ts";
 
 const ProfileInfo = () => {
   const userDetails = useSelector((state) => state.user.userDetails);
+  const provider = useSelector((state) => state.auth.provider);
+
+  const [nftTokenId, setNftTokenId] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState("");
+
+  const handleCreateSellOffer = async () => {
+    if (!nftTokenId) {
+      alert("Please enter a valid NFT Token ID.");
+      return;
+    }
+    try {
+      setLoading(true);
+      const xrpl = new XrplService(provider);
+      const response = await xrpl.createSellOffer(nftTokenId, 1.0, "Court booking sell offer");
+      console.log("Sell offer response:", response);
+      setMessage("Sell offer created successfully!");
+    } catch (err) {
+      console.error(err);
+      setMessage("Failed to create sell offer.");
+    } finally {
+      setLoading(false);
+      setNftTokenId("");
+    }
+  };
 
   if (!userDetails) {
     return (
@@ -11,7 +38,7 @@ const ProfileInfo = () => {
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
-          fontSize: 18,
+          fontSize: 16,
           color: "#555",
         }}
       >
@@ -24,106 +51,93 @@ const ProfileInfo = () => {
     <div
       style={{
         minHeight: "100vh",
-        backgroundColor: "rgba(14, 99, 4, 0.1)", // soft transparent green
-        padding: 40,
+        backgroundColor: "rgba(14, 99, 4, 0.1)",
+        padding: 20,
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
-        fontFamily:
-          "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
+        fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
       }}
     >
       <div
         style={{
-          backgroundColor: "rgba(255, 255, 255, 0.95)", // near white with slight transparency
-          borderRadius: 20,
-          boxShadow: "0 20px 50px rgba(0, 0, 0, 0.1)",
-          maxWidth: 900,
+          backgroundColor: "rgba(255, 255, 255, 0.95)",
+          borderRadius: 16,
+          boxShadow: "0 10px 30px rgba(0, 0, 0, 0.1)",
+          maxWidth: 700,
           width: "100%",
           display: "grid",
           gridTemplateColumns: "1fr 2fr",
           overflow: "hidden",
         }}
       >
-        {/* Left side: SVG Avatar */}
+        {/* Left panel: heading + profile picture */}
         <div
           style={{
-            backgroundColor: "rgba(14, 99, 4, 0.15)", // light green overlay
+            backgroundColor: "rgba(14, 99, 4, 0.15)",
             display: "flex",
+            flexDirection: "column",
             justifyContent: "center",
             alignItems: "center",
-            padding: 40,
+            padding: 24,
+            gap: 24,
           }}
-          aria-hidden="true"
         >
-          <svg
-            width="140"
-            height="140"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="#0e6304"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          >
-            <circle cx="12" cy="7" r="4" />
-            <path d="M5.5 21a7 7 0 0 1 13 0" />
-          </svg>
-        </div>
-
-        {/* Right side: Profile info */}
-        <div style={{ padding: "40px 60px", color: "#0e6304" }}>
           <h1
             style={{
-              marginBottom: 24,
+              color: "#0e6304",
               fontWeight: "700",
-              fontSize: "2.8rem",
-              letterSpacing: "1px",
+              fontSize: "2rem",
+              margin: 0,
+              textAlign: "center",
+              userSelect: "none",
             }}
           >
             My Profile
           </h1>
 
+          <img
+            src={userDetails.imageUrl || "/default-user.png"}
+            alt="Profile"
+            style={{ borderRadius: 20, width: 120, height: 120, objectFit: "cover" }}
+          />
+        </div>
+
+        {/* Right panel: profile details and actions */}
+        <div style={{ padding: "24px 36px", color: "#0e6304" }}>
           <section
             style={{
-              marginBottom: 40,
+              marginBottom: 32,
               borderBottom: "2px solid rgba(14, 99, 4, 0.3)",
-              paddingBottom: 20,
+              paddingBottom: 16,
             }}
           >
-            <h2
-              style={{
-                fontSize: "1.8rem",
-                marginBottom: 18,
-                fontWeight: "600",
-              }}
-            >
+            <h2 style={{ fontSize: "1.4rem", marginBottom: 12, fontWeight: "600" }}>
               Profile Information
             </h2>
-
-            <dl style={{ fontSize: 18, lineHeight: 1.6 }}>
+            <dl style={{ fontSize: 16, lineHeight: 1.5 }}>
               <dt style={{ fontWeight: "700" }}>Name:</dt>
-              <dd style={{ marginBottom: 12 }}>{userDetails.Name}</dd>
+              <dd style={{ marginBottom: 8 }}>{userDetails.Name}</dd>
 
               <dt style={{ fontWeight: "700" }}>Email:</dt>
-              <dd style={{ marginBottom: 12 }}>{userDetails.Email}</dd>
+              <dd style={{ marginBottom: 8 }}>{userDetails.Email}</dd>
 
               <dt style={{ fontWeight: "700" }}>Role:</dt>
-              <dd style={{ marginBottom: 12 }}>{userDetails.UserRole}</dd>
+              <dd style={{ marginBottom: 8 }}>{userDetails.UserRole}</dd>
 
               <dt style={{ fontWeight: "700" }}>XRPL Address:</dt>
               <dd>{userDetails.XrplAddress}</dd>
             </dl>
           </section>
 
-          <section>
+          <section style={{ marginBottom: 32 }}>
             <h3
               style={{
-                fontSize: "1.6rem",
-                marginBottom: 20,
+                fontSize: "1.3rem",
+                marginBottom: 16,
                 fontWeight: "600",
                 borderBottom: "2px solid rgba(14, 99, 4, 0.3)",
-                paddingBottom: 10,
+                paddingBottom: 8,
               }}
             >
               Fund Your XRPL Account
@@ -137,25 +151,64 @@ const ProfileInfo = () => {
                 display: "inline-block",
                 backgroundColor: "#850c0cff",
                 color: "#fff",
-                padding: "14px 32px",
+                padding: "10px 24px",
                 borderRadius: 12,
                 fontWeight: "600",
-                fontSize: 18,
+                fontSize: 16,
                 textDecoration: "none",
-                transition: "background-color 0.3s ease",
-                boxShadow:
-                  "0 6px 12px rgba(103, 97, 97, 0.72)",
-                cursor: "pointer",
+                marginBottom: 16,
               }}
-              onMouseEnter={(e) =>
-                (e.currentTarget.style.backgroundColor = "#850c0cff")
-              }
-              onMouseLeave={(e) =>
-                (e.currentTarget.style.backgroundColor = "#850c0cff")
-              }
             >
               Fund Account
             </a>
+          </section>
+
+          <section>
+            <h3
+              style={{
+                fontSize: "1.3rem",
+                marginBottom: 16,
+                fontWeight: "600",
+                borderBottom: "2px solid rgba(14, 99, 4, 0.3)",
+                paddingBottom: 8,
+              }}
+            >
+              Create Sell Offer
+            </h3>
+
+            <input
+              type="text"
+              placeholder="Enter NFT Token ID"
+              value={nftTokenId}
+              onChange={(e) => setNftTokenId(e.target.value)}
+              style={{
+                padding: 8,
+                fontSize: 14,
+                borderRadius: 6,
+                border: "1px solid #ccc",
+                marginBottom: 10,
+                width: "100%",
+              }}
+            />
+
+            <button
+              onClick={handleCreateSellOffer}
+              disabled={!nftTokenId || loading}
+              style={{
+                backgroundColor: "#143da2ff",
+                color: "#fff",
+                padding: "8px 20px",
+                borderRadius: 6,
+                fontWeight: "600",
+                fontSize: 14,
+                border: "none",
+                cursor: "pointer",
+              }}
+            >
+              {loading ? "Creating..." : "Create Sell Offer"}
+            </button>
+
+            {message && <p style={{ marginTop: 10, fontSize: 14 }}>{message}</p>}
           </section>
         </div>
       </div>

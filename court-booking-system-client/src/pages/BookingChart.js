@@ -277,6 +277,82 @@ const BookingChart = () => {
         </div>
       </div>
 
+
+            {/* Booking Details List */}
+<div
+  style={{
+    maxWidth: 900,
+    margin: "20px auto 60px",
+    padding: 24,
+    backgroundColor: "#fff",
+    borderRadius: 12,
+    boxShadow: "0 4px 16px rgba(0,0,0,0.1)",
+    fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
+    color: "#222",
+    userSelect: "none",
+  }}
+>
+  <h3
+    style={{
+      textAlign: "center",
+      marginBottom: 16,
+      fontWeight: 700,
+      fontSize: 20,
+      color: "#2c3e50",
+    }}
+  >
+    Booking Details List
+  </h3>
+  <table
+    style={{
+      width: "100%",
+      borderCollapse: "collapse",
+      fontSize: 14,
+    }}
+  >
+    <thead>
+      <tr style={{ backgroundColor: "#cc6e6eff", color: "#fff" }}>
+        {/* Dynamically get keys from first data object */}
+        {data.length > 0 &&
+          Object.keys(data[0]).map((key) => (
+            <th
+              key={key}
+              style={{
+                padding: "10px 12px",
+                textAlign: "left",
+                borderBottom: "2px solid #cc4a4aff",
+                borderTop: "1px solid #cc4a4aff",
+                textTransform: "capitalize",
+              }}
+            >
+              {key}
+            </th>
+          ))}
+      </tr>
+    </thead>
+    <tbody>
+      {data.map((item, idx) => (
+        <tr
+          key={idx}
+          style={{
+            borderBottom: "1px solid #ddd",
+            backgroundColor: idx % 2 === 0 ? "#f9f9f9" : "#fff",
+          }}
+        >
+          {Object.values(item).map((val, i) => (
+            <td key={i} style={{ padding: "8px 12px" }}>
+              {val?.toString()}
+            </td>
+          ))}
+        </tr>
+      ))}
+    </tbody>
+  </table>
+</div>
+
+
+
+
       {/* Footer */}
       <Footer />
     </>
