@@ -7,10 +7,34 @@ const MyNFTsPage = () => {
   const [courtIdFilter, setCourtIdFilter] = useState("");
   const [tokenIdSearch, setTokenIdSearch] = useState("");
   const [showLatestFirst, setShowLatestFirst] = useState(true);
+<<<<<<< HEAD
 
   useEffect(() => {
     const savedNFTs = JSON.parse(localStorage.getItem("mintedNFTs") || "[]");
     setAllNFTs(savedNFTs);
+=======
+
+  // Your fixed token IDs (with dummy court IDs)
+  const fixedNFTs = [
+    {
+      courtId: "1",
+      tokenId: "000000008EDF5E57B26D668C7D6B73915C82C031657FA577C94526B60056121A",
+    },
+    {
+      courtId: "2",
+      tokenId: "000000008EDF5E57B26D668C7D6B73915C82C031657FA577C94526B60056121B",
+    },
+    {
+      courtId: "3",
+      tokenId: "000000008EDF5E57B26D668C7D6B73915C82C031657FA5778493B3B300561218",
+    },
+  ];
+
+  useEffect(() => {
+    const savedNFTs = JSON.parse(localStorage.getItem("mintedNFTs") || "[]");
+    // Combine saved NFTs with fixed NFTs (fixed ones come first)
+    setAllNFTs([...fixedNFTs, ...savedNFTs]);
+>>>>>>> 91a0210349f5a2babe5f60893d86b3b4d4768142
   }, []);
 
   useEffect(() => {
@@ -51,7 +75,12 @@ const MyNFTsPage = () => {
       )
     ) {
       localStorage.removeItem("mintedNFTs");
+<<<<<<< HEAD
       setAllNFTs([]);
+=======
+      // Keep the fixed NFTs visible after clearing localStorage
+      setAllNFTs(fixedNFTs);
+>>>>>>> 91a0210349f5a2babe5f60893d86b3b4d4768142
       setFilteredNFTs([]);
       setCourtIdFilter("");
       setTokenIdSearch("");

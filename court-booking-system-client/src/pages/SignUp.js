@@ -118,6 +118,7 @@ const SignUp = () => {
             Register Your Account
           </h1>
 
+<<<<<<< HEAD
           <form
             onSubmit={handleSubmit}
             className="card p-4 shadow-l"
@@ -197,6 +198,42 @@ const SignUp = () => {
                 </option>
               </select>
             </div>
+=======
+            <form onSubmit={handleSubmit} className="card p-4 shadow-l"
+              style={{
+                borderRadius: "15px",
+                backgroundColor: "white", // or any light color for contra
+              }}>
+              
+              {/* Name */}
+              <div className="signup-mb-3">
+                <label htmlFor="name" className="form-label">Full Name (required)</label>
+                <input type="text" name="name" id="name" value={formData.name} onChange={handleInputChange} className="form-control" required 
+                 />
+                
+              </div>
+
+              {/* XRPL Address */}
+              <div className="signup-mb-3">
+                <label htmlFor="xrplAddress" className="form-label">XRPL Address</label>
+                <input type="text" name="xrplAddress" id="xrplAddress" value={formData.xrplAddress} className="form-control" readOnly disabled />
+              </div>
+
+              {/* Email */}
+              <div className="signup-mb-3">
+                <label htmlFor="email" className="form-label">Email</label>
+                <input type="email" name="email" id="email" value={formData.email} className="form-control" readOnly disabled />
+              </div>
+
+              {/* Role */}
+              <div className="signup-mb-3">
+                <label htmlFor="userRole" className="form-label">Account Type</label>
+                <select name="userRole" id="userRole" value={formData.userRole} onChange={handleInputChange} className="form-select" required>
+                  <option value="PublicUser">Public User</option>
+                  <option value="CourtOwner">Court Owner</option>
+                </select>
+              </div>
+>>>>>>> 91a0210349f5a2babe5f60893d86b3b4d4768142
 
             {/* Submit */}
             <button type="submit" className="btn btn-success" disabled={isLoading}>

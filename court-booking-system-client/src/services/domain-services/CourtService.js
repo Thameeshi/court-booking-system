@@ -37,6 +37,7 @@ class CourtService {
 
   // Get court by ID
   async getCourtById(courtId) {
+    if (!courtId) throw new Error("Court ID is required.");
     return await hotPocketService.getServerReadReqResponse({
       type: "Court",
       subType: "getCourtById",
@@ -46,6 +47,7 @@ class CourtService {
 
   // Get courts by owner email
   async getCourtByOwner(ownerEmail) {
+    if (!ownerEmail) throw new Error("Owner email is required.");
     return await hotPocketService.getServerReadReqResponse({
       type: "Court",
       subType: "getCourtByOwner",
@@ -58,6 +60,7 @@ class CourtService {
     return this.getCourtByOwner(email);
   }
 
+<<<<<<< HEAD
   // Update court details with 3 images and availability
   async updateCourt(courtId, updatedData) {
     const message = {
@@ -84,10 +87,24 @@ class CourtService {
     };
 
     return await hotPocketService.getServerInputResponse(message);
+=======
+  // Update court details
+  async updateCourt(courtId, updatedData) {
+    if (!courtId || !updatedData) {
+      throw new Error("Court ID and updated data are required.");
+    }
+
+    return await hotPocketService.getServerInputResponse({
+      type: "Court",
+      subType: "editCourt",
+      data: { courtId, updatedData },
+    });
+>>>>>>> 91a0210349f5a2babe5f60893d86b3b4d4768142
   }
 
   // Delete court
   async deleteCourt(courtId) {
+    if (!courtId) throw new Error("Court ID is required.");
     return await hotPocketService.getServerInputResponse({
       type: "Court",
       subType: "deleteCourt",
@@ -97,6 +114,10 @@ class CourtService {
 
   // Add availability
   async addAvailability(availabilityData) {
+    if (!availabilityData || !availabilityData.CourtId) {
+      throw new Error("Availability data with CourtId is required.");
+    }
+
     return await hotPocketService.getServerInputResponse({
       type: "Court",
       subType: "addAvailability",
@@ -106,17 +127,13 @@ class CourtService {
 
   // Create booking
   async createBooking(bookingData) {
-    if (
-      !bookingData.UserEmail ||
-      !bookingData.CourtId ||
-      !bookingData.Date ||
-      !bookingData.StartTime ||
-      !bookingData.EndTime
-    ) {
-      throw new Error(
-        "Missing required fields: UserEmail, CourtId, Date, StartTime, or EndTime."
-      );
+    const requiredFields = ["UserEmail", "CourtId", "Date", "StartTime", "EndTime"];
+    for (const field of requiredFields) {
+      if (!bookingData[field]) {
+        throw new Error(`Missing required field: ${field}`);
+      }
     }
+
     return await hotPocketService.getServerInputResponse({
       type: "Court",
       subType: "createBooking",
@@ -125,14 +142,15 @@ class CourtService {
   }
 
   // Confirm booking
-  async confirmBooking(bookingId) {
-    if (!bookingId) {
+  async confirmBooking(CourtId) {
+    if (!CourtId) {
       throw new Error("Booking ID is required to confirm a booking.");
     }
+
     return await hotPocketService.getServerInputResponse({
       type: "Court",
       subType: "confirmBooking",
-      data: { bookingId },
+      data: { CourtId },
     });
   }
 
@@ -141,6 +159,7 @@ class CourtService {
     if (!userEmail) {
       throw new Error("UserEmail is required to fetch bookings.");
     }
+
     return await hotPocketService.getServerReadReqResponse({
       type: "Court",
       subType: "getUserBookings",
@@ -148,8 +167,43 @@ class CourtService {
     });
   }
 
+<<<<<<< HEAD
   // Mint NFT
+=======
+  // Get all bookings for a court on a specific date
+  async getCourtBookingsByDate(courtId, date) {
+    if (!courtId || !date) {
+      throw new Error("CourtId and Date are required to fetch court bookings.");
+    }
+
+    return await hotPocketService.getServerReadReqResponse({
+      type: "Court",
+      subType: "getCourtBookingsByDate",
+      data: { CourtId: courtId, Date: date },
+    });
+  }
+
+  // Cancel booking
+  async cancelBooking({ bookingId, reason }) {
+    if (!bookingId || !reason) {
+      throw new Error("Booking ID and reason are required.");
+    }
+
+    return await hotPocketService.getServerInputResponse({
+      type: "Court",
+      subType: "cancelBooking",
+      data: { bookingId, reason },
+    });
+  }
+
+
+  // Mint NFT on server
+>>>>>>> 91a0210349f5a2babe5f60893d86b3b4d4768142
   async mintNFTOnServer(mintData) {
+    if (!mintData || !mintData.bookingId) {
+      throw new Error("Mint data with bookingId is required.");
+    }
+
     return await hotPocketService.getServerInputResponse({
       type: "Court",
       subType: "mintNFT",

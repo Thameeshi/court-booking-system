@@ -143,6 +143,7 @@ const Web3AuthPage = () => {
   };
 
   return (
+<<<<<<< HEAD
     <div
       className="login-bg"
       style={{
@@ -169,6 +170,34 @@ const Web3AuthPage = () => {
           backdropFilter: "blur(8px)",
         }}
       >
+=======
+      <div
+        className="login-bg"
+        style={{
+          minHeight: "100vh",
+          width: "100vw",
+          background: ` url("/greencourt.jpg") center center / cover no-repeat`,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+      <div
+        className="login-card"
+        style={{
+          background: "rgba(237, 242, 235, 0.85)",
+          borderRadius: "24px",
+          boxShadow: "0 8px 32px rgba(34,139,34,0.18)",
+          padding: "40px 36px 32px 36px",
+          maxWidth: "370px",
+          width: "100%",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          backdropFilter: "blur(8px)",
+        }}
+      >
+>>>>>>> 91a0210349f5a2babe5f60893d86b3b4d4768142
         <img
           src={`${process.env.PUBLIC_URL}/logo.png`}
           alt="Courtify Logo"
@@ -179,6 +208,7 @@ const Web3AuthPage = () => {
             boxShadow: "0 2px 8px rgba(34,139,34,0.10)",
           }}
         />
+<<<<<<< HEAD
         <h2
           style={{
             color: "#0e6304",
@@ -200,6 +230,12 @@ const Web3AuthPage = () => {
         >
           Book your favorite sports court anytime, anywhere.
           <br />
+=======
+        <h2 style={{ color: "#0e6304", marginBottom: 8, fontWeight: 700, letterSpacing: 1,fontSize: "2rem" }}>COURTIFY </h2>
+        <p style={{ color: "#6d716dff", fontSize: "1rem", marginBottom: 28, textAlign: "center" }}>
+          Book your favorite sports court anytime, anywhere.<br />
+          
+>>>>>>> 91a0210349f5a2babe5f60893d86b3b4d4768142
         </p>
         {loading ? (
           <div className="loading-spinner" style={{ margin: "24px 0" }}></div>
@@ -219,7 +255,11 @@ const Web3AuthPage = () => {
               cursor: "pointer",
               boxShadow: "0 2px 8px rgba(34,139,34,0.10)",
               transition: "background 0.2s",
+<<<<<<< HEAD
               marginBottom: "8px",
+=======
+              marginBottom: "8px"
+>>>>>>> 91a0210349f5a2babe5f60893d86b3b4d4768142
             }}
           >
             sign up with Web3

@@ -1,6 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
+<<<<<<< HEAD
 import { Routes, Route, Navigate, useLocation } from "react-router-dom"; // NO Router import here
+=======
+import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from "react-router-dom";
+>>>>>>> 91a0210349f5a2babe5f60893d86b3b4d4768142
 import userService from "./services/domain-services/UserService.js";
 import hotPocketService from "./services/common-services/HotPocketService";
 import { setUserDetails } from "./store/slices/userSlice.js";
@@ -22,19 +26,26 @@ import UserHome from "./pages/UserHome.js";
 import AddAvailability from "./pages/AddAvailability.js";
 import EditProfile from "./pages/EditProfile.js";
 import WalletManagement from "./pages/WalletManagement.js";
+<<<<<<< HEAD
 import BookingChart from "./pages/BookingChart.js";
 
 import AdminNavbar from "./components/AdminNavbar.js";
 import AdminUsers from "./pages/AdminUsers.js";
 import AdminCourts from "./pages/AdminCourts.js";
 
+=======
+import Cart from "./pages/CartPage.js";
+>>>>>>> 91a0210349f5a2babe5f60893d86b3b4d4768142
 import MyNFTs from "./pages/MyNFTs.js";
+import CancelBooking from "./pages/CancelBooking";
+import Chatbot from "./components/Chatbot"; 
+import PaymentPage from "./pages/PaymentPage.js"; 
+import MoreInfo from "./pages/MoreInfo";
 
-import Chatbot from "./components/Chatbot";
 
 import "./App.css";
 
-const App = () => {
+const AppContent = () => {
   const dispatch = useDispatch();
   const { web3Authorized, userInfo } = useSelector((state) => state.auth);
   const userDetails = useSelector((state) => state.user.userDetails);
@@ -44,6 +55,11 @@ const App = () => {
   const [userExists, setUserExists] = useState(false);
 
   const location = useLocation();
+<<<<<<< HEAD
+=======
+  const hideNavbarPaths = ["/signup", "/register"];
+  const shouldHideNavbar = hideNavbarPaths.includes(location.pathname);
+>>>>>>> 91a0210349f5a2babe5f60893d86b3b4d4768142
 
   useEffect(() => {
     if (web3Authorized) {
@@ -86,6 +102,7 @@ const App = () => {
 
   return (
     <>
+<<<<<<< HEAD
       {showNavbar && (
         <>
           {userDetails.UserRole === "CourtOwner" && <DashboardNavbar />}
@@ -93,8 +110,18 @@ const App = () => {
           {userDetails.UserRole === "Admin" && <AdminNavbar />}
         </>
       )}
+=======
+      {/* Only show navbars if not on signup/register and user is authorized */}
+      {!shouldHideNavbar && web3Authorized && (
+        userDetails?.UserRole === "CourtOwner"
+          ? <DashboardNavbar />
+          : userDetails?.UserRole === "PublicUser"
+            ? <UserNavbar />
+            : null
+      )}
 
-      <div className="app-container">
+>>>>>>> 91a0210349f5a2babe5f60893d86b3b4d4768142
+
         <div className="grid">
           <Routes>
             {!web3Authorized && <Route path="/" element={<Web3AuthPage />} />}
@@ -117,13 +144,21 @@ const App = () => {
                 <Route path="/dashboard/profile" element={<ProfileInfo />} />
                 <Route path="/viewcourt" element={<ViewCourt />} />
                 <Route path="/confirmbooking" element={<ConfirmBooking />} />
+                <Route path="/cart" element={<Cart />} />
 
                 {userDetails?.UserRole === "PublicUser" && (
                   <>
                     <Route path="/userdashboard/user-home" element={<UserHome />} />
+                    <Route path="/moreinfo" element={<MoreInfo />} />
                     <Route path="/userdashboard/booking" element={<CourtBooking />} />
                     <Route path="/userdashboard/myBookings" element={<MyBookings />} />
+                    <Route path="/cancelbooking" element={<CancelBooking />} />
                     <Route path="/userdashboard/profile" element={<ProfileInfo />} />
+                    <Route path="/userdashboard/profile/edit" element={<EditProfile />} />
+                    <Route path="/userdashboard/wallet" element={<WalletManagement />} />
+                    <Route path="/userdashboard/myNFTs" element={<MyNFTs />} />
+                    <Route path="/userdashboard/payment" element={<PaymentPage />} />
+
                   </>
                 )}
 
@@ -153,11 +188,17 @@ const App = () => {
             <Route path="*" element={<Navigate to="/" />} />
           </Routes>
         </div>
-      </div>
+
 
       {web3Authorized && userDetails && <Chatbot />}
     </>
   );
 };
+
+const App = () => (
+  <Router>
+    <AppContent />
+  </Router>
+);
 
 export default App;

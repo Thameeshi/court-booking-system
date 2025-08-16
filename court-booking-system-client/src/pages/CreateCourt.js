@@ -85,7 +85,11 @@ const CreateCourt = () => {
         email: userEmail,
         moreDetails,
         availability,
+<<<<<<< HEAD
         imageUrls,
+=======
+        imageUrl,
+>>>>>>> 91a0210349f5a2babe5f60893d86b3b4d4768142
       };
 
       const result = await courtService.addCourt(courtData);
@@ -104,7 +108,20 @@ const CreateCourt = () => {
     }
   };
 
+  // Use inline style for background image from public folder
+  const backgroundStyle = {
+    background: `linear-gradient(rgba(255,255,255,0.35),rgba(255,255,255,0.35)), url("/addcourt.png") center center / cover no-repeat`,
+    backgroundBlendMode: "lighten",
+    minHeight: "100vh",
+    display: "flex",
+    justifyContent: "flex-end",
+    alignItems: "center",
+    padding: "2rem",
+    fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif"
+  };
+
   return (
+<<<<<<< HEAD
     <div className="create-court">
       {loading && (
         <div className="full-screen-loader">
@@ -113,6 +130,9 @@ const CreateCourt = () => {
         </div>
       )}
 
+=======
+    <div className="create-court" style={backgroundStyle}>
+>>>>>>> 91a0210349f5a2babe5f60893d86b3b4d4768142
       <form onSubmit={handleSubmit}>
         <h2>Create Court</h2>
 
@@ -125,6 +145,7 @@ const CreateCourt = () => {
           }}
           required
         />
+<<<<<<< HEAD
 
         <input
           placeholder="Location"
@@ -159,6 +180,8 @@ const CreateCourt = () => {
           step="0.01"
         />
 
+=======
+>>>>>>> 91a0210349f5a2babe5f60893d86b3b4d4768142
         <select
           value={availability}
           onChange={(e) => {
@@ -170,7 +193,6 @@ const CreateCourt = () => {
           <option value="Available">Available</option>
           <option value="Unavailable">Unavailable</option>
         </select>
-
         <textarea
           placeholder="More Details"
           value={moreDetails}
@@ -179,7 +201,6 @@ const CreateCourt = () => {
             updateLocalStorage("moreDetails", e.target.value);
           }}
         />
-
         <input
           type="file"
           accept="image/*"
@@ -187,6 +208,7 @@ const CreateCourt = () => {
           onChange={(e) => setImages(Array.from(e.target.files).slice(0, 3))}
           required
         />
+<<<<<<< HEAD
 
         {images.length > 0 && (
           <div className="image-preview">
@@ -201,6 +223,8 @@ const CreateCourt = () => {
           </div>
         )}
 
+=======
+>>>>>>> 91a0210349f5a2babe5f60893d86b3b4d4768142
         <button type="submit" disabled={loading}>
           {loading ? "Processing..." : "Add Court"}
         </button>

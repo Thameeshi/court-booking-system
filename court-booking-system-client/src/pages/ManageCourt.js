@@ -12,6 +12,11 @@ const ManageCourt = () => {
   const [isDeleting, setIsDeleting] = useState(false);
   const courtsPerPage = 6;
 
+<<<<<<< HEAD
+=======
+  // Replace this with your actual owner email, or get from auth/Redux
+  const ownerEmail = process.env.USER_EMAIL || "thameeshisenade@gmail.com"; 
+>>>>>>> 91a0210349f5a2babe5f60893d86b3b4d4768142
   const navigate = useNavigate();
   const { userDetails } = useSelector((state) => state.user);
   const ownerEmail = userDetails?.Email;

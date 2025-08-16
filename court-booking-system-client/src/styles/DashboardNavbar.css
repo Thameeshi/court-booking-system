@@ -1,5 +1,5 @@
 /* Reset and container setup */
-.dashboard-container {
+.dashboard-navbar-container {
   display: flex;
   flex-direction: column;
   height: 100vh;
